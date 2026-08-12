@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/swevvenn/transcendance/app/like-button.jsx"],"sourcesContent":["'use client';\n \nimport { useState } from 'react';\n \nexport default function LikeButton() {\n  const [likes, setLikes] = useState(0);\n \n  function handleClick() {\n    setLikes(likes + 1);\n  }\n \n  return <button onClick={handleClick}>Like ({likes})</button>;\n}"],"names":["LikeButton","likes","setLikes","handleClick","onClick"],"mappings":";;;;;AAEA;AAFA;;;AAIe,SAASA;IACtB,MAAM,CAACC,OAAOC,SAAS,GAAG,IAAA,iNAAQ,EAAC;IAEnC,SAASC;QACPD,SAASD,QAAQ;IACnB;IAEA,qBAAO,8OAAC;QAAOG,SAASD;;YAAa;YAAOF;YAAM;;;;;;;AACpD"}},
-    {"offset": {"line": 35, "column": 0}, "map": {"version":3,"sources":["file:///home/swevvenn/transcendance/node_modules/next/src/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.ts"],"sourcesContent":["module.exports = (\n  require('../../module.compiled') as typeof import('../../module.compiled')\n).vendored['react-ssr']!.ReactJsxDevRuntime\n"],"names":["module","exports","require","vendored","ReactJsxDevRuntime"],"mappings":"AAAAA,OAAOC,OAAO,GACZC,QAAQ,4HACRC,QAAQ,CAAC,YAAY,CAAEC,kBAAkB","ignoreList":[0]}}]
-}

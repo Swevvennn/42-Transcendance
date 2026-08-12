@@ -1,4 +1,9 @@
 (globalThis["TURBOPACK"] || (globalThis["TURBOPACK"] = [])).push([typeof document === "object" ? document.currentScript : undefined,
+"[hmr-entry]/hmr-entry.js { ENTRY => \"[project]/pages/_error\" }", (function(__turbopack_context__){
+"use strict";
+
+__turbopack_context__.r("[next]/entry/page-loader.ts { PAGE => \"[project]/node_modules/.pnpm/next@16.3.0_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/pages/_error.js [client] (ecmascript)\" } [client] (ecmascript)");
+}),
 "[turbopack]/browser/dev/hmr-client/hmr-client.ts [client] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
@@ -465,11 +470,6 @@ function triggerUpdate(msg) {
         updateCallbackSets.delete(key);
     }
 }
-}),
-"[hmr-entry]/hmr-entry.js { ENTRY => \"[project]/pages/_error\" }", ((__turbopack_context__) => {
-"use strict";
-
-__turbopack_context__.r("[next]/entry/page-loader.ts { PAGE => \"[project]/node_modules/next/dist/pages/_error.js [client] (ecmascript)\" } [client] (ecmascript)");
 }),
 ]);
 

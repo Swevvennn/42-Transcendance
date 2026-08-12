@@ -1,50 +1,81 @@
-import AcmeLogo from '@/app/ui/acme-logo';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
-import { lusitana } from '@/app/ui/fonts'
-import Image from 'next/image'
+import Image from "next/image";
 
-export default function Page() {
+import Link from "next/link"
+
+export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col p-6">
-      <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
-        {<AcmeLogo />}
-      </div>
-      <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
-        <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
-		
-          <p className={`text-xl text-gray-800 md:text-3xl md:leading-normal ${lusitana.className}`}>
-            <strong>Welcome to Acme.</strong> This is the example for the{' '}
-            <Link href="https://nextjs.org/learn/" className="text-blue-500">
-              Next.js Learn Course
+    <main className="min-h-screen bg-slate-950 text-white">
+      {/* Navbar */}
+      <header className="absolute left-0 right-0 top-0">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
+          <Link
+            href="/"
+            className="text-lg font-bold tracking-[0.2em] text-cyan-400"
+          >
+            MAXENDANCE
+          </Link>
+
+          <nav className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="rounded-md px-5 py-2.5 text-sm font-medium text-slate-300 transition hover:text-white"
+            >
+              Login
             </Link>
-            , brought to you by Vercel.
-          </p>
+
+            <Link
+              href="/signup"
+              className="rounded-md bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+            >
+              Sign Up
+            </Link>
+          </nav>
+        </div>
+      </header>
+
+      {/* Hero */}
+      <section className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
+        <div className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-cyan-400">
+          Naval Battle Arena
+        </div>
+
+        <h1 className="text-6xl font-bold tracking-tight sm:text-8xl">
+          MAXENDANCE
+        </h1>
+
+        <p className="mt-6 max-w-xl text-lg text-slate-400">
+          Deploy your fleet. Read the enemy waters. Sink their ships.
+          <br />
+          Only one commander leaves victorious.
+        </p>
+
+        <div className="mt-10">
           <Link
             href="/login"
-            className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
+            className="inline-block rounded-md bg-cyan-500 px-8 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400"
           >
-            <span>Log in</span> <ArrowRightIcon className="w-5 md:w-6" />
+            Play Now
           </Link>
         </div>
-        <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
-          {/* Add Hero Images Here */}
-		<Image
-			src="/hero-desktop.png"
-			width={1000}
-			height={760}
-			className="hidden md:block"
-			alt="Screenshots of the dashboard project showing desktop version"
-		/>
-		<Image
-			src="/hero-mobile.png"
-			width={560}
-			height={620}
-			className="block md:hidden"
-			alt="Screenshots of the dashboard project showing mobile version"
-		/>
+
+        {/* Stats */}
+        <div className="mt-16 grid grid-cols-3 gap-8 border-t border-slate-800 pt-8 text-sm">
+          <div>
+            <p className="text-2xl font-bold text-white">1v1</p>
+            <p className="mt-1 text-slate-500">Battles</p>
+          </div>
+
+          <div>
+            <p className="text-2xl font-bold text-white">10×10</p>
+            <p className="mt-1 text-slate-500">Battle Grid</p>
+          </div>
+
+          <div>
+            <p className="text-2xl font-bold text-white">∞</p>
+            <p className="mt-1 text-slate-500">Battles</p>
+          </div>
         </div>
-      </div>
+      </section>
     </main>
-  );
+  )
 }
