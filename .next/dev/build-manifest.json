@@ -50,7 +50,7 @@
       "static/chunks/turbopack-_12g9o1i._.js",
       "static/chunks/_1urspxg._.js"
     ],
-    "/signup/page": [
+    "/home/page": [
       "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_0ytcuq3._.js",
       "static/chunks/0q15_next_dist_compiled_next-devtools_index_1le60mi.js",
       "static/chunks/0q15_next_dist_compiled_react-dom_1hnuoab._.js",
@@ -61,7 +61,7 @@
       "static/chunks/0vvp_@swc_helpers_cjs_0vb02wp._.js",
       "static/chunks/_1anvha4._.js",
       "static/chunks/turbopack-_12g9o1i._.js",
-      "static/chunks/_0ekjam_._.js"
+      "static/chunks/_1cxq3bf._.js"
     ]
   },
   "pagesChunkGroupBootstrapParams": {},

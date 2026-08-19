@@ -12,7 +12,7 @@ export default function Home() {
             href="/"
             className="text-lg font-bold tracking-[0.2em] text-cyan-400"
           >
-            MAXENDANCE
+            TRANSCENDENCE
           </Link>
 
           <nav className="flex items-center gap-3">
@@ -40,7 +40,7 @@ export default function Home() {
         </div>
 
         <h1 className="text-6xl font-bold tracking-tight sm:text-8xl">
-          MAXENDANCE
+          TRANSCENDENCE
         </h1>
 
         <p className="mt-6 max-w-xl text-lg text-slate-400">
@@ -51,7 +51,7 @@ export default function Home() {
 
         <div className="mt-10">
           <Link
-            href="/login"
+            href="/home"
             className="inline-block rounded-md bg-cyan-500 px-8 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400"
           >
             Play Now
