@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider"
 import { ModeToggle } from "@/components/mode-toggle"
 import { TooltipProvider } from "@/components/ui/tooltip"
-
+import { Separator } from "@/components/ui/separator"
 
 const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
 
@@ -29,9 +29,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-mono", jetbrainsMono.variable)}
-      suppressHydrationWarning    
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-slate-950">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -40,6 +40,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           <TooltipProvider>{children}</TooltipProvider>
         </ThemeProvider>
+		<Separator />
+		<footer className="justify-center bg-black">
+			<div className="p-8">
+				<Separator />
+				<br />
+				© 2026 MAXENDANCE, Inc.
+			</div>
+		</footer>
       </body>
     </html>
   );
