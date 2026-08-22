@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { ModeToggle } from "@/components/mode-toggle"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { Separator } from "@/components/ui/separator"
+import Link from "next/link"
 
 const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
 
@@ -32,6 +33,35 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-slate-950">
+		<header className="absolute left-0 right-0 top-0">
+			<div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
+				<Link
+					href="/"
+					className="text-lg font-bold tracking-[0.2em] text-cyan-400"
+				>
+					TRANSCENDENCE
+				</Link>
+
+				<nav className="flex items-center gap-3">
+					<Link
+					href="/login"
+					className="rounded-md px-5 py-2.5 text-sm font-medium text-slate-300 transition hover:text-white"
+					>
+					Login
+					</Link>
+
+					<Link
+					href="/signup"
+					className="rounded-md bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+					>
+					Sign Up
+					</Link>
+				</nav>
+			</div>
+			<div className="mx-auto max-w-7xl">
+				<Separator />
+			</div>
+		</header>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -41,11 +71,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <TooltipProvider>{children}</TooltipProvider>
         </ThemeProvider>
 		<Separator />
-		<footer className="justify-center bg-black">
-			<div className="p-8">
-				<Separator />
-				<br />
-				© 2026 MAXENDANCE, Inc.
+		<footer className="justify-center bg-black py-8">
+			<div className="mx-auto max-w-7xl">
+				<div className="flex items-center justify-between border-t pt-4">
+					<p>© 2026 MAXENDANCE, Inc.</p>
+					<p>mosmond</p>
+					<p>aandreo</p>
+					<p>...</p>
+					<p>...</p>
+					<p>...</p>
+				</div>
 			</div>
 		</footer>
       </body>

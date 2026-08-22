@@ -37,7 +37,7 @@ globalThis.__BUILD_MANIFEST = {
       "static/chunks/turbopack-_12g9o1i._.js",
       "static/chunks/_219uq1s._.js"
     ],
-    "/home/page": [
+    "/play/page": [
       "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_0ytcuq3._.js",
       "static/chunks/0q15_next_dist_compiled_next-devtools_index_1le60mi.js",
       "static/chunks/0q15_next_dist_compiled_react-dom_1hnuoab._.js",
@@ -48,7 +48,7 @@ globalThis.__BUILD_MANIFEST = {
       "static/chunks/0vvp_@swc_helpers_cjs_0vb02wp._.js",
       "static/chunks/_1anvha4._.js",
       "static/chunks/turbopack-_12g9o1i._.js",
-      "static/chunks/_1cxq3bf._.js"
+      "static/chunks/_0-iv0sp._.js"
     ],
     "/_not-found/page": [
       "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_0ytcuq3._.js",
@@ -62,6 +62,45 @@ globalThis.__BUILD_MANIFEST = {
       "static/chunks/_1anvha4._.js",
       "static/chunks/turbopack-_12g9o1i._.js",
       "static/chunks/_18x7jxu._.js"
+    ],
+    "/play/tournament/page": [
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_0ytcuq3._.js",
+      "static/chunks/0q15_next_dist_compiled_next-devtools_index_1le60mi.js",
+      "static/chunks/0q15_next_dist_compiled_react-dom_1hnuoab._.js",
+      "static/chunks/0q15_next_dist_compiled_react-server-dom-turbopack_0hx275l._.js",
+      "static/chunks/0q15_next_dist_compiled_02m753p._.js",
+      "static/chunks/0q15_next_dist_client_1ct8m3b._.js",
+      "static/chunks/0q15_next_dist_1f2l7xf._.js",
+      "static/chunks/0vvp_@swc_helpers_cjs_0vb02wp._.js",
+      "static/chunks/_1anvha4._.js",
+      "static/chunks/turbopack-_12g9o1i._.js",
+      "static/chunks/_1epb5yz._.js"
+    ],
+    "/play/online/page": [
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_0ytcuq3._.js",
+      "static/chunks/0q15_next_dist_compiled_next-devtools_index_1le60mi.js",
+      "static/chunks/0q15_next_dist_compiled_react-dom_1hnuoab._.js",
+      "static/chunks/0q15_next_dist_compiled_react-server-dom-turbopack_0hx275l._.js",
+      "static/chunks/0q15_next_dist_compiled_02m753p._.js",
+      "static/chunks/0q15_next_dist_client_1ct8m3b._.js",
+      "static/chunks/0q15_next_dist_1f2l7xf._.js",
+      "static/chunks/0vvp_@swc_helpers_cjs_0vb02wp._.js",
+      "static/chunks/_1anvha4._.js",
+      "static/chunks/turbopack-_12g9o1i._.js",
+      "static/chunks/_0tekw5u._.js"
+    ],
+    "/play/solo/page": [
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_0ytcuq3._.js",
+      "static/chunks/0q15_next_dist_compiled_next-devtools_index_1le60mi.js",
+      "static/chunks/0q15_next_dist_compiled_react-dom_1hnuoab._.js",
+      "static/chunks/0q15_next_dist_compiled_react-server-dom-turbopack_0hx275l._.js",
+      "static/chunks/0q15_next_dist_compiled_02m753p._.js",
+      "static/chunks/0q15_next_dist_client_1ct8m3b._.js",
+      "static/chunks/0q15_next_dist_1f2l7xf._.js",
+      "static/chunks/0vvp_@swc_helpers_cjs_0vb02wp._.js",
+      "static/chunks/_1anvha4._.js",
+      "static/chunks/turbopack-_12g9o1i._.js",
+      "static/chunks/_06np_am._.js"
     ],
     "/login/page": [
       "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_0ytcuq3._.js",

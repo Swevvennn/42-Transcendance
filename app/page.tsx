@@ -5,34 +5,6 @@ import Link from "next/link"
 export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
-      {/* Navbar */}
-      <header className="absolute left-0 right-0 top-0">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
-          <Link
-            href="/"
-            className="text-lg font-bold tracking-[0.2em] text-cyan-400"
-          >
-            TRANSCENDENCE
-          </Link>
-
-          <nav className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="rounded-md px-5 py-2.5 text-sm font-medium text-slate-300 transition hover:text-white"
-            >
-              Login
-            </Link>
-
-            <Link
-              href="/signup"
-              className="rounded-md bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
-            >
-              Sign Up
-            </Link>
-          </nav>
-        </div>
-      </header>
-
       {/* Hero */}
       <section className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
         <div className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-cyan-400">
@@ -51,7 +23,7 @@ export default function Home() {
 
         <div className="mt-10">
           <Link
-            href="/home"
+            href="/play"
             className="inline-block rounded-md bg-cyan-500 px-8 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400"
           >
             Play Now
