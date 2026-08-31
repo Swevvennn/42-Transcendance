@@ -3,7 +3,7 @@ import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider"
-import { ModeToggle } from "@/components/mode-toggle"
+import MouseGlow from "@/components/mouse-glow";
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
@@ -32,12 +32,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-mono", jetbrainsMono.variable)}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-slate-950">
+      <body className="min-h-full flex flex-col bg-[#0C1100]">
+		<MouseGlow />
 		<header className="absolute left-0 right-0 top-0">
 			<div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
 				<Link
 					href="/"
-					className="text-lg font-bold tracking-[0.2em] text-cyan-400"
+					className="text-lg font-bold tracking-[0.2em] text-[#CBFF00]"
 				>
 					TRANSCENDENCE
 				</Link>
@@ -45,14 +46,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 				<nav className="flex items-center gap-3">
 					<Link
 					href="/login"
-					className="rounded-md px-5 py-2.5 text-sm font-medium text-slate-300 transition hover:text-white"
+					className="rounded-md px-5 py-2.5 text-sm font-medium text-[#CBFF00] transition hover:text-white"
 					>
 					Login
 					</Link>
 
 					<Link
 					href="/signup"
-					className="rounded-md bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+					className="rounded-md bg-[#CBFF00] px-5 py-2.5 text-sm font-semibold text-[#0C1100] transition hover:text-white"
 					>
 					Sign Up
 					</Link>
@@ -74,9 +75,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 		<footer className="justify-center bg-black py-8">
 			<div className="mx-auto max-w-7xl">
 				<div className="flex items-center justify-between border-t pt-4">
-					<p>© 2026 MAXENDANCE, Inc.</p>
-					<p>mosmond</p>
-					<p>aandreo</p>
+					<p className="text-[#CBFF00]">© 2026 MAXENDANCE, Inc.</p>
+					<a href="https://mosmond.dev">mosmond</a>
+					<a href="https://github.com/LnnKk2">aandreo</a>
 					<p>...</p>
 					<p>...</p>
 					<p>...</p>

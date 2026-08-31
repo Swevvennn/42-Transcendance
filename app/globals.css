@@ -49,6 +49,8 @@
 }
 
 :root {
+  --mouse-x: 50vw;
+  --mouse-y: 50vh;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -82,6 +84,24 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 }
+
+.mouse-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+
+  background: radial-gradient(
+    circle 100px at var(--mouse-x) var(--mouse-y),
+    rgba(203, 255, 0, 0.35) 0%,
+    rgba(203, 255, 0, 0.12) 25%,
+    rgba(12, 17, 0, 0.05) 50%,
+    transparent 75%
+  );
+
+  mix-blend-mode: screen;
+}
+
 
 .dark {
   --background: oklch(0.145 0 0);
