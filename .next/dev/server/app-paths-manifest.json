@@ -1,7 +1,1 @@
-{
-  "/page": "app/page.js",
-  "/play/online/page": "app/play/online/page.js",
-  "/play/page": "app/play/page.js",
-  "/play/solo/page": "app/play/solo/page.js",
-  "/play/tournament/page": "app/play/tournament/page.js"
-}
+{}
