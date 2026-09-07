@@ -34,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-[#0C1100]">
 		<MouseGlow />
-		<header className="absolute left-0 right-0 top-0">
+		<header className="absolute left-0 right-0 top-0 z-50">
 			<div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
 				<Link
 					href="/"
@@ -63,18 +63,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 				<Separator />
 			</div>
 		</header>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <TooltipProvider>{children}</TooltipProvider>
-        </ThemeProvider>
+        {children}
 		<Separator />
-		<footer className="justify-center bg-black py-8">
+		<footer className="justify-center bg-black py-8 z-50">
 			<div className="mx-auto max-w-7xl">
-				<div className="flex items-center justify-between border-t pt-4">
+				<div className="flex items-center justify-between border-t pt-4 text-white">
 					<p className="text-[#CBFF00]">© 2026 MAXENDANCE, Inc.</p>
 					<a href="https://mosmond.dev">mosmond</a>
 					<a href="https://github.com/LnnKk2">aandreo</a>

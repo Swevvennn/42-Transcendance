@@ -1,12 +1,11 @@
-import Image from "next/image";
-import Warship from "@/components/warship";
+import { LandingScene } from "@/components/naval-scene";
 import Link from "next/link"
 
 export default function Home() {
   return (
     <main className="relative min-h-screen bg-[#0C1100] text-white">
-	  <div className="absolute inset-0">
-		<Warship />
+	  <div className="pointer-events-none absolute inset-0 z-0">
+		<LandingScene />
 	  </div>
       {/* Hero */}
       <section className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
