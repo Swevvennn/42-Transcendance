@@ -1,6 +1,3 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
+// shadcn components import `cn` from the "cn" package directly; this alias
+// keeps `@/lib/utils` (declared in components.json) pointing at the same helper.
+export { cn } from "cn"

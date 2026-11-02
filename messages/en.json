@@ -1,0 +1,205 @@
+{
+  "Metadata": {
+    "title": "Transcendence",
+    "description": "Play Pong online with your friends."
+  },
+  "Nav": {
+    "home": "Home",
+    "play": "Play",
+    "leaderboard": "Leaderboard",
+    "profile": "Profile",
+    "login": "Log in",
+    "signup": "Sign up"
+  },
+  "LocaleSwitcher": {
+    "label": "Language",
+    "en": "English",
+    "fr": "Français"
+  },
+  "Footer": {
+    "rights": "© 2026 Transcendence — 42 Le Havre project",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "Home": {
+    "title": "Transcendence",
+    "subtitle": "The classic Pong, online. Challenge your friends, the AI, or enter a tournament.",
+    "play": "Play now",
+    "signup": "Create an account",
+    "features": {
+      "online": {
+        "title": "Online matches",
+        "description": "Play in real time against other players."
+      },
+      "ai": {
+        "title": "AI opponent",
+        "description": "Train against an AI that plays like a human."
+      },
+      "tournament": {
+        "title": "Tournaments",
+        "description": "Compete with several players and climb the leaderboard."
+      }
+    }
+  },
+  "Auth": {
+    "email": "Email",
+    "password": "Password",
+    "notConnected": "Form is valid. The backend is not connected yet.",
+    "or": "or",
+    "oauth42": "Continue with 42",
+    "login": {
+      "title": "Log in",
+      "description": "Enter your email and password.",
+      "submit": "Log in",
+      "noAccount": "No account yet?",
+      "signupLink": "Sign up"
+    },
+    "signup": {
+      "title": "Sign up",
+      "description": "Create your account to start playing.",
+      "username": "Username",
+      "confirmPassword": "Confirm password",
+      "passwordHint": "At least 8 characters, with a letter and a digit.",
+      "submit": "Create account",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Log in"
+    }
+  },
+  "Validation": {
+    "emailInvalid": "Please enter a valid email address.",
+    "passwordRequired": "Please enter your password.",
+    "usernameLength": "Username must be between 3 and 20 characters.",
+    "usernameChars": "Only letters, digits and underscores are allowed.",
+    "passwordLength": "Password must be at least 8 characters.",
+    "passwordLetterDigit": "Password must contain a letter and a digit.",
+    "passwordMismatch": "Passwords do not match."
+  },
+  "Play": {
+    "title": "Play",
+    "description": "Choose a game mode.",
+    "start": "Start",
+    "soon": "Coming soon",
+    "modes": {
+      "local": {
+        "title": "Local 1v1",
+        "description": "Two players on the same keyboard."
+      },
+      "ai": {
+        "title": "Versus AI",
+        "description": "Play against the computer."
+      },
+      "online": {
+        "title": "Online",
+        "description": "Find an opponent online."
+      },
+      "tournament": {
+        "title": "Tournament",
+        "description": "Several players, one winner."
+      }
+    }
+  },
+  "Game": {
+    "title": "Local 1v1",
+    "controls": "Left player: W / S — Right player: ↑ / ↓",
+    "pressStart": "Press Space to start",
+    "paused": "Paused — press Space to resume",
+    "winner": "{player} wins! Press Space to play again",
+    "left": "Left player",
+    "right": "Right player",
+    "back": "Back to modes"
+  },
+  "Profile": {
+    "title": "Profile",
+    "online": "Online",
+    "offline": "Offline",
+    "inGame": "In game",
+    "level": "Level {level}",
+    "edit": "Edit profile",
+    "stats": {
+      "title": "Statistics",
+      "wins": "Wins",
+      "losses": "Losses",
+      "winRate": "Win rate"
+    },
+    "history": {
+      "title": "Match history",
+      "opponent": "Opponent",
+      "score": "Score",
+      "result": "Result",
+      "date": "Date",
+      "win": "Win",
+      "loss": "Loss"
+    },
+    "friends": {
+      "title": "Friends",
+      "add": "Add a friend"
+    },
+    "mockNotice": "Preview with sample data."
+  },
+  "Leaderboard": {
+    "title": "Leaderboard",
+    "description": "The best players on Transcendence.",
+    "rank": "Rank",
+    "player": "Player",
+    "wins": "Wins",
+    "losses": "Losses",
+    "level": "Level"
+  },
+  "Privacy": {
+    "title": "Privacy Policy",
+    "updated": "Last updated: November 2, 2026",
+    "sections": {
+      "collect": {
+        "title": "Data we collect",
+        "body": "When you create an account, we store your username, email address, a hashed version of your password, your avatar if you upload one, and your game history. If you sign in with 42, we receive your 42 login and public profile information."
+      },
+      "use": {
+        "title": "How we use it",
+        "body": "Your data is only used to run the service: authenticate you, display your profile, match you with other players, and compute statistics and leaderboards. We do not sell your data or use it for advertising."
+      },
+      "storage": {
+        "title": "Storage and security",
+        "body": "Data is stored in a database hosted by the project team. Passwords are never stored in plain text and all traffic is encrypted with HTTPS."
+      },
+      "rights": {
+        "title": "Your rights",
+        "body": "You can view and edit your profile at any time. You can request a copy of your data or the deletion of your account by contacting us."
+      },
+      "contact": {
+        "title": "Contact",
+        "body": "This is a student project from 42 Le Havre. For any question about your data, contact the team through the project repository."
+      }
+    }
+  },
+  "Terms": {
+    "title": "Terms of Service",
+    "updated": "Last updated: November 2, 2026",
+    "sections": {
+      "acceptance": {
+        "title": "Acceptance",
+        "body": "By creating an account or using Transcendence, you agree to these terms. If you do not agree, please do not use the service."
+      },
+      "account": {
+        "title": "Your account",
+        "body": "You are responsible for keeping your credentials secret and for all activity on your account. Your username must not impersonate someone else or be offensive."
+      },
+      "conduct": {
+        "title": "Fair play",
+        "body": "Cheating, exploiting bugs, harassing other players or disrupting the service is forbidden and may lead to suspension of your account."
+      },
+      "service": {
+        "title": "Service availability",
+        "body": "Transcendence is a student project provided as is, without any guarantee of availability. Features may change or be removed at any time."
+      },
+      "changes": {
+        "title": "Changes",
+        "body": "These terms may be updated. The date at the top of this page shows the latest version."
+      }
+    }
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist.",
+    "back": "Back to home"
+  }
+}
