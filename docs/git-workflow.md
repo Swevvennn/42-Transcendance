@@ -95,5 +95,5 @@ front, so few conflicts are expected there.
       Claude can do this once the branches are on GitHub.
 - [ ] Check the Chrome console on `/`, then merge `feat/style-templates` through a PR:
       https://github.com/Swevvennn/42-Transcendance/pull/new/feat/style-templates
-- [ ] Optional cleanup: the local `master` branch is stale (deleted on GitHub):
+- [x] Optional cleanup: the local `master` branch is stale (deleted on GitHub):
       `git branch -D master`.
