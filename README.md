@@ -1,10 +1,12 @@
 *This project has been created as part of the 42 curriculum by mosmond, aandreo, TODO, TODO, TODO.*
 
-# ft_transcendence
+# Pongo
+
+> Our take on the 42 **ft_transcendence** subject.
 
 ## Description
 
-**Transcendence** is a web application where players compete in **Pong**: local 1v1, against an AI, online in real time, or in tournaments. It includes user accounts, profiles, friends, statistics and a leaderboard, in several languages.
+**Pongo** is a web application where players compete in **Pong**: local 1v1, against an AI, online in real time, or in tournaments. It includes user accounts, profiles, friends, statistics and a leaderboard, in several languages.
 
 > **Status:** front-end preview. All pages exist (EN/FR) with a playable local Pong; the backend (auth, database, real-time games) is not wired yet. See [`docs/frontend.md`](docs/frontend.md) for details (in French).
 
@@ -60,6 +62,7 @@ TODO: how tasks were split and tracked, communication tools, meeting rhythm.
 | Styling | **Tailwind CSS v4** + **shadcn/ui** (base-ui) | CSS framework required by the subject; accessible, editable components |
 | i18n | **next-intl** | Localized routes (`/en`, `/fr`), server and client translations |
 | Validation | **zod** | One schema shared by the front-end and the back-end |
+| 3D | **three.js** | Cel-shaded animated intro of the home page only, loaded on demand |
 | Real time | Socket.IO on a custom server *(planned)* | Server-authoritative Pong at ~60 ticks/s |
 | Database | PostgreSQL + Prisma *(planned)* | Relational data (users, friends, matches) with a typed ORM |
 | Auth | Better Auth *(planned)* | Email/password, OAuth 42, TOTP 2FA |
@@ -80,6 +83,8 @@ TODO (DevOps): diagram and description of tables and relations (users, friendshi
 | Sign up / log in forms with client-side validation | Done (UI), backend TODO | mosmond |
 | Privacy Policy and Terms of Service (footer links) | Done | mosmond |
 | Local 1v1 Pong (canvas) | Done | mosmond |
+| Swiss visual identity, light/dark theme, "Stack" logo | Done | mosmond |
+| Animated manga-style 3D intro on the home page (full once per session, short version on reload) | Done | mosmond |
 | Online games, AI, tournaments | TODO | TODO |
 
 ## Modules
@@ -109,7 +114,7 @@ Target: **23 points** (19 needed for 125 %).
 
 ## Individual contributions
 
-- **mosmond** — Front-end rebuild: Next.js 16 App Router structure, next-intl (EN/FR, localized routing via `proxy.ts`), shadcn/ui components, all pages, shared zod validation schemas, local canvas Pong, Privacy/ToS pages.
+- **mosmond** — Front-end rebuild: Next.js 16 App Router structure, next-intl (EN/FR, localized routing via `proxy.ts`), shadcn/ui components, all pages, shared zod validation schemas, local canvas Pong, Privacy/ToS pages; Swiss visual identity with light/dark theme and the "Stack" logo; the animated 3D intro of the home page (three.js) and the `/templates` style lab.
 - **aandreo** — TODO
 - TODO
 
@@ -122,4 +127,4 @@ Target: **23 points** (19 needed for 125 %).
 
 ### Use of AI
 
-Claude (Claude Code) was used to scaffold the front-end preview: page structure, i18n setup, form validation and the local Pong. It also wrote the project documentation (`docs/frontend.md`, `AGENTS.md`, `CLAUDE.md`). All generated code was type-checked, linted, built and tested in Chrome; team members review it before building on it. TODO: each member adds how they used AI.
+Claude (Claude Code) was used to scaffold the front-end preview: page structure, i18n setup, form validation and the local Pong. It also built the animated 3D intro of the home page from mosmond's art direction (iterated on feedback: shading, smash angle, camera, facial expressions, dark mode), and wrote the project documentation (`docs/frontend.md`, `AGENTS.md`, `CLAUDE.md`). All generated code was type-checked, linted and built; the preview pages were tested in Chrome, and the intro geometry was checked with scripts. Team members review it before building on it. TODO: each member adds how they used AI.

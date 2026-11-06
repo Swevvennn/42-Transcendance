@@ -34,6 +34,7 @@
 
 - Le front a été refait de zéro. C'est une preview simple : toutes les pages existent en **EN / FR** (3e langue à choisir), sous `app/[locale]/`.
 - Fonctionnel : accueil, login / signup (validation client), menu Play, **Pong local 1v1** (canvas, client uniquement), profil et classement (données d'exemple dans `lib/mock-data.ts`), Privacy / Terms dans le footer, 404.
+- Ajouté le 6 novembre : thème suisse clair / sombre, logo « Stack » (le logo officiel, `components/brand/logos.tsx`), intro 3D manga de l'accueil (three.js, `components/landing/anime3d/`, une fois par session) et labo `/templates`. Pas encore revérifié dans Chrome.
 - Pas encore fait : backend (Better Auth, Prisma, Socket.IO), Docker / nginx, modes IA / en ligne / tournoi.
 - Vérifié : `tsc`, `lint` et `build` OK, aucune erreur console Chrome (prod et dev).
 - **Explications détaillées pour l'équipe : `docs/frontend.md`.** Règles de code pour les agents : `AGENTS.md`.
