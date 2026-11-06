@@ -28,7 +28,7 @@ export default async function LoginPage({
       footer={
         <>
           <span className="text-muted-foreground">{t("login.noAccount")}</span>
-          <Link href="/signup" className="underline">
+          <Link href="/signup" className="font-semibold underline underline-offset-4 hover:text-primary">
             {t("login.signupLink")}
           </Link>
         </>

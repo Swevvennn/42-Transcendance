@@ -80,7 +80,7 @@ export function SignupForm() {
           <FieldError>{errorFor("confirmPassword")}</FieldError>
         </Field>
 
-        <Button type="submit" className="w-full">
+        <Button type="submit" size="lg" className="h-10 w-full text-sm font-semibold">
           {t("signup.submit")}
         </Button>
 

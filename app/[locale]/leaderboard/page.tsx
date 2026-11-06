@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import type { Locale } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
+import { PageHeader } from "@/components/page-header"
 import {
   Table,
   TableBody,
@@ -11,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { leaderboard } from "@/lib/mock-data"
+import { cn } from "@/lib/utils"
 
 export async function generateMetadata({
   params,
@@ -32,31 +34,38 @@ export default async function LeaderboardPage({
   const tProfile = await getTranslations("Profile")
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("description")}</p>
-        <p className="text-xs text-muted-foreground">{tProfile("mockNotice")}</p>
-      </div>
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        title={t("title")}
+        description={t("description")}
+        actions={<p className="text-xs text-muted-foreground">{tProfile("mockNotice")}</p>}
+      />
 
-      <Table>
+      <Table className="text-sm">
         <TableHeader>
-          <TableRow>
-            <TableHead>{t("rank")}</TableHead>
-            <TableHead>{t("player")}</TableHead>
-            <TableHead>{t("level")}</TableHead>
-            <TableHead>{t("wins")}</TableHead>
-            <TableHead>{t("losses")}</TableHead>
+          <TableRow className="border-b-2 border-foreground hover:bg-transparent">
+            <TableHead className="w-20 text-xs tracking-widest uppercase">{t("rank")}</TableHead>
+            <TableHead className="text-xs tracking-widest uppercase">{t("player")}</TableHead>
+            <TableHead className="text-right text-xs tracking-widest uppercase">{t("level")}</TableHead>
+            <TableHead className="text-right text-xs tracking-widest uppercase">{t("wins")}</TableHead>
+            <TableHead className="text-right text-xs tracking-widest uppercase">{t("losses")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {leaderboard.map((row, index) => (
             <TableRow key={row.username}>
-              <TableCell>#{index + 1}</TableCell>
-              <TableCell>{row.username}</TableCell>
-              <TableCell>{row.level}</TableCell>
-              <TableCell>{row.wins}</TableCell>
-              <TableCell>{row.losses}</TableCell>
+              <TableCell
+                className={cn(
+                  "text-2xl font-black tracking-tighter tabular-nums",
+                  index === 0 && "text-primary",
+                )}
+              >
+                {String(index + 1).padStart(2, "0")}
+              </TableCell>
+              <TableCell className="text-base font-semibold">{row.username}</TableCell>
+              <TableCell className="text-right tabular-nums">{row.level}</TableCell>
+              <TableCell className="text-right tabular-nums">{row.wins}</TableCell>
+              <TableCell className="text-right tabular-nums">{row.losses}</TableCell>
             </TableRow>
           ))}
         </TableBody>

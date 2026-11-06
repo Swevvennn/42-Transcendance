@@ -1,0 +1,291 @@
+/*
+ * Style lab themes (/[locale]/templates). Each `.theme-*` class overrides the
+ * shadcn tokens, so `bg-background`, `text-primary`, <ButtonLink>… pick up the
+ * palette automatically. Effects below only use these tokens.
+ */
+
+@layer components {
+  /* ── Palettes ─────────────────────────────────────────────── */
+
+  .theme-brutalist {
+    color-scheme: light;
+    font-family: var(--font-brutalist), sans-serif;
+    --background: oklch(0.97 0.01 95);
+    --foreground: oklch(0.15 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.15 0 0);
+    --primary: oklch(0.9 0.19 105);
+    --primary-foreground: oklch(0.15 0 0);
+    --secondary: oklch(0.55 0.22 265);
+    --secondary-foreground: oklch(0.98 0 0);
+    --accent: oklch(0.63 0.24 30);
+    --accent-foreground: oklch(0.98 0 0);
+    --muted: oklch(0.92 0.01 95);
+    --muted-foreground: oklch(0.4 0 0);
+    --border: oklch(0.15 0 0);
+    --input: oklch(0.15 0 0);
+    --ring: oklch(0.55 0.22 265);
+  }
+
+  .theme-editorial {
+    color-scheme: light;
+    --background: oklch(0.96 0.02 85);
+    --foreground: oklch(0.2 0.02 60);
+    --card: oklch(0.98 0.015 85);
+    --card-foreground: oklch(0.2 0.02 60);
+    --primary: oklch(0.52 0.2 28);
+    --primary-foreground: oklch(0.97 0.02 85);
+    --secondary: oklch(0.2 0.02 60);
+    --secondary-foreground: oklch(0.96 0.02 85);
+    --accent: oklch(0.52 0.2 28);
+    --accent-foreground: oklch(0.97 0.02 85);
+    --muted: oklch(0.92 0.02 85);
+    --muted-foreground: oklch(0.45 0.02 60);
+    --border: oklch(0.2 0.02 60 / 25%);
+    --input: oklch(0.2 0.02 60 / 25%);
+    --ring: oklch(0.52 0.2 28);
+  }
+
+  .theme-terminal {
+    color-scheme: dark;
+    font-family: var(--font-terminal), monospace;
+    --background: oklch(0.12 0.01 150);
+    --foreground: oklch(0.86 0.2 145);
+    --card: oklch(0.15 0.015 150);
+    --card-foreground: oklch(0.86 0.2 145);
+    --primary: oklch(0.86 0.2 145);
+    --primary-foreground: oklch(0.12 0.01 150);
+    --secondary: oklch(0.2 0.03 150);
+    --secondary-foreground: oklch(0.86 0.2 145);
+    --accent: oklch(0.82 0.16 80);
+    --accent-foreground: oklch(0.12 0.01 150);
+    --muted: oklch(0.18 0.02 150);
+    --muted-foreground: oklch(0.62 0.12 145);
+    --border: oklch(0.86 0.2 145 / 30%);
+    --input: oklch(0.86 0.2 145 / 30%);
+    --ring: oklch(0.82 0.16 80);
+  }
+
+  .theme-swiss {
+    color-scheme: light;
+    font-family: var(--font-swiss), sans-serif;
+    --background: oklch(0.98 0 0);
+    --foreground: oklch(0.13 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.13 0 0);
+    --primary: oklch(0.58 0.23 28);
+    --primary-foreground: oklch(0.99 0 0);
+    --secondary: oklch(0.13 0 0);
+    --secondary-foreground: oklch(0.98 0 0);
+    --accent: oklch(0.58 0.23 28);
+    --accent-foreground: oklch(0.99 0 0);
+    --muted: oklch(0.94 0 0);
+    --muted-foreground: oklch(0.45 0 0);
+    --border: oklch(0.13 0 0);
+    --input: oklch(0.13 0 0);
+    --ring: oklch(0.58 0.23 28);
+  }
+
+  .theme-riso {
+    color-scheme: light;
+    font-family: var(--font-riso), sans-serif;
+    --background: oklch(0.95 0.02 90);
+    --foreground: oklch(0.38 0.15 262);
+    --card: oklch(0.97 0.015 90);
+    --card-foreground: oklch(0.38 0.15 262);
+    --primary: oklch(0.7 0.22 0);
+    --primary-foreground: oklch(0.22 0.08 262);
+    --secondary: oklch(0.52 0.19 258);
+    --secondary-foreground: oklch(0.97 0.015 90);
+    --accent: oklch(0.88 0.17 95);
+    --accent-foreground: oklch(0.22 0.08 262);
+    --muted: oklch(0.9 0.03 90);
+    --muted-foreground: oklch(0.45 0.1 262);
+    --border: oklch(0.38 0.15 262);
+    --input: oklch(0.38 0.15 262);
+    --ring: oklch(0.7 0.22 0);
+  }
+
+  .theme-blueprint {
+    color-scheme: dark;
+    font-family: var(--font-blueprint), monospace;
+    --background: oklch(0.4 0.13 258);
+    --foreground: oklch(0.97 0.01 250);
+    --card: oklch(0.36 0.12 258);
+    --card-foreground: oklch(0.97 0.01 250);
+    --primary: oklch(0.97 0.01 250);
+    --primary-foreground: oklch(0.36 0.12 258);
+    --secondary: oklch(0.47 0.12 255);
+    --secondary-foreground: oklch(0.97 0.01 250);
+    --accent: oklch(0.88 0.16 95);
+    --accent-foreground: oklch(0.3 0.1 258);
+    --muted: oklch(0.45 0.12 258);
+    --muted-foreground: oklch(0.84 0.05 250);
+    --border: oklch(0.97 0.01 250 / 45%);
+    --input: oklch(0.97 0.01 250 / 45%);
+    --ring: oklch(0.88 0.16 95);
+  }
+
+  /* Per-style display fonts, used with the `font-display` class. */
+  .theme-brutalist .font-display { font-family: var(--font-brutalist-display), sans-serif; }
+  .theme-editorial .font-display { font-family: var(--font-editorial), serif; }
+  .theme-terminal .font-display { font-family: var(--font-terminal), monospace; }
+  .theme-swiss .font-display { font-family: var(--font-swiss), sans-serif; }
+  .theme-riso .font-display { font-family: var(--font-riso), sans-serif; }
+  .theme-blueprint .font-display { font-family: var(--font-blueprint-display), sans-serif; }
+
+  /* ── Pong demo (CSS only: deterministic, no hydration issue) ── */
+
+  .pong-demo {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    --ball: 4%;
+  }
+  .pong-net {
+    position: absolute;
+    inset: 6% auto 6% 50%;
+    border-left: 2px dashed currentColor;
+    opacity: 0.4;
+  }
+  .pong-ball {
+    position: absolute;
+    width: var(--ball);
+    aspect-ratio: 1;
+    translate: 0 -50%;
+    animation:
+      pong-x 2.2s linear infinite alternate,
+      pong-y 1.5s linear infinite alternate;
+  }
+  .pong-paddle {
+    position: absolute;
+    width: 2.5%;
+    height: 24%;
+    translate: 0 -50%;
+    animation: pong-y 1.5s linear infinite alternate;
+  }
+  .pong-paddle-left { left: 3%; }
+  .pong-paddle-right { right: 3%; animation-delay: -0.15s; }
+
+  @keyframes pong-x {
+    from { left: 5.5%; }
+    to { left: calc(94.5% - var(--ball)); }
+  }
+  @keyframes pong-y {
+    from { top: 12%; }
+    to { top: 88%; }
+  }
+
+  /* ── Brutalist ── */
+
+  .brutal-shadow { box-shadow: 6px 6px 0 0 var(--foreground); }
+  .brutal-shadow-sm { box-shadow: 4px 4px 0 0 var(--foreground); }
+  .brutal-marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee 18s linear infinite;
+  }
+
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── Editorial ── */
+
+  .editorial-dropcap::first-letter {
+    float: left;
+    margin: 0.1em 0.12em 0 0;
+    font-family: var(--font-editorial), serif;
+    font-size: 4.2em;
+    line-height: 0.8;
+    color: var(--primary);
+  }
+  .editorial-columns {
+    columns: 2 18rem;
+    column-gap: 2.5rem;
+    column-rule: 1px solid var(--border);
+  }
+
+  /* ── Terminal ── */
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  .terminal-glow {
+    text-shadow: 0 0 6px color-mix(in oklch, var(--foreground) 60%, transparent);
+  }
+  .terminal-cursor {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.1em;
+    vertical-align: text-bottom;
+    background: var(--foreground);
+    animation: blink 1s steps(1) infinite;
+  }
+  .terminal-crt {
+    background:
+      radial-gradient(
+        ellipse at center,
+        color-mix(in oklch, var(--foreground) 6%, transparent),
+        transparent 70%
+      ),
+      var(--card);
+  }
+
+  /* ── Swiss ── */
+
+  .swiss-vertical { writing-mode: vertical-rl; rotate: 180deg; }
+
+  /* ── Riso ── */
+
+  .riso-ink { mix-blend-mode: multiply; }
+  .riso-halftone {
+    background-image: radial-gradient(currentColor 32%, transparent 34%);
+    background-size: 9px 9px;
+  }
+  .riso-grain { position: relative; isolation: isolate; }
+  .riso-grain::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0.18;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* Two ink passes slightly out of register. */
+  .riso-misprint { position: relative; }
+  .riso-misprint > :last-child {
+    position: absolute;
+    inset: 0;
+    translate: 0.06em 0.05em;
+  }
+  .riso-float { animation: riso-float 6s ease-in-out infinite alternate; }
+
+  @keyframes riso-float {
+    to { translate: 0 -10px; rotate: 4deg; }
+  }
+
+  /* ── Blueprint ── */
+
+  .blueprint-grid {
+    background-image:
+      linear-gradient(color-mix(in oklch, var(--foreground) 22%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in oklch, var(--foreground) 22%, transparent) 1px, transparent 1px),
+      linear-gradient(color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px);
+    background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pong-ball,
+    .pong-paddle,
+    .brutal-marquee,
+    .terminal-cursor,
+    .riso-float {
+      animation: none;
+    }
+  }
+}

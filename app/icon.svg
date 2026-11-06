@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .block { fill: oklch(0.13 0 0); }
+    .bar { fill: oklch(0.985 0 0); }
+    .ball { fill: oklch(0.58 0.23 28); }
+    @media (prefers-color-scheme: dark) {
+      .block { fill: oklch(0.97 0 0); }
+      .bar { fill: oklch(0.145 0 0); }
+      .ball { fill: oklch(0.64 0.22 28); }
+    }
+  </style>
+  <rect class="block" width="32" height="32" />
+  <rect class="bar" x="4" y="15" width="16" height="5" />
+  <rect class="bar" x="4" y="23" width="11" height="5" />
+  <circle class="ball" cx="24" cy="8" r="4.5" />
+</svg>

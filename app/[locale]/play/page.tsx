@@ -1,17 +1,11 @@
+import { ArrowRightIcon } from "@phosphor-icons/react/ssr"
 import type { Metadata } from "next"
 import type { Locale } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { ButtonLink } from "@/components/button-link"
+import { PageHeader } from "@/components/page-header"
 import { Badge } from "@/components/ui/badge"
-import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 
 // Only the local mode is playable for now; the others need the game server.
 const modes = [
@@ -35,32 +29,36 @@ export default async function PlayPage({ params }: PageProps<"/[locale]/play">) 
   const t = await getTranslations("Play")
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("description")}</p>
-      </div>
+    <div className="flex flex-col gap-10">
+      <PageHeader title={t("title")} description={t("description")} />
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {modes.map(({ key, href }) => (
-          <Card key={key}>
-            <CardHeader>
-              <CardTitle>{t(`modes.${key}.title`)}</CardTitle>
-              <CardDescription>{t(`modes.${key}.description`)}</CardDescription>
-              {!href && (
-                <CardAction>
-                  <Badge variant="secondary">{t("soon")}</Badge>
-                </CardAction>
-              )}
-            </CardHeader>
+      <ol className="grid gap-x-8 gap-y-10 sm:grid-cols-2">
+        {modes.map(({ key, href }, index) => (
+          <li
+            key={key}
+            className="flex flex-col gap-4 border-t-2 border-foreground pt-4"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <span className="text-5xl font-black tracking-tighter text-primary">
+                0{index + 1}
+              </span>
+              {!href && <Badge variant="outline">{t("soon")}</Badge>}
+            </div>
+            <div className="flex flex-col gap-1">
+              <h2 className="text-2xl font-bold tracking-tight">
+                {t(`modes.${key}.title`)}
+              </h2>
+              <p className="text-muted-foreground">{t(`modes.${key}.description`)}</p>
+            </div>
             {href && (
-              <CardFooter>
-                <ButtonLink href={href}>{t("start")}</ButtonLink>
-              </CardFooter>
+              <ButtonLink href={href} size="lg" className="h-11 w-fit px-5 text-sm font-semibold">
+                {t("start")}
+                <ArrowRightIcon weight="bold" aria-hidden />
+              </ButtonLink>
             )}
-          </Card>
+          </li>
         ))}
-      </div>
+      </ol>
     </div>
   )
 }

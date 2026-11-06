@@ -3,6 +3,7 @@ import type { Locale } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { ButtonLink } from "@/components/button-link"
+import { PageHeader } from "@/components/page-header"
 import { LocalPong } from "@/components/pong/local-pong"
 
 export async function generateMetadata({
@@ -21,16 +22,16 @@ export default async function LocalGamePage({
   const t = await getTranslations("Game")
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <h1 className="text-2xl font-bold">{t("title")}</h1>
-          <p className="text-sm text-muted-foreground">{t("controls")}</p>
-        </div>
-        <ButtonLink href="/play" variant="outline">
-          {t("back")}
-        </ButtonLink>
-      </div>
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        title={t("title")}
+        description={t("controls")}
+        actions={
+          <ButtonLink href="/play" variant="outline" size="lg" className="h-10 px-4 text-sm">
+            {t("back")}
+          </ButtonLink>
+        }
+      />
       <LocalPong />
     </div>
   )

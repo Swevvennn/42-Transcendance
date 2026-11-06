@@ -1,6 +1,6 @@
 {
   "Metadata": {
-    "title": "Transcendence",
+    "title": "Pongo",
     "description": "Play Pong online with your friends."
   },
   "Nav": {
@@ -9,7 +9,8 @@
     "leaderboard": "Leaderboard",
     "profile": "Profile",
     "login": "Log in",
-    "signup": "Sign up"
+    "signup": "Sign up",
+    "theme": "Toggle light / dark theme"
   },
   "LocaleSwitcher": {
     "label": "Language",
@@ -17,12 +18,12 @@
     "fr": "Français"
   },
   "Footer": {
-    "rights": "© 2026 Transcendence — 42 Le Havre project",
+    "rights": "© 2026 Pongo — 42 Le Havre project",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service"
   },
   "Home": {
-    "title": "Transcendence",
+    "title": "Pongo",
     "subtitle": "The classic Pong, online. Challenge your friends, the AI, or enter a tournament.",
     "play": "Play now",
     "signup": "Create an account",
@@ -39,7 +40,16 @@
         "title": "Tournaments",
         "description": "Compete with several players and climb the leaderboard."
       }
-    }
+    },
+    "kicker": "Real-time Pong",
+    "headline": "Pongo",
+    "tagline": "One ball. Two players. Zero decoration.",
+    "vertical": "Pongo — 42 Le Havre",
+    "featuresTitle": "Program",
+    "attractHint": "Move your cursor over the court to take the right paddle.",
+    "introSfx": "SMASH!",
+    "introSkip": "Skip intro",
+    "introLoading": "Loading"
   },
   "Auth": {
     "email": "Email",
@@ -138,7 +148,7 @@
   },
   "Leaderboard": {
     "title": "Leaderboard",
-    "description": "The best players on Transcendence.",
+    "description": "The best players on Pongo.",
     "rank": "Rank",
     "player": "Player",
     "wins": "Wins",
@@ -177,7 +187,7 @@
     "sections": {
       "acceptance": {
         "title": "Acceptance",
-        "body": "By creating an account or using Transcendence, you agree to these terms. If you do not agree, please do not use the service."
+        "body": "By creating an account or using Pongo, you agree to these terms. If you do not agree, please do not use the service."
       },
       "account": {
         "title": "Your account",
@@ -189,7 +199,7 @@
       },
       "service": {
         "title": "Service availability",
-        "body": "Transcendence is a student project provided as is, without any guarantee of availability. Features may change or be removed at any time."
+        "body": "Pongo is a student project provided as is, without any guarantee of availability. Features may change or be removed at any time."
       },
       "changes": {
         "title": "Changes",
@@ -201,5 +211,191 @@
     "title": "Page not found",
     "description": "The page you are looking for does not exist.",
     "back": "Back to home"
+  },
+  "Templates": {
+    "title": "Style lab",
+    "description": "Animation ideas for the Pongo landing page, plus the earlier style experiments.",
+    "notice": "Experimental pages: they are not linked from the main navigation.",
+    "open": "Open",
+    "back": "All templates",
+    "fontLine": "Font: {font}",
+    "styles": {
+      "brutalist": {
+        "name": "Brutalist",
+        "description": "Raw borders, huge type, hard shadows. No gradients, no apologies.",
+        "font": "Archivo Black + Space Grotesk",
+        "kicker": "Pong. No frills.",
+        "headline": "Hit the ball. Beat your friends.",
+        "tagline": "A browser game made at 42 Le Havre. Real time, ranked, free.",
+        "marquee": "Online matches · AI opponent · Tournaments · Leaderboard ·",
+        "featuresTitle": "What you get"
+      },
+      "editorial": {
+        "name": "Editorial",
+        "description": "A sports magazine on paper: serif headlines, columns and a drop cap.",
+        "font": "Instrument Serif",
+        "masthead": "The Pongo Gazette",
+        "issue": "Issue nº 42 · Le Havre",
+        "section": "Sport",
+        "headline": "The oldest video game is back, and it wants a rematch",
+        "lede": "Fifty years after its first rally, Pong returns to the browser. Our reporters played hundreds of matches against friends, strangers and a suspiciously human AI. Here is what they found: the rules have not changed, but the stakes have. Every point counts on the leaderboard, every tournament has a winner, and every defeat comes with a rematch button.",
+        "featuresTitle": "In this issue"
+      },
+      "terminal": {
+        "name": "Terminal",
+        "description": "Green phosphor shell, ASCII court and a blinking cursor.",
+        "font": "JetBrains Mono",
+        "command": "./pongo --mode online",
+        "boot": "Booting game server…",
+        "ready": "Ready. 3 players waiting in queue.",
+        "ok": "OK",
+        "featuresTitle": "Available modes",
+        "hint": "Pick a command below to continue."
+      },
+      "swiss": {
+        "name": "Swiss",
+        "description": "International Typographic Style: strict grid, one red circle, nothing extra.",
+        "font": "Inter Tight",
+        "kicker": "Real-time Pong",
+        "headline": "Pongo",
+        "tagline": "One ball. Two players. Zero decoration.",
+        "vertical": "Pongo — 42 Le Havre",
+        "featuresTitle": "Program"
+      },
+      "riso": {
+        "name": "Riso zine",
+        "description": "Two-ink risograph print: pink and blue overprint, halftones, paper grain.",
+        "font": "Bricolage Grotesque",
+        "kicker": "Zine nº 1 · Printed at home",
+        "headline": "Pong is a sport",
+        "tagline": "Grab a paddle, call a friend, and make some noise in the cluster.",
+        "sticker": "Free to play!",
+        "featuresTitle": "Inside this zine"
+      },
+      "blueprint": {
+        "name": "Blueprint",
+        "description": "Technical drawing: grid paper, dimension lines and a title block.",
+        "font": "IBM Plex Sans Condensed + Plex Mono",
+        "figure": "Fig. 1 — Court, top view",
+        "paddle": "Paddle",
+        "ball": "Ball",
+        "net": "Net",
+        "featuresTitle": "Specifications",
+        "project": "Project",
+        "drawnBy": "Drawn by",
+        "drawnByValue": "Team 42 Le Havre",
+        "sheet": "Sheet",
+        "scale": "Scale",
+        "revision": "Rev."
+      }
+    },
+    "motionTitle": "Landing animations",
+    "motionDescription": "The same Swiss landing page with different kinds of motion. The first three are 3D anime intros. Open one, hit Replay, pick a favorite.",
+    "stylesTitle": "Earlier style experiments",
+    "replay": "Replay",
+    "motion": {
+      "gym": {
+        "name": "3D · School gym",
+        "description": "Two school boys in a cel-shaded gym. The camera starts above the table like a game of Pong, tilts down into the action, then cuts between the players, dolly-zooms on the jump and orbits the smash in bullet time."
+      },
+      "rooftop": {
+        "name": "3D · Sunset rooftop",
+        "description": "A school rooftop at sunset with cherry petals in the air. A slow crane down, a low tracking shot, the hero jumping in silhouette against the sun and a full 360° orbit when time stops."
+      },
+      "manga": {
+        "name": "3D · Manga",
+        "description": "Black-and-white screentone shading in a club room. You see the rally through each player’s eyes, from the net and from above, then the camera rides the ball into the sky."
+      },
+      "anime": {
+        "name": "2D anime intro",
+        "description": "A loading screen, then a flat anime-style rally with an eye close-up and an impact frame. The final smash sends the red ball into the Swiss block logo."
+      },
+      "kinetic": {
+        "name": "Kinetic",
+        "description": "Letters rise one by one, the red period drops in and bounces like a ball."
+      },
+      "rally": {
+        "name": "Rally",
+        "description": "The abstract court plays by itself: a red ball with a motion trail and paddles that track it."
+      },
+      "assemble": {
+        "name": "Assemble",
+        "description": "A Swiss poster builds itself: the grid draws in, then blocks wipe into place."
+      },
+      "attract": {
+        "name": "Attract mode",
+        "description": "A live AI vs AI match in the hero, like an arcade cabinet. Hover the court to play."
+      }
+    },
+    "logosTitle": "Logo designs",
+    "logosDescription": "Five directions for the Pongo mark, each shown from poster size down to a 16 px favicon. Small sizes switch to the icon version.",
+    "logoFull": "Logo",
+    "logoIcon": "Icon",
+    "logoInverted": "Inverted",
+    "sizePx": "{size} px",
+    "logos": {
+      "ballO": {
+        "name": "Ball in the o",
+        "description": "The red ball sits in the first “o”."
+      },
+      "point": {
+        "name": "Full stop",
+        "description": "The current mark: the name in black, closed by a red full stop."
+      },
+      "paddle": {
+        "name": "Paddle P",
+        "description": "The “P” is a paddle and a ball: a bar for the stem, the red circle for the bowl."
+      },
+      "court": {
+        "name": "Court",
+        "description": "A tiny court with two paddles and the ball, next to a lowercase name."
+      },
+      "stack": {
+        "name": "Swiss block",
+        "description": "The name split on two lines in a solid square, with the ball on the grid."
+      }
+    },
+    "characters": {
+      "title": "Character lab",
+      "description": "3D prototypes of the two school boys in five model styles. Turn them, switch the pose and the screentone, then pick the one to animate in the manga intro.",
+      "open": "Open the character lab",
+      "pose": "Pose",
+      "poses": {
+        "ready": "Ready",
+        "swing": "Forehand",
+        "smash": "Jump smash"
+      },
+      "screentone": "Manga screentone",
+      "hint": "Drag a model to turn it.",
+      "hero": "Hero",
+      "rival": "Rival",
+      "styles": {
+        "classic": {
+          "name": "Classic",
+          "description": "The models of the gym and rooftop intros, for comparison: rounder faces, simple hair."
+        },
+        "sharp": {
+          "name": "Sharp manga",
+          "description": "Taller manga proportions, V-shaped torso, pointed chin, slanted brows, many sharp hair spikes. Hexagonal limbs, diamond joints and angular shadows in the screentone. Used in the manga intro."
+        },
+        "lowpoly": {
+          "name": "Low-poly",
+          "description": "The sharp models with flat facets and no outlines, like an early 3D anime game."
+        },
+        "chibi": {
+          "name": "Chibi",
+          "description": "Big heads, tiny bodies, huge round eyes and round glasses. Cute rather than fierce."
+        },
+        "ink": {
+          "name": "Ink silhouette",
+          "description": "Long-legged black silhouettes with white outlines and eye slits; only the red details stand out. Made for the screentone."
+        }
+      },
+      "view": "View",
+      "views": {
+        "body": "Full body",
+        "face": "Faces"
+      }
+    }
   }
 }

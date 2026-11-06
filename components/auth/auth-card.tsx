@@ -1,17 +1,10 @@
 import { useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { FieldSeparator } from "@/components/ui/field"
 
-// Shared frame for the login and signup pages.
+// Shared frame for the login and signup pages: big title on the left,
+// form on the right.
 export function AuthCard({
   title,
   description,
@@ -26,22 +19,24 @@ export function AuthCard({
   const t = useTranslations("Auth")
 
   return (
-    <Card className="mx-auto w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>
-          <h1>{title}</h1>
-        </CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+    <div className="grid gap-10 md:grid-cols-12">
+      <header className="flex flex-col gap-4 border-t-2 border-foreground pt-4 md:col-span-6">
+        <h1 className="text-5xl leading-[0.9] font-bold tracking-tighter sm:text-7xl">
+          {title}
+          <span className="text-primary">.</span>
+        </h1>
+        <p className="max-w-sm text-muted-foreground">{description}</p>
+      </header>
+
+      <div className="flex flex-col gap-4 border-t-2 border-foreground pt-4 md:col-span-5 md:col-start-8">
         {children}
         <FieldSeparator>{t("or")}</FieldSeparator>
         {/* OAuth 42 will be wired with Better Auth. */}
-        <Button variant="outline" className="w-full" disabled>
+        <Button variant="outline" size="lg" className="h-10 w-full" disabled>
           {t("oauth42")}
         </Button>
-      </CardContent>
-      <CardFooter className="justify-center gap-1 text-xs">{footer}</CardFooter>
-    </Card>
+        <p className="flex justify-center gap-1 text-xs">{footer}</p>
+      </div>
+    </div>
   )
 }

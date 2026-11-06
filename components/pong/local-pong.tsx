@@ -161,8 +161,10 @@ export function LocalPong() {
 
     const draw = () => {
       const s = stateRef.current
-      // Colors come from the theme through the canvas' CSS.
-      const fg = getComputedStyle(canvas).color
+      // Colors come from the theme through the canvas' CSS (ball = --primary).
+      const style = getComputedStyle(canvas)
+      const fg = style.color
+      const ball = style.getPropertyValue("--primary").trim() || fg
       ctx.clearRect(0, 0, WIDTH, HEIGHT)
       ctx.fillStyle = fg
 
@@ -174,7 +176,10 @@ export function LocalPong() {
 
       ctx.fillRect(PADDLE_MARGIN, s.leftY, PADDLE_W, PADDLE_H)
       ctx.fillRect(WIDTH - PADDLE_MARGIN - PADDLE_W, s.rightY, PADDLE_W, PADDLE_H)
-      ctx.fillRect(s.ballX, s.ballY, BALL_SIZE, BALL_SIZE)
+      ctx.fillStyle = ball
+      ctx.beginPath()
+      ctx.arc(s.ballX + BALL_SIZE / 2, s.ballY + BALL_SIZE / 2, BALL_SIZE / 2, 0, Math.PI * 2)
+      ctx.fill()
     }
 
     let frame = 0
@@ -213,14 +218,22 @@ export function LocalPong() {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex justify-between text-sm">
-        <span className="flex gap-2">
-          <span>{t("left")}</span>
-          <strong>{score.left}</strong>
+      <div className="flex items-end justify-between">
+        <span className="flex flex-col">
+          <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+            {t("left")}
+          </span>
+          <strong className="text-5xl font-black tracking-tighter tabular-nums">
+            {score.left}
+          </strong>
         </span>
-        <span className="flex gap-2">
-          <strong>{score.right}</strong>
-          <span>{t("right")}</span>
+        <span className="flex flex-col items-end">
+          <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+            {t("right")}
+          </span>
+          <strong className="text-5xl font-black tracking-tighter tabular-nums">
+            {score.right}
+          </strong>
         </span>
       </div>
       <div className="relative">
@@ -228,11 +241,11 @@ export function LocalPong() {
           ref={canvasRef}
           width={WIDTH}
           height={HEIGHT}
-          className="aspect-[8/5] w-full border bg-muted text-foreground"
+          className="aspect-[8/5] w-full border-2 border-foreground bg-card text-foreground"
         />
         {message && (
           <p className="absolute inset-0 flex items-center justify-center p-4 text-center text-sm font-medium">
-            <span className="bg-background/80 px-3 py-2">{message}</span>
+            <span className="bg-foreground px-4 py-2 font-semibold text-background">{message}</span>
           </p>
         )}
       </div>
