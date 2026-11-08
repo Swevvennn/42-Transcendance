@@ -218,7 +218,7 @@ export function LocalPong() {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-end justify-between">
+      <div dir="ltr" className="flex items-end justify-between">
         <span className="flex flex-col">
           <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
             {t("left")}

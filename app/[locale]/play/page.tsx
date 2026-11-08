@@ -39,7 +39,7 @@ export default async function PlayPage({ params }: PageProps<"/[locale]/play">) 
             className="flex flex-col gap-4 border-t-2 border-foreground pt-4"
           >
             <div className="flex items-start justify-between gap-4">
-              <span className="text-5xl font-black tracking-tighter text-primary">
+              <span className="text-5xl font-black tracking-tighter">
                 0{index + 1}
               </span>
               {!href && <Badge variant="outline">{t("soon")}</Badge>}
@@ -53,7 +53,7 @@ export default async function PlayPage({ params }: PageProps<"/[locale]/play">) 
             {href && (
               <ButtonLink href={href} size="lg" className="h-11 w-fit px-5 text-sm font-semibold">
                 {t("start")}
-                <ArrowRightIcon weight="bold" aria-hidden />
+                <ArrowRightIcon weight="bold" className="rtl:rotate-180" aria-hidden />
               </ButtonLink>
             )}
           </li>

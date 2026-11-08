@@ -10,12 +10,16 @@
     "profile": "Profil",
     "login": "Connexion",
     "signup": "Inscription",
-    "theme": "Basculer entre thème clair et sombre"
+    "theme": "Basculer entre thème clair et sombre",
+    "menu": "Menu principal",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu"
   },
   "LocaleSwitcher": {
     "label": "Langue",
     "en": "English",
-    "fr": "Français"
+    "fr": "Français",
+    "ar": "العربية"
   },
   "Footer": {
     "rights": "© 2026 Pongo — projet 42 Le Havre",

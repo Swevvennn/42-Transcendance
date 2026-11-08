@@ -9,9 +9,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter-tight);
+  --font-sans: var(--font-inter-tight), var(--font-arabic), sans-serif;
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-inter-tight);
+  --font-heading: var(--font-inter-tight), var(--font-arabic), sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -51,80 +51,82 @@
 }
 
 /*
- * Swiss theme (International Typographic Style): black, white and one red.
- * Square corners, strong rules. `--border` stays subtle for tables and inputs;
+ * Swiss theme (International Typographic Style): black, cream and one red,
+ * kept for what matters (main action, ball, errors). Dark mode is the same
+ * palette dimmed, never inverted. Square corners, strong rules. `--border` stays subtle for tables and inputs;
  * use `border-foreground` for the thick Swiss rules.
  */
 /* `.light` forces the light palette inside dark mode (the anime intros always
  * play in the light colors, see components/landing/anime3d/intro.tsx). */
 :root,
 .light {
-  --background: oklch(0.985 0 0);
-  --foreground: oklch(0.13 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.13 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.13 0 0);
-  --primary: oklch(0.58 0.23 28);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.13 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.945 0 0);
-  --muted-foreground: oklch(0.45 0 0);
-  --accent: oklch(0.945 0 0);
-  --accent-foreground: oklch(0.13 0 0);
+  --background: oklch(0.95 0.025 88);
+  --foreground: oklch(0.15 0.005 70);
+  --card: oklch(0.975 0.015 88);
+  --card-foreground: oklch(0.15 0.005 70);
+  --popover: oklch(0.975 0.015 88);
+  --popover-foreground: oklch(0.15 0.005 70);
+  --primary: oklch(0.53 0.2 28);
+  --primary-foreground: oklch(0.95 0.025 88);
+  --secondary: oklch(0.15 0.005 70);
+  --secondary-foreground: oklch(0.95 0.025 88);
+  --muted: oklch(0.91 0.03 86);
+  --muted-foreground: oklch(0.42 0.02 75);
+  --accent: oklch(0.91 0.03 86);
+  --accent-foreground: oklch(0.15 0.005 70);
   --destructive: oklch(0.5 0.2 28);
-  --border: oklch(0.13 0 0 / 16%);
-  --input: oklch(0.13 0 0 / 30%);
-  --ring: oklch(0.58 0.23 28);
-  --chart-1: oklch(0.58 0.23 28);
-  --chart-2: oklch(0.13 0 0);
-  --chart-3: oklch(0.45 0 0);
-  --chart-4: oklch(0.65 0 0);
-  --chart-5: oklch(0.85 0 0);
+  --border: oklch(0.15 0.005 70 / 18%);
+  --input: oklch(0.15 0.005 70 / 32%);
+  --ring: oklch(0.15 0.005 70);
+  --chart-1: oklch(0.53 0.2 28);
+  --chart-2: oklch(0.15 0.005 70);
+  --chart-3: oklch(0.42 0.02 75);
+  --chart-4: oklch(0.62 0.025 80);
+  --chart-5: oklch(0.82 0.03 85);
   --radius: 0rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.13 0 0);
-  --sidebar-primary: oklch(0.58 0.23 28);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.945 0 0);
-  --sidebar-accent-foreground: oklch(0.13 0 0);
-  --sidebar-border: oklch(0.13 0 0 / 16%);
-  --sidebar-ring: oklch(0.58 0.23 28);
+  --sidebar: oklch(0.95 0.025 88);
+  --sidebar-foreground: oklch(0.15 0.005 70);
+  --sidebar-primary: oklch(0.53 0.2 28);
+  --sidebar-primary-foreground: oklch(0.95 0.025 88);
+  --sidebar-accent: oklch(0.91 0.03 86);
+  --sidebar-accent-foreground: oklch(0.15 0.005 70);
+  --sidebar-border: oklch(0.15 0.005 70 / 18%);
+  --sidebar-ring: oklch(0.15 0.005 70);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.97 0 0);
-  --card: oklch(0.185 0 0);
-  --card-foreground: oklch(0.97 0 0);
-  --popover: oklch(0.185 0 0);
-  --popover-foreground: oklch(0.97 0 0);
-  --primary: oklch(0.64 0.22 28);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.145 0 0);
-  --muted: oklch(0.22 0 0);
-  --muted-foreground: oklch(0.7 0 0);
-  --accent: oklch(0.22 0 0);
-  --accent-foreground: oklch(0.97 0 0);
-  --destructive: oklch(0.68 0.19 25);
-  --border: oklch(0.97 0 0 / 16%);
-  --input: oklch(0.97 0 0 / 25%);
-  --ring: oklch(0.64 0.22 28);
-  --chart-1: oklch(0.64 0.22 28);
-  --chart-2: oklch(0.97 0 0);
-  --chart-3: oklch(0.7 0 0);
-  --chart-4: oklch(0.5 0 0);
-  --chart-5: oklch(0.3 0 0);
-  --sidebar: oklch(0.185 0 0);
-  --sidebar-foreground: oklch(0.97 0 0);
-  --sidebar-primary: oklch(0.64 0.22 28);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.22 0 0);
-  --sidebar-accent-foreground: oklch(0.97 0 0);
-  --sidebar-border: oklch(0.97 0 0 / 16%);
-  --sidebar-ring: oklch(0.64 0.22 28);
+  /* The light theme with the light turned down, not inverted. */
+  --background: oklch(0.6 0.04 78);
+  --foreground: oklch(0.13 0.005 70);
+  --card: oklch(0.64 0.036 78);
+  --card-foreground: oklch(0.13 0.005 70);
+  --popover: oklch(0.64 0.036 78);
+  --popover-foreground: oklch(0.13 0.005 70);
+  --primary: oklch(0.36 0.15 28);
+  --primary-foreground: oklch(0.82 0.04 80);
+  --secondary: oklch(0.13 0.005 70);
+  --secondary-foreground: oklch(0.6 0.04 78);
+  --muted: oklch(0.56 0.042 76);
+  --muted-foreground: oklch(0.17 0.015 70);
+  --accent: oklch(0.56 0.042 76);
+  --accent-foreground: oklch(0.13 0.005 70);
+  --destructive: oklch(0.26 0.12 28);
+  --border: oklch(0.13 0.005 70 / 22%);
+  --input: oklch(0.13 0.005 70 / 36%);
+  --ring: oklch(0.13 0.005 70);
+  --chart-1: oklch(0.36 0.15 28);
+  --chart-2: oklch(0.13 0.005 70);
+  --chart-3: oklch(0.17 0.015 70);
+  --chart-4: oklch(0.42 0.02 80);
+  --chart-5: oklch(0.55 0.025 85);
+  --sidebar: oklch(0.6 0.04 78);
+  --sidebar-foreground: oklch(0.13 0.005 70);
+  --sidebar-primary: oklch(0.36 0.15 28);
+  --sidebar-primary-foreground: oklch(0.82 0.04 80);
+  --sidebar-accent: oklch(0.56 0.042 76);
+  --sidebar-accent-foreground: oklch(0.13 0.005 70);
+  --sidebar-border: oklch(0.13 0.005 70 / 22%);
+  --sidebar-ring: oklch(0.13 0.005 70);
 }
 
 @layer base {
@@ -137,9 +139,6 @@
   html {
     @apply font-sans;
     color-scheme: light;
-  }
-  html.dark {
-    color-scheme: dark;
   }
 }
 /*
@@ -164,4 +163,17 @@
     border-radius: 9999px;
     background: var(--primary);
   }
+}
+
+/*
+ * Arabic (RTL). Unlayered, so these beat Tailwind's utilities.
+ * Letter-spacing breaks the joins between Arabic letters; latin brand elements
+ * marked dir="ltr" keep theirs. Emails and passwords are typed left to right.
+ */
+[dir="rtl"] :not([dir="ltr"], [dir="ltr"] *) {
+  letter-spacing: 0;
+}
+[dir="rtl"] :is(input[type="email"], input[type="password"]) {
+  direction: ltr;
+  text-align: right;
 }

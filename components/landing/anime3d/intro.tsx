@@ -142,8 +142,8 @@ export function Anime3DIntro({
         const cy = target.top + target.height / 2
         const startX = from.left + from.width / 2 - cx
         const startY = from.top + from.height / 2 - cy
-        const midX = width / 2 - cx
-        const midY = height / 2 - cy
+        const midX = window.innerWidth / 2 - cx
+        const midY = window.innerHeight / 2 - cy
         const s0 = from.width / target.width
         fly.animate(
           [
@@ -402,6 +402,7 @@ export function Anime3DIntro({
     <>
     <div
       ref={rootRef}
+      dir="ltr"
       className="lp-intro fixed inset-0 z-[100] bg-background text-foreground"
       data-phase={phase}
       data-exit={variant === "manga" ? "fade" : undefined}

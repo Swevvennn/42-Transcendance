@@ -106,7 +106,7 @@ export default async function ProfilePage({
                 <TableHead className="text-xs tracking-widest uppercase">{t("history.opponent")}</TableHead>
                 <TableHead className="text-xs tracking-widest uppercase">{t("history.score")}</TableHead>
                 <TableHead className="text-xs tracking-widest uppercase">{t("history.result")}</TableHead>
-                <TableHead className="text-right text-xs tracking-widest uppercase">{t("history.date")}</TableHead>
+                <TableHead className="text-end text-xs tracking-widest uppercase">{t("history.date")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -123,7 +123,7 @@ export default async function ProfilePage({
                         {won ? t("history.win") : t("history.loss")}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right text-muted-foreground">
+                    <TableCell className="text-end text-muted-foreground">
                       {format.dateTime(new Date(match.date), { dateStyle: "medium" })}
                     </TableCell>
                   </TableRow>

@@ -46,9 +46,9 @@ export default async function LeaderboardPage({
           <TableRow className="border-b-2 border-foreground hover:bg-transparent">
             <TableHead className="w-20 text-xs tracking-widest uppercase">{t("rank")}</TableHead>
             <TableHead className="text-xs tracking-widest uppercase">{t("player")}</TableHead>
-            <TableHead className="text-right text-xs tracking-widest uppercase">{t("level")}</TableHead>
-            <TableHead className="text-right text-xs tracking-widest uppercase">{t("wins")}</TableHead>
-            <TableHead className="text-right text-xs tracking-widest uppercase">{t("losses")}</TableHead>
+            <TableHead className="text-end text-xs tracking-widest uppercase">{t("level")}</TableHead>
+            <TableHead className="text-end text-xs tracking-widest uppercase">{t("wins")}</TableHead>
+            <TableHead className="text-end text-xs tracking-widest uppercase">{t("losses")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -63,9 +63,9 @@ export default async function LeaderboardPage({
                 {String(index + 1).padStart(2, "0")}
               </TableCell>
               <TableCell className="text-base font-semibold">{row.username}</TableCell>
-              <TableCell className="text-right tabular-nums">{row.level}</TableCell>
-              <TableCell className="text-right tabular-nums">{row.wins}</TableCell>
-              <TableCell className="text-right tabular-nums">{row.losses}</TableCell>
+              <TableCell className="text-end tabular-nums">{row.level}</TableCell>
+              <TableCell className="text-end tabular-nums">{row.wins}</TableCell>
+              <TableCell className="text-end tabular-nums">{row.losses}</TableCell>
             </TableRow>
           ))}
         </TableBody>

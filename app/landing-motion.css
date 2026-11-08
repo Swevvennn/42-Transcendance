@@ -5,6 +5,10 @@
  * Only transform-like properties, opacity and clip-path are animated for intros.
  */
 
+[dir="rtl"] {
+  --lp-side: -1;
+}
+
 [data-motion] {
   --lp-ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -19,9 +23,6 @@
   0% { scale: 0; }
   70% { scale: 1.08; }
   100% { scale: 1; }
-}
-@keyframes lp-draw-x {
-  from { scale: 0 1; }
 }
 @keyframes lp-draw-y {
   from { scale: 1 0; }
@@ -53,9 +54,9 @@
   100% { translate: 0 0; }
 }
 
-[data-motion="kinetic"] :is(.lp-kicker, .lp-tagline, .lp-subtitle, .lp-cta, .lp-vertical, .lp-features-title),
-[data-anime] :is(.lp-kicker, .lp-tagline, .lp-subtitle, .lp-cta, .lp-vertical, .lp-features-title),
-[data-motion="attract"] :is(.lp-kicker, .lp-tagline, .lp-subtitle, .lp-cta, .lp-vertical, .lp-features-title, .lp-court-wrap) {
+[data-motion="kinetic"] :is(.lp-kicker, .lp-tagline, .lp-subtitle, .lp-cta, .lp-vertical),
+[data-anime] :is(.lp-kicker, .lp-tagline, .lp-subtitle, .lp-cta, .lp-vertical),
+[data-motion="attract"] :is(.lp-kicker, .lp-tagline, .lp-subtitle, .lp-cta, .lp-vertical, .lp-court-wrap) {
   animation: lp-fade-up 0.9s var(--lp-ease) both;
 }
 [data-motion] .lp-kicker { animation-delay: 0s; }
@@ -64,7 +65,6 @@
 [data-motion] .lp-cta { animation-delay: 1.1s; }
 [data-motion] .lp-vertical { animation-delay: 1.2s; }
 [data-motion] .lp-court-wrap { animation-delay: 0.4s; }
-[data-motion] .lp-features-title { animation-delay: 1.3s; }
 
 [data-motion="kinetic"] .lp-net,
 [data-anime] .lp-net {
@@ -88,21 +88,6 @@
 [data-motion="kinetic"] .lp-ball,
 [data-anime] .lp-ball {
   animation: lp-pop 0.8s var(--lp-ease) 0.8s both;
-}
-
-/* Rules draw left to right, features follow. */
-[data-motion]:not([data-motion="rally"]) .lp-rule,
-[data-motion]:not([data-motion="rally"]) .lp-feature-rule {
-  transform-origin: left;
-  animation: lp-draw-x 1s var(--lp-ease) both;
-}
-[data-motion]:not([data-motion="rally"]) .lp-rule { animation-delay: 1.2s; }
-[data-motion]:not([data-motion="rally"]) .lp-feature-rule {
-  animation-delay: calc(1.35s + var(--i) * 0.12s);
-}
-[data-motion]:is([data-motion="kinetic"], [data-motion="attract"], [data-anime]) .lp-feature {
-  animation: lp-fade-up 0.9s var(--lp-ease) both;
-  animation-delay: calc(1.45s + var(--i) * 0.12s);
 }
 
 /* ── Rally: the court plays on its own ─────────────────────────── */
@@ -211,8 +196,6 @@
   from { clip-path: circle(0% at 50% 50%); }
   to { clip-path: circle(50% at 50% 50%); }
 }
-[data-motion="assemble"] .lp-features-title { animation: lp-wipe-right 0.7s var(--lp-ease) 1.5s both; }
-[data-motion="assemble"] .lp-feature { animation: lp-slide-in 0.8s var(--lp-ease) both; animation-delay: calc(1.6s + var(--i) * 0.12s); }
 
 /* ── Anime: intro overlay, then the ball drops into the first "o" ── */
 /* The overlay is components/landing/anime-intro.tsx. Until it sets
@@ -240,7 +223,7 @@
 /* Dark theme: the very same cut as the light theme, just dimmed, so a dark
  * system isn't flashed with white. */
 .dark .lp-intro-canvas {
-  filter: brightness(0.6);
+  filter: brightness(0.63) sepia(0.14);
 }
 /* Slanted wipe from left to right. */
 .lp-intro[data-phase="leaving"] {
@@ -314,7 +297,7 @@
   animation: lp-court-in 1.1s var(--lp-ease) 0.35s both;
 }
 @keyframes lp-court-in {
-  from { opacity: 0; translate: 5rem 0; }
+  from { opacity: 0; translate: calc(5rem * var(--lp-side, 1)) 0; }
 }
 
 /* ── Accessibility ─────────────────────────────────────────────── */

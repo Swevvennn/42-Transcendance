@@ -9,8 +9,6 @@ import { Anime3DIntro } from "@/components/landing/anime3d/intro"
 import { isAnime, isAnime3D, type LandingMotion } from "@/components/landing/motion"
 import { cn } from "@/lib/utils"
 
-const features = ["online", "ai", "tournament"] as const
-
 const index = (i: number) => ({ "--i": i }) as CSSProperties
 
 // Swiss landing page. `motion` picks an animation (CSS in app/landing-motion.css,
@@ -49,7 +47,8 @@ export function Landing({
           loadingLabel={t("introLoading")}
         />
       )}
-      <section className="relative isolate grid grid-cols-12 gap-4 pb-12 lg:pb-16">
+      {/* Fills the screen below the header; wider than <main> on large screens. */}
+      <section className="relative isolate flex min-h-[calc(100dvh-12rem)] flex-col items-center justify-center gap-10 md:flex-row md:gap-12 lg:mx-[calc((100%-min(94vw,92rem))/2)] lg:gap-20">
         {motion === "assemble" && (
           <div
             className="pointer-events-none absolute inset-0 -z-10 grid grid-cols-12 gap-4"
@@ -61,18 +60,18 @@ export function Landing({
           </div>
         )}
 
-        <p className="lp-kicker col-span-12 text-xs font-semibold tracking-widest text-primary uppercase">
-          {t("kicker")}
-        </p>
-
-        <p className="lp-vertical col-span-1 hidden rotate-180 text-xs font-semibold tracking-widest text-muted-foreground uppercase [writing-mode:vertical-rl] lg:block">
+        <p className="lp-vertical hidden rotate-180 text-xs font-semibold tracking-widest text-muted-foreground uppercase [writing-mode:vertical-rl] lg:block">
           {t("vertical")}
         </p>
 
-        <div className="col-span-12 flex flex-col gap-8 lg:col-span-7">
+        <div className="flex min-w-0 flex-col items-center gap-6 text-center md:items-start md:gap-8 md:text-start">
+          <p className="lp-kicker text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+            {t("kicker")}
+          </p>
           {anime ? (
             <h1
-              className="lp-block relative flex size-[2.78em] flex-col justify-end bg-foreground p-[0.09em] text-[5.5rem] text-background uppercase sm:text-[8rem]"
+              dir="ltr"
+              className="lp-block relative flex size-[2.78em] flex-col justify-end bg-foreground p-[0.09em] text-left text-[min(30vw,8rem)] text-background uppercase md:text-[clamp(6rem,min(17vh,15vw),12rem)]"
               aria-label={headline}
             >
               <span className="leading-[0.82] font-black tracking-tighter" aria-hidden>
@@ -92,7 +91,8 @@ export function Landing({
             </h1>
           ) : (
             <h1
-              className="lp-headline text-[7rem] leading-[0.8] font-black tracking-tighter sm:text-[12rem]"
+              dir="ltr"
+              className="lp-headline text-[min(20vw,7rem)] leading-[0.8] font-black tracking-tighter md:text-[min(11vw,12rem)]"
               aria-label={`${headline}.`}
             >
               {Array.from(headline).map((letter, i) => (
@@ -105,14 +105,14 @@ export function Landing({
               </span>
             </h1>
           )}
-          <p className="lp-tagline max-w-md text-2xl leading-tight font-semibold tracking-tight">
+          <p className="lp-tagline max-w-lg text-2xl leading-tight font-semibold tracking-tight lg:text-3xl">
             {t("tagline")}
           </p>
-          <p className="lp-subtitle max-w-md text-muted-foreground">{t("subtitle")}</p>
-          <div className="lp-cta flex flex-wrap gap-2">
+          <p className="lp-subtitle max-w-lg text-muted-foreground lg:text-lg">{t("subtitle")}</p>
+          <div className="lp-cta flex flex-wrap justify-center gap-2 md:justify-start">
             <ButtonLink href="/play" size="lg" className="h-12 px-6 text-sm font-semibold">
               {t("play")}
-              <ArrowRightIcon weight="bold" aria-hidden />
+              <ArrowRightIcon weight="bold" className="rtl:rotate-180" aria-hidden />
             </ButtonLink>
             <ButtonLink
               href="/signup"
@@ -125,33 +125,13 @@ export function Landing({
           </div>
         </div>
 
-        <div className="lp-court-wrap col-span-12 mt-8 flex flex-col gap-3 sm:col-span-8 sm:col-start-3 lg:col-span-4 lg:col-start-9 lg:mt-0">
+        {/* The match is desktop only. */}
+        <div className="lp-court-wrap hidden shrink-0 flex-col gap-3 md:flex md:w-[min(36rem,60vh,42vw)]">
           {motion === "attract" || anime ? (
             <AttractPong hint={t("attractHint")} />
           ) : (
             <LandingCourt motion={motion} />
           )}
-        </div>
-      </section>
-
-      <section className="relative grid gap-8 pt-8 sm:grid-cols-12">
-        <span className="lp-rule absolute inset-x-0 top-0 h-0.5 bg-foreground" aria-hidden />
-        <h2 className="lp-features-title text-sm font-semibold sm:col-span-3">
-          {t("featuresTitle")}
-        </h2>
-        <div className="grid gap-8 sm:col-span-9 sm:grid-cols-3">
-          {features.map((key, i) => (
-            <div key={key} className="lp-feature relative flex flex-col gap-3 pt-3" style={index(i)}>
-              <span className="lp-feature-rule absolute inset-x-0 top-0 h-px bg-foreground" aria-hidden />
-              <span className="text-4xl font-black tracking-tighter text-primary">0{i + 1}</span>
-              <h3 className="text-lg leading-tight font-semibold">
-                {t(`features.${key}.title`)}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {t(`features.${key}.description`)}
-              </p>
-            </div>
-          ))}
         </div>
       </section>
     </div>

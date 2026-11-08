@@ -183,6 +183,11 @@ export function AttractPong({ hint }: { hint: string }) {
     const loop = (now: number) => {
       const dt = Math.min((now - last) / 1000, 0.05)
       last = now
+      // Hidden by CSS on phones: keep the frame loop idle.
+      if (canvas.clientWidth === 0) {
+        frame = requestAnimationFrame(loop)
+        return
+      }
       let remaining = dt
       while (remaining > 0) {
         const step = Math.min(remaining, 1 / 240)
@@ -205,11 +210,12 @@ export function AttractPong({ hint }: { hint: string }) {
   return (
     <div ref={wrapRef} className="flex flex-col gap-3 text-foreground">
       <div
+        dir="ltr"
         className="flex items-end justify-between text-5xl leading-none font-black tracking-tighter tabular-nums"
         aria-hidden
       >
         <span>{String(score.left).padStart(2, "0")}</span>
-        <span className="text-primary">{String(score.right).padStart(2, "0")}</span>
+        <span>{String(score.right).padStart(2, "0")}</span>
       </div>
       <canvas
         ref={canvasRef}

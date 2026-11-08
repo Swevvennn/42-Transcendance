@@ -19,7 +19,7 @@ export function LegalPage({
             key={section.key}
             className="grid gap-2 border-b border-border py-6 sm:grid-cols-12 sm:gap-4"
           >
-            <span className="text-sm font-bold text-primary tabular-nums sm:col-span-1">
+            <span className="text-sm font-bold text-muted-foreground tabular-nums sm:col-span-1">
               {String(index + 1).padStart(2, "0")}
             </span>
             <h2 className="text-lg leading-tight font-semibold sm:col-span-4">
