@@ -1,0 +1,37 @@
+generator client
+{
+	provider = "prisma-client-js"
+}
+
+datasource db
+{
+	provider = "postgresql"
+	url		 = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  avatarUrl String?
+  xp        Int      @default(0)
+  level     Int      @default(1)
+}
+
+model Friendship {
+  id          Int      @id @default(autoincrement())
+  requesterId Int
+  addresseeId Int
+  status      String   @default("pending")
+}
+
+model Match {
+  id          Int      @id @default(autoincrement())
+  player1Id   Int
+  player2Id   Int?
+  vsAI        Boolean  @default(false)
+  score1      Int      @default(0)
+  score2      Int      @default(0)
+  winnerId    Int?
+  startedAt   DateTime @default(now())
+  endedAt     DateTime?
+}
