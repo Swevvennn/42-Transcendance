@@ -1,37 +1,156 @@
-generator client
-{
-	provider = "prisma-client-js"
+// Database schema (PostgreSQL, Prisma 7).
+// After a change: `bun run db:migrate` (creates a migration + regenerates the client).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
 }
 
-datasource db
-{
-	provider = "postgresql"
-	url		 = env("DATABASE_URL")
+datasource db {
+  provider = "postgresql"
 }
+
+// --- Better Auth tables (user, session, account, verification) ------------
+// Field names are the ones Better Auth expects; don't rename them.
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  avatarUrl String?
-  xp        Int      @default(0)
-  level     Int      @default(1)
+  id              String   @id
+  /// Display name (same as the username at sign-up).
+  name            String
+  email           String   @unique
+  emailVerified   Boolean  @default(false)
+  image           String?
+  /// Unique nickname, stored lowercase (Better Auth `username` plugin).
+  username        String?  @unique
+  /// The username with the case the player typed.
+  displayUsername String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  /// Better Auth `twoFactor` plugin: true once TOTP is set up and verified.
+  twoFactorEnabled Boolean? @default(false)
+
+  // Game data.
+  xp    Int @default(0)
+  level Int @default(1)
+
+  sessions          Session[]
+  accounts          Account[]
+  twoFactors        TwoFactor[]
+  matchesAsPlayer1  Match[]      @relation("MatchPlayer1")
+  matchesAsPlayer2  Match[]      @relation("MatchPlayer2")
+  matchesWon        Match[]      @relation("MatchWinner")
+  friendRequestsOut Friendship[] @relation("FriendshipRequester")
+  friendRequestsIn  Friendship[] @relation("FriendshipAddressee")
+
+  @@map("user")
 }
+
+/// A logged-in browser (cookie). Deleted on logout or when it expires.
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("session")
+}
+
+/// A way to log in: "credential" (email + hashed password), later "42" (OAuth).
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  /// Hashed password (scrypt), only for providerId = "credential".
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+/// Short-lived tokens (email verification, password reset…).
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+/// TOTP secret and backup codes (both encrypted by Better Auth).
+model TwoFactor {
+  id                      String    @id
+  secret                  String
+  backupCodes             String
+  userId                  String
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// false until the player typed a first valid code.
+  verified                Boolean?  @default(true)
+  failedVerificationCount Int?      @default(0)
+  lockedUntil             DateTime?
+
+  @@index([secret])
+  @@index([userId])
+  @@map("twoFactor")
+}
+
+// --- Game ---------------------------------------------------------------
 
 model Friendship {
   id          Int      @id @default(autoincrement())
-  requesterId Int
-  addresseeId Int
+  requesterId String
+  requester   User     @relation("FriendshipRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  addresseeId String
+  addressee   User     @relation("FriendshipAddressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+  /// "pending" | "accepted"
   status      String   @default("pending")
+  createdAt   DateTime @default(now())
+
+  @@unique([requesterId, addresseeId])
+  @@map("friendship")
 }
 
 model Match {
-  id          Int      @id @default(autoincrement())
-  player1Id   Int
-  player2Id   Int?
-  vsAI        Boolean  @default(false)
-  score1      Int      @default(0)
-  score2      Int      @default(0)
-  winnerId    Int?
-  startedAt   DateTime @default(now())
-  endedAt     DateTime?
+  id         Int       @id @default(autoincrement())
+  player1Id  String
+  player1    User      @relation("MatchPlayer1", fields: [player1Id], references: [id], onDelete: Cascade)
+  /// Null for a game against the AI.
+  player2Id  String?
+  player2    User?     @relation("MatchPlayer2", fields: [player2Id], references: [id], onDelete: Cascade)
+  vsAI       Boolean   @default(false)
+  score1     Int       @default(0)
+  score2     Int       @default(0)
+  winnerId   String?
+  winner     User?     @relation("MatchWinner", fields: [winnerId], references: [id], onDelete: SetNull)
+  /// true if the loser gave up or did not come back in time.
+  forfeit    Boolean   @default(false)
+  /// Played inside a tournament.
+  tournament Boolean   @default(false)
+  startedAt  DateTime  @default(now())
+  endedAt    DateTime?
+
+  @@index([player1Id])
+  @@index([player2Id])
+  @@index([winnerId])
+  @@map("match")
 }

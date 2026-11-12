@@ -3,62 +3,29 @@
 import { useTranslations } from "next-intl"
 import { useEffect, useRef, useState } from "react"
 
-// Local 2-player Pong, fully client-side. This is only a preview: online
-// games will run on the server (~60 ticks/s) and the client will just render.
+import {
+  drawPong,
+  HEIGHT,
+  initialState,
+  serve,
+  step,
+  SUB_STEP,
+  WIDTH,
+  WIN_SCORE,
+  type Direction,
+  type PongState,
+  type Side,
+} from "@/lib/pong/engine"
 
-const WIDTH = 800
-const HEIGHT = 500
-const PADDLE_W = 12
-const PADDLE_H = 90
-const PADDLE_MARGIN = 24
-const PADDLE_SPEED = 450 // px/s
-const BALL_SIZE = 12
-const BALL_SPEED = 380 // px/s
-const BALL_SPEED_MAX = 900
-const WIN_SCORE = 5
+// Local 2-player Pong, fully client-side. The physics live in
+// lib/pong/engine.ts and are the same ones the online game server uses.
 
 type Phase = "ready" | "playing" | "paused" | "over"
-type Side = "left" | "right"
-
-type State = {
-  leftY: number
-  rightY: number
-  ballX: number
-  ballY: number
-  vx: number
-  vy: number
-  score: { left: number; right: number }
-}
-
-function initialState(): State {
-  return {
-    leftY: (HEIGHT - PADDLE_H) / 2,
-    rightY: (HEIGHT - PADDLE_H) / 2,
-    ballX: (WIDTH - BALL_SIZE) / 2,
-    ballY: (HEIGHT - BALL_SIZE) / 2,
-    vx: 0,
-    vy: 0,
-    score: { left: 0, right: 0 },
-  }
-}
-
-// Puts the ball back in the center, heading towards `towards`.
-function serve(s: State, towards: Side) {
-  const angle = (Math.random() - 0.5) * (Math.PI / 3) // ±30°
-  const dir = towards === "left" ? -1 : 1
-  s.ballX = (WIDTH - BALL_SIZE) / 2
-  s.ballY = (HEIGHT - BALL_SIZE) / 2
-  s.vx = Math.cos(angle) * BALL_SPEED * dir
-  s.vy = Math.sin(angle) * BALL_SPEED
-}
-
-const clamp = (v: number, min: number, max: number) =>
-  Math.min(Math.max(v, min), max)
 
 export function LocalPong() {
   const t = useTranslations("Game")
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const stateRef = useRef<State>(initialState())
+  const stateRef = useRef<PongState>(initialState())
   const keysRef = useRef(new Set<string>())
   const phaseRef = useRef<Phase>("ready")
   const [phase, setPhase] = useState<Phase>("ready")
@@ -106,48 +73,15 @@ export function LocalPong() {
     const update = (dt: number) => {
       const s = stateRef.current
       const keys = keysRef.current
-      const move = PADDLE_SPEED * dt
-      const maxY = HEIGHT - PADDLE_H
+      const dir = (up: string, down: string): Direction =>
+        keys.has(up) === keys.has(down) ? 0 : keys.has(up) ? -1 : 1
 
-      if (keys.has("w")) s.leftY -= move
-      if (keys.has("s")) s.leftY += move
-      if (keys.has("arrowup")) s.rightY -= move
-      if (keys.has("arrowdown")) s.rightY += move
-      s.leftY = clamp(s.leftY, 0, maxY)
-      s.rightY = clamp(s.rightY, 0, maxY)
-
-      s.ballX += s.vx * dt
-      s.ballY += s.vy * dt
-
-      // Top / bottom walls.
-      if (s.ballY <= 0 || s.ballY >= HEIGHT - BALL_SIZE) {
-        s.ballY = clamp(s.ballY, 0, HEIGHT - BALL_SIZE)
-        s.vy = -s.vy
-      }
-
-      // Paddles: bounce angle depends on where the ball hits.
-      const hit = (paddleX: number, paddleY: number, dir: 1 | -1) => {
-        const overlapX = s.ballX < paddleX + PADDLE_W && s.ballX + BALL_SIZE > paddleX
-        const overlapY = s.ballY < paddleY + PADDLE_H && s.ballY + BALL_SIZE > paddleY
-        if (!overlapX || !overlapY || Math.sign(s.vx) === dir) return
-        const offset =
-          (s.ballY + BALL_SIZE / 2 - (paddleY + PADDLE_H / 2)) / (PADDLE_H / 2)
-        const angle = offset * (Math.PI / 4) // up to ±45°
-        const speed = Math.min(Math.hypot(s.vx, s.vy) * 1.05, BALL_SPEED_MAX)
-        s.vx = Math.cos(angle) * speed * dir
-        s.vy = Math.sin(angle) * speed
-        s.ballX = dir === 1 ? paddleX + PADDLE_W : paddleX - BALL_SIZE
-      }
-      hit(PADDLE_MARGIN, s.leftY, 1)
-      hit(WIDTH - PADDLE_MARGIN - PADDLE_W, s.rightY, -1)
-
-      // Goals.
-      let scorer: Side | null = null
-      if (s.ballX + BALL_SIZE < 0) scorer = "right"
-      else if (s.ballX > WIDTH) scorer = "left"
+      const scorer = step(s, dt, {
+        left: dir("w", "s"),
+        right: dir("arrowup", "arrowdown"),
+      })
       if (!scorer) return
 
-      s.score = { ...s.score, [scorer]: s.score[scorer] + 1 }
       setScore(s.score)
       if (s.score[scorer] >= WIN_SCORE) {
         s.vx = 0
@@ -160,21 +94,8 @@ export function LocalPong() {
     }
 
     const draw = () => {
-      const s = stateRef.current
       // Colors come from the theme through the canvas' CSS.
-      const fg = getComputedStyle(canvas).color
-      ctx.clearRect(0, 0, WIDTH, HEIGHT)
-      ctx.fillStyle = fg
-
-      ctx.globalAlpha = 0.3
-      for (let y = 0; y < HEIGHT; y += 24) {
-        ctx.fillRect(WIDTH / 2 - 1, y, 2, 12)
-      }
-      ctx.globalAlpha = 1
-
-      ctx.fillRect(PADDLE_MARGIN, s.leftY, PADDLE_W, PADDLE_H)
-      ctx.fillRect(WIDTH - PADDLE_MARGIN - PADDLE_W, s.rightY, PADDLE_W, PADDLE_H)
-      ctx.fillRect(s.ballX, s.ballY, BALL_SIZE, BALL_SIZE)
+      drawPong(ctx, stateRef.current, getComputedStyle(canvas).color)
     }
 
     let frame = 0
@@ -185,9 +106,9 @@ export function LocalPong() {
       // Small fixed sub-steps so a fast ball cannot pass through a paddle.
       let remaining = dt
       while (remaining > 0 && phaseRef.current === "playing") {
-        const step = Math.min(remaining, 1 / 240)
-        update(step)
-        remaining -= step
+        const sub = Math.min(remaining, SUB_STEP)
+        update(sub)
+        remaining -= sub
       }
       draw()
       frame = requestAnimationFrame(loop)

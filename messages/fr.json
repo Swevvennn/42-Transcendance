@@ -9,7 +9,8 @@
     "leaderboard": "Classement",
     "profile": "Profil",
     "login": "Connexion",
-    "signup": "Inscription"
+    "signup": "Inscription",
+    "logout": "Se déconnecter"
   },
   "LocaleSwitcher": {
     "label": "Langue",
@@ -44,7 +45,6 @@
   "Auth": {
     "email": "E-mail",
     "password": "Mot de passe",
-    "notConnected": "Formulaire valide. Le backend n'est pas encore branché.",
     "or": "ou",
     "oauth42": "Continuer avec 42",
     "login": {
@@ -63,6 +63,28 @@
       "submit": "Créer le compte",
       "hasAccount": "Déjà un compte ?",
       "loginLink": "Se connecter"
+    },
+    "errors": {
+      "invalidCredentials": "Email ou mot de passe incorrect.",
+      "tooManyRequests": "Trop de tentatives. Attends un peu avant de réessayer.",
+      "generic": "Une erreur est survenue. Réessaie.",
+      "invalidCode": "Code incorrect.",
+      "invalidPassword": "Mot de passe incorrect.",
+      "oauth42Unavailable": "La connexion avec 42 n'est pas configurée sur ce serveur.",
+      "oauthFailed": "La connexion avec 42 a échoué. Réessaie.",
+      "sessionExpired": "Trop tard : reconnecte-toi."
+    },
+    "twoFactor": {
+      "title": "Double authentification",
+      "description": "Entre le code à 6 chiffres de ton application d'authentification.",
+      "backupDescription": "Entre un de tes codes de secours.",
+      "code": "Code",
+      "backupCode": "Code de secours",
+      "submit": "Vérifier",
+      "useBackup": "Utiliser un code de secours",
+      "useTotp": "Utiliser l'application",
+      "trustDevice": "Faire confiance à cet appareil pendant 30 jours",
+      "back": "Retour"
     }
   },
   "Validation": {
@@ -72,7 +94,13 @@
     "usernameChars": "Seuls les lettres, chiffres et underscores sont autorisés.",
     "passwordLength": "Le mot de passe doit faire au moins 8 caractères.",
     "passwordLetterDigit": "Le mot de passe doit contenir une lettre et un chiffre.",
-    "passwordMismatch": "Les mots de passe ne correspondent pas."
+    "passwordMismatch": "Les mots de passe ne correspondent pas.",
+    "tournamentNameLength": "Le nom doit faire entre 3 et 30 caractères.",
+    "tournamentSize": "Choisis 4 ou 8 joueurs.",
+    "usernameTaken": "Ce nom d'utilisateur est déjà pris.",
+    "emailTaken": "Un compte utilise déjà cet email.",
+    "codeFormat": "Entre le code à 6 chiffres.",
+    "codeRequired": "Entre un code."
   },
   "Play": {
     "title": "Jouer",
@@ -108,18 +136,123 @@
     "right": "Joueur droit",
     "back": "Retour aux modes"
   },
+  "Online": {
+    "title": "Match en ligne",
+    "description": "Joue contre un adversaire au hasard, en temps réel.",
+    "back": "Retour aux modes",
+    "loginRequired": {
+      "title": "Connecte-toi pour jouer en ligne",
+      "description": "Les matchs en ligne et les tournois sont liés à ton compte, donc ton pseudo est unique.",
+      "login": "Se connecter",
+      "signup": "S'inscrire"
+    },
+    "connecting": "Connexion au serveur de jeu…",
+    "connectionError": "Impossible de joindre le serveur de jeu. Nouvelle tentative…",
+    "resume": {
+      "title": "Tu as un match en cours.",
+      "action": "Reprendre le match"
+    },
+    "queue": {
+      "find": "Trouver un match",
+      "searching": "Recherche d'un adversaire…",
+      "cancel": "Annuler"
+    },
+    "errors": {
+      "invalid": "Requête invalide.",
+      "notFound": "Introuvable.",
+      "alreadyInMatch": "Tu as déjà un match à jouer.",
+      "tournamentFull": "Ce tournoi est complet.",
+      "tournamentStarted": "Ce tournoi a déjà commencé.",
+      "notHost": "Seul l'organisateur peut faire ça.",
+      "notEnoughPlayers": "Pas assez de joueurs pour commencer.",
+      "playersBusy": "Un joueur est encore dans un autre match. Réessaie dans un instant."
+    }
+  },
+  "Match": {
+    "title": "Match en ligne",
+    "joining": "Connexion au match…",
+    "notFound": "Ce match n'existe pas ou est terminé.",
+    "controls": "Tu es le {side}. Déplace-toi avec W / S ou ↑ / ↓.",
+    "left": "joueur de gauche",
+    "right": "joueur de droite",
+    "spectating": "Tu regardes ce match.",
+    "you": "{name} (toi)",
+    "waiting": "En attente de {name}… ({seconds} s)",
+    "paused": "{name} s'est déconnecté. On attend son retour… ({seconds} s)",
+    "winner": "{name} gagne !",
+    "winnerForfeit": "{name} gagne par forfait.",
+    "forfeit": "Abandonner",
+    "forfeitConfirm": "Confirmer l'abandon",
+    "cancel": "Annuler",
+    "playAgain": "Rejouer",
+    "backToTournament": "Retour au tournoi",
+    "back": "Retour aux modes"
+  },
+  "Tournament": {
+    "title": "Tournois",
+    "description": "Crée un tournoi ou rejoins-en un. Élimination directe : une défaite et c'est fini.",
+    "create": {
+      "title": "Créer un tournoi",
+      "name": "Nom",
+      "size": "Nombre de joueurs max",
+      "submit": "Créer"
+    },
+    "list": {
+      "title": "Tournois",
+      "empty": "Aucun tournoi pour l'instant. Crée le premier !",
+      "players": "{count}/{max} joueurs",
+      "host": "Organisateur : {name}",
+      "open": "Ouvrir"
+    },
+    "status": {
+      "lobby": "En attente de joueurs",
+      "running": "En cours",
+      "finished": "Terminé"
+    },
+    "notFound": "Ce tournoi n'existe plus.",
+    "back": "Tous les tournois",
+    "players": "Joueurs ({count}/{max})",
+    "host": "Organisateur",
+    "you": "(toi)",
+    "lobbyHint": "L'organisateur peut lancer dès qu'il y a au moins {min} joueurs. Les matchs sont tirés au sort.",
+    "join": "Rejoindre",
+    "leave": "Quitter",
+    "start": "Lancer le tournoi",
+    "yourMatch": "Ton match est prêt !",
+    "play": "Jouer",
+    "watch": "Regarder",
+    "champion": "{name} remporte le tournoi !",
+    "bracket": "Tableau",
+    "round": {
+      "final": "Finale",
+      "semi": "Demi-finales",
+      "quarter": "Quarts de finale"
+    },
+    "bye": "Exempt",
+    "tbd": "À déterminer",
+    "errors": {
+      "invalid": "Requête invalide.",
+      "notFound": "Introuvable.",
+      "alreadyInMatch": "Tu as déjà un match à jouer.",
+      "tournamentFull": "Ce tournoi est complet.",
+      "tournamentStarted": "Ce tournoi a déjà commencé.",
+      "notHost": "Seul l'organisateur peut faire ça.",
+      "notEnoughPlayers": "Pas assez de joueurs pour commencer.",
+      "playersBusy": "Un joueur est encore dans un autre match. Réessaie dans un instant."
+    }
+  },
   "Profile": {
     "title": "Profil",
     "online": "En ligne",
     "offline": "Hors ligne",
     "inGame": "En partie",
     "level": "Niveau {level}",
-    "edit": "Modifier le profil",
     "stats": {
       "title": "Statistiques",
       "wins": "Victoires",
       "losses": "Défaites",
-      "winRate": "Taux de victoire"
+      "winRate": "Taux de victoire",
+      "played": "Parties"
     },
     "history": {
       "title": "Historique des parties",
@@ -128,13 +261,41 @@
       "result": "Résultat",
       "date": "Date",
       "win": "Victoire",
-      "loss": "Défaite"
+      "loss": "Défaite",
+      "forfeit": "forfait",
+      "tournament": "Tournoi",
+      "empty": "Aucun match pour l'instant. Joue une partie en ligne pour remplir ton historique !",
+      "deleted": "Joueur supprimé"
     },
     "friends": {
       "title": "Amis",
-      "add": "Ajouter un ami"
+      "add": "Ajouter un ami",
+      "send": "Envoyer",
+      "empty": "Pas encore d'amis.",
+      "received": "Demandes reçues",
+      "sent": "Demandes envoyées",
+      "accept": "Accepter",
+      "decline": "Refuser",
+      "cancel": "Annuler",
+      "remove": "Retirer",
+      "addFriend": "Ajouter en ami",
+      "requestSent": "Demande envoyée",
+      "acceptRequest": "Accepter la demande",
+      "isFriend": "Amis",
+      "removeFriend": "Retirer des amis",
+      "sentOk": "Demande envoyée.",
+      "errors": {
+        "unauthorized": "Tu dois être connecté.",
+        "notFound": "Aucun joueur avec ce nom d'utilisateur.",
+        "self": "Tu ne peux pas t'ajouter toi-même.",
+        "already": "Déjà ami, ou demande déjà envoyée.",
+        "invalid": "Demande invalide."
+      }
     },
-    "mockNotice": "Aperçu avec des données d'exemple."
+    "xp": "{xp} XP",
+    "settings": "Paramètres",
+    "memberSince": "Membre depuis le {date}",
+    "notFoundTitle": "Joueur introuvable"
   },
   "Leaderboard": {
     "title": "Classement",
@@ -143,7 +304,31 @@
     "player": "Joueur",
     "wins": "Victoires",
     "losses": "Défaites",
-    "level": "Niveau"
+    "level": "Niveau",
+    "empty": "Aucun match joué pour l'instant."
+  },
+  "Settings": {
+    "title": "Paramètres",
+    "description": "Sécurité de ton compte.",
+    "twoFactor": {
+      "title": "Double authentification (2FA)",
+      "description": "À la connexion, demande un code d'une application d'authentification en plus du mot de passe.",
+      "enabled": "Activée",
+      "disabled": "Désactivée",
+      "enable": "Activer la 2FA",
+      "disable": "Désactiver la 2FA",
+      "passwordHint": "Confirme avec ton mot de passe.",
+      "scan": "Scanne ce QR code avec une application d'authentification (Google Authenticator, Authy, 2FAS…), puis tape le code à 6 chiffres qu'elle affiche.",
+      "qrLabel": "QR code pour configurer la 2FA",
+      "secret": "Ou tape cette clé dans l'application :",
+      "verify": "Activer",
+      "backupCodes": "Codes de secours",
+      "backupHint": "Garde ces codes en lieu sûr. Chacun permet de se connecter une fois si tu perds ton téléphone.",
+      "done": "La 2FA est activée. La prochaine connexion demandera un code.",
+      "disabledOk": "La 2FA est désactivée.",
+      "cancel": "Annuler",
+      "oauthOnly": "Ce compte utilise la connexion 42 et n'a pas de mot de passe : sa sécurité (2FA comprise) se gère sur l'intra 42."
+    }
   },
   "Privacy": {
     "title": "Politique de confidentialité",

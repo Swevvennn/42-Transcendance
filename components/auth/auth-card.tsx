@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl"
 
-import { Button } from "@/components/ui/button"
+import { OAuth42Button } from "@/components/auth/oauth42-button"
 import {
   Card,
   CardContent,
@@ -16,11 +16,17 @@ export function AuthCard({
   title,
   description,
   footer,
+  oauthEnabled,
+  oauthError = false,
   children,
 }: {
   title: string
   description: string
   footer: React.ReactNode
+  /** "Continue with 42" is configured on the server. */
+  oauthEnabled: boolean
+  /** The 42 login came back with an error. */
+  oauthError?: boolean
   children: React.ReactNode
 }) {
   const t = useTranslations("Auth")
@@ -36,10 +42,7 @@ export function AuthCard({
       <CardContent className="flex flex-col gap-4">
         {children}
         <FieldSeparator>{t("or")}</FieldSeparator>
-        {/* OAuth 42 will be wired with Better Auth. */}
-        <Button variant="outline" className="w-full" disabled>
-          {t("oauth42")}
-        </Button>
+        <OAuth42Button enabled={oauthEnabled} initialError={oauthError} />
       </CardContent>
       <CardFooter className="justify-center gap-1 text-xs">{footer}</CardFooter>
     </Card>

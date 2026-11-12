@@ -33,8 +33,11 @@
 # État du projet (2 novembre 2026)
 
 - Le front a été refait de zéro. C'est une preview simple : toutes les pages existent en **EN / FR** (3e langue à choisir), sous `app/[locale]/`.
-- Fonctionnel : accueil, login / signup (validation client), menu Play, **Pong local 1v1** (canvas, client uniquement), profil et classement (données d'exemple dans `lib/mock-data.ts`), Privacy / Terms dans le footer, 404.
-- Pas encore fait : backend (Better Auth, Prisma, Socket.IO), Docker / nginx, modes IA / en ligne / tournoi.
+- Fonctionnel : accueil, login / signup (validation client), menu Play, **Pong local 1v1** (canvas, client uniquement), Privacy / Terms dans le footer, 404.
+- **Jeu en ligne + tournoi (12 novembre 2026)** : custom server `server.ts` + Socket.IO, partie serveur à 60 ticks/s, matchmaking, reconnexion (15 s puis forfait), spectateur, tournoi à élimination directe (3 à 8 joueurs). Parties en mémoire. Détails : `docs/online.md`.
+- **Better Auth + Prisma 7** : inscription / connexion email + mot de passe, nom d'utilisateur unique, sessions, déconnexion, jeu en ligne réservé aux connectés. BDD de dev : `bun run db:up`. Détails : `docs/auth.md`.
+- **Comptes complets (12 novembre 2026)** : 2FA TOTP + codes de secours, connexion 42 (OAuth, à activer avec une app intra), matchs sauvegardés en BDD + XP / niveau, profils réels (le sien et `/profile/<username>`), amis avec statut en ligne, classement depuis la BDD. Docker écoute en HTTPS sur **8443** (`HTTPS_PORT`).
+- Pas encore fait : upload d'avatar, modification du profil, mode IA, 3e langue, monitoring.
 - Vérifié : `tsc`, `lint` et `build` OK, aucune erreur console Chrome (prod et dev).
 - **Explications détaillées pour l'équipe : `docs/frontend.md`.** Règles de code pour les agents : `AGENTS.md`.
 
@@ -82,7 +85,7 @@ Tâches détaillées de chacun : Feuille de route par personne
 # Points d'attention
 
 - **Hydratation Next.js** : pas de `Date.now()`, `Math.random()` ou `window` dans le rendu serveur, sinon erreurs console. Le canvas du jeu en composant client (`"use client"`).
-- **Dockerfile en production** : `next build` puis `node server.js`, jamais `next dev` (warnings dans la console).
+- **Dockerfile en production** : `next build` puis `bun server.ts` (script `bun run start`), jamais `next dev` (warnings dans la console).
 - **Jeu côté serveur** : boucle à ~60 ticks/s, les clients envoient seulement haut / bas et reçoivent l'état, interpolation côté client.
 - **Reconnexion** : partie en pause quelques secondes, le joueur qui recharge revient dans sa partie, sinon forfait.
 - **IA** : doit pouvoir gagner et perdre, jouer « comme un humain » (temps de réaction, erreurs) et gérer les power-ups / options de personnalisation.

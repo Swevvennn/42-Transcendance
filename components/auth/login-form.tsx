@@ -6,19 +6,48 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { loginSchema, type LoginInput } from "@/lib/validation/auth"
+import { authError, type AuthErrorResult } from "@/components/auth/auth-error"
+import { FormAlert } from "@/components/auth/form-alert"
+import { TwoFactorStep } from "@/components/auth/two-factor-step"
 import { useFormErrors } from "@/components/auth/use-form-errors"
+import { useRouter } from "@/i18n/navigation"
+import { signIn } from "@/lib/auth-client"
+import { loginSchema, type LoginInput } from "@/lib/validation/auth"
 
 export function LoginForm() {
   const t = useTranslations("Auth")
+  const router = useRouter()
   const { errors, validate, errorFor } = useFormErrors<LoginInput>(loginSchema)
-  const [submitted, setSubmitted] = useState(false)
+  const [pending, setPending] = useState(false)
+  const [formError, setFormError] = useState<AuthErrorResult | null>(null)
+  /** The password was right but the account has 2FA: ask for the code. */
+  const [needsCode, setNeedsCode] = useState(false)
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function loggedIn() {
+    router.push("/play")
+    router.refresh()
+  }
+
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const data = Object.fromEntries(new FormData(event.currentTarget))
-    // TODO: call the auth backend once it exists (it must re-validate with loginSchema).
-    setSubmitted(validate(data) !== null)
+    setFormError(null)
+    const data = validate(Object.fromEntries(new FormData(event.currentTarget)))
+    if (!data) return
+
+    // The server checks the same fields again (lib/auth.ts).
+    setPending(true)
+    const { data: result, error } = await signIn.email(data)
+    setPending(false)
+
+    if (error) return setFormError(authError(error))
+    if (result && "twoFactorRedirect" in result && result.twoFactorRedirect) {
+      return setNeedsCode(true)
+    }
+    loggedIn()
+  }
+
+  if (needsCode) {
+    return <TwoFactorStep onDone={loggedIn} onBack={() => setNeedsCode(false)} />
   }
 
   return (
@@ -48,15 +77,11 @@ export function LoginForm() {
           <FieldError>{errorFor("password")}</FieldError>
         </Field>
 
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full" disabled={pending}>
           {t("login.submit")}
         </Button>
 
-        {submitted && (
-          <p role="status" className="text-xs text-muted-foreground">
-            {t("notConnected")}
-          </p>
-        )}
+        <FormAlert error={formError} />
       </FieldGroup>
     </form>
   )

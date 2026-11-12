@@ -1,10 +1,12 @@
 import type { Metadata } from "next"
+import { connection } from "next/server"
 import type { Locale } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { AuthCard } from "@/components/auth/auth-card"
 import { SignupForm } from "@/components/auth/signup-form"
 import { Link } from "@/i18n/navigation"
+import { fortyTwoCredentials } from "@/lib/oauth42"
 
 export async function generateMetadata({
   params,
@@ -20,9 +22,13 @@ export default async function SignupPage({
   const { locale } = await params
   setRequestLocale(locale as Locale)
   const t = await getTranslations("Auth")
+  // Rendered per request: the 42 credentials are read from the env at run
+  // time, not when the Docker image is built.
+  await connection()
 
   return (
     <AuthCard
+      oauthEnabled={fortyTwoCredentials() !== null}
       title={t("signup.title")}
       description={t("signup.description")}
       footer={

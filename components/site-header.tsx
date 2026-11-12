@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl"
 import { ButtonLink } from "@/components/button-link"
 import { LocaleSwitcher } from "@/components/locale-switcher"
 import { Separator } from "@/components/ui/separator"
+import { UserMenu } from "@/components/user-menu"
 import { Link } from "@/i18n/navigation"
 
 export function SiteHeader() {
@@ -25,10 +26,7 @@ export function SiteHeader() {
           <ButtonLink href="/profile" variant="ghost">
             {t("profile")}
           </ButtonLink>
-          <ButtonLink href="/login" variant="outline">
-            {t("login")}
-          </ButtonLink>
-          <ButtonLink href="/signup">{t("signup")}</ButtonLink>
+          <UserMenu />
           <LocaleSwitcher />
         </nav>
       </div>

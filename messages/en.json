@@ -9,7 +9,8 @@
     "leaderboard": "Leaderboard",
     "profile": "Profile",
     "login": "Log in",
-    "signup": "Sign up"
+    "signup": "Sign up",
+    "logout": "Log out"
   },
   "LocaleSwitcher": {
     "label": "Language",
@@ -44,7 +45,6 @@
   "Auth": {
     "email": "Email",
     "password": "Password",
-    "notConnected": "Form is valid. The backend is not connected yet.",
     "or": "or",
     "oauth42": "Continue with 42",
     "login": {
@@ -63,6 +63,28 @@
       "submit": "Create account",
       "hasAccount": "Already have an account?",
       "loginLink": "Log in"
+    },
+    "errors": {
+      "invalidCredentials": "Wrong email or password.",
+      "tooManyRequests": "Too many attempts. Please wait a moment and try again.",
+      "generic": "Something went wrong. Please try again.",
+      "invalidCode": "Wrong code.",
+      "invalidPassword": "Wrong password.",
+      "oauth42Unavailable": "Login with 42 is not configured on this server.",
+      "oauthFailed": "Login with 42 failed. Please try again.",
+      "sessionExpired": "Too slow: please log in again."
+    },
+    "twoFactor": {
+      "title": "Two-factor authentication",
+      "description": "Enter the 6-digit code from your authenticator app.",
+      "backupDescription": "Enter one of your backup codes.",
+      "code": "Code",
+      "backupCode": "Backup code",
+      "submit": "Verify",
+      "useBackup": "Use a backup code",
+      "useTotp": "Use the authenticator app",
+      "trustDevice": "Trust this device for 30 days",
+      "back": "Back"
     }
   },
   "Validation": {
@@ -72,7 +94,13 @@
     "usernameChars": "Only letters, digits and underscores are allowed.",
     "passwordLength": "Password must be at least 8 characters.",
     "passwordLetterDigit": "Password must contain a letter and a digit.",
-    "passwordMismatch": "Passwords do not match."
+    "passwordMismatch": "Passwords do not match.",
+    "tournamentNameLength": "Name must be between 3 and 30 characters.",
+    "tournamentSize": "Choose 4 or 8 players.",
+    "usernameTaken": "This username is already taken.",
+    "emailTaken": "An account already uses this email.",
+    "codeFormat": "Enter the 6-digit code.",
+    "codeRequired": "Please enter a code."
   },
   "Play": {
     "title": "Play",
@@ -108,18 +136,123 @@
     "right": "Right player",
     "back": "Back to modes"
   },
+  "Online": {
+    "title": "Online match",
+    "description": "Play against a random opponent in real time.",
+    "back": "Back to modes",
+    "loginRequired": {
+      "title": "Log in to play online",
+      "description": "Online matches and tournaments are linked to your account, so your nickname is unique.",
+      "login": "Log in",
+      "signup": "Sign up"
+    },
+    "connecting": "Connecting to the game server…",
+    "connectionError": "Can't reach the game server. Retrying…",
+    "resume": {
+      "title": "You have a match in progress.",
+      "action": "Resume match"
+    },
+    "queue": {
+      "find": "Find a match",
+      "searching": "Looking for an opponent…",
+      "cancel": "Cancel"
+    },
+    "errors": {
+      "invalid": "Invalid request.",
+      "notFound": "Not found.",
+      "alreadyInMatch": "You already have a match to play.",
+      "tournamentFull": "This tournament is full.",
+      "tournamentStarted": "This tournament has already started.",
+      "notHost": "Only the host can do that.",
+      "notEnoughPlayers": "Not enough players to start.",
+      "playersBusy": "A player is still in another match. Try again in a moment."
+    }
+  },
+  "Match": {
+    "title": "Online match",
+    "joining": "Joining the match…",
+    "notFound": "This match doesn't exist or has ended.",
+    "controls": "You are the {side}. Move with W / S or ↑ / ↓.",
+    "left": "left player",
+    "right": "right player",
+    "spectating": "You are watching this match.",
+    "you": "{name} (you)",
+    "waiting": "Waiting for {name}… ({seconds}s)",
+    "paused": "{name} disconnected. Waiting for them to come back… ({seconds}s)",
+    "winner": "{name} wins!",
+    "winnerForfeit": "{name} wins by forfeit.",
+    "forfeit": "Forfeit",
+    "forfeitConfirm": "Confirm forfeit",
+    "cancel": "Cancel",
+    "playAgain": "Play again",
+    "backToTournament": "Back to the tournament",
+    "back": "Back to modes"
+  },
+  "Tournament": {
+    "title": "Tournaments",
+    "description": "Create a tournament or join one. Single elimination: lose once and you're out.",
+    "create": {
+      "title": "Create a tournament",
+      "name": "Name",
+      "size": "Maximum players",
+      "submit": "Create"
+    },
+    "list": {
+      "title": "Tournaments",
+      "empty": "No tournament yet. Create the first one!",
+      "players": "{count}/{max} players",
+      "host": "Host: {name}",
+      "open": "Open"
+    },
+    "status": {
+      "lobby": "Waiting for players",
+      "running": "In progress",
+      "finished": "Finished"
+    },
+    "notFound": "This tournament doesn't exist anymore.",
+    "back": "All tournaments",
+    "players": "Players ({count}/{max})",
+    "host": "Host",
+    "you": "(you)",
+    "lobbyHint": "The host can start once at least {min} players have joined. Players are drawn at random.",
+    "join": "Join",
+    "leave": "Leave",
+    "start": "Start the tournament",
+    "yourMatch": "Your match is ready!",
+    "play": "Play",
+    "watch": "Watch",
+    "champion": "{name} wins the tournament!",
+    "bracket": "Bracket",
+    "round": {
+      "final": "Final",
+      "semi": "Semi-finals",
+      "quarter": "Quarter-finals"
+    },
+    "bye": "Bye",
+    "tbd": "To be decided",
+    "errors": {
+      "invalid": "Invalid request.",
+      "notFound": "Not found.",
+      "alreadyInMatch": "You already have a match to play.",
+      "tournamentFull": "This tournament is full.",
+      "tournamentStarted": "This tournament has already started.",
+      "notHost": "Only the host can do that.",
+      "notEnoughPlayers": "Not enough players to start.",
+      "playersBusy": "A player is still in another match. Try again in a moment."
+    }
+  },
   "Profile": {
     "title": "Profile",
     "online": "Online",
     "offline": "Offline",
     "inGame": "In game",
     "level": "Level {level}",
-    "edit": "Edit profile",
     "stats": {
       "title": "Statistics",
       "wins": "Wins",
       "losses": "Losses",
-      "winRate": "Win rate"
+      "winRate": "Win rate",
+      "played": "Played"
     },
     "history": {
       "title": "Match history",
@@ -128,13 +261,41 @@
       "result": "Result",
       "date": "Date",
       "win": "Win",
-      "loss": "Loss"
+      "loss": "Loss",
+      "forfeit": "forfeit",
+      "tournament": "Tournament",
+      "empty": "No match yet. Play an online game to fill your history!",
+      "deleted": "Deleted player"
     },
     "friends": {
       "title": "Friends",
-      "add": "Add a friend"
+      "add": "Add a friend",
+      "send": "Send",
+      "empty": "No friends yet.",
+      "received": "Requests received",
+      "sent": "Requests sent",
+      "accept": "Accept",
+      "decline": "Decline",
+      "cancel": "Cancel",
+      "remove": "Remove",
+      "addFriend": "Add friend",
+      "requestSent": "Request sent",
+      "acceptRequest": "Accept friend request",
+      "isFriend": "Friends",
+      "removeFriend": "Remove friend",
+      "sentOk": "Request sent.",
+      "errors": {
+        "unauthorized": "You must be logged in.",
+        "notFound": "No player with this username.",
+        "self": "You can't add yourself.",
+        "already": "Already a friend or request already sent.",
+        "invalid": "Invalid request."
+      }
     },
-    "mockNotice": "Preview with sample data."
+    "xp": "{xp} XP",
+    "settings": "Settings",
+    "memberSince": "Member since {date}",
+    "notFoundTitle": "Player not found"
   },
   "Leaderboard": {
     "title": "Leaderboard",
@@ -143,7 +304,31 @@
     "player": "Player",
     "wins": "Wins",
     "losses": "Losses",
-    "level": "Level"
+    "level": "Level",
+    "empty": "No match played yet."
+  },
+  "Settings": {
+    "title": "Settings",
+    "description": "Security of your account.",
+    "twoFactor": {
+      "title": "Two-factor authentication (2FA)",
+      "description": "At login, ask for a code from an authenticator app in addition to the password.",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "enable": "Enable 2FA",
+      "disable": "Disable 2FA",
+      "passwordHint": "Confirm with your password.",
+      "scan": "Scan this QR code with an authenticator app (Google Authenticator, Authy, 2FAS…), then type the 6-digit code it shows.",
+      "qrLabel": "QR code to set up 2FA",
+      "secret": "Or type this key in the app:",
+      "verify": "Activate",
+      "backupCodes": "Backup codes",
+      "backupHint": "Save these codes somewhere safe. Each one lets you log in once if you lose your phone.",
+      "done": "2FA is enabled. The next login will ask for a code.",
+      "disabledOk": "2FA is disabled.",
+      "cancel": "Cancel",
+      "oauthOnly": "This account uses the 42 login and has no password: its security (2FA included) is managed on the 42 intra."
+    }
   },
   "Privacy": {
     "title": "Privacy Policy",

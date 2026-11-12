@@ -14,6 +14,8 @@ The block above is managed by `next dev`, so don't edit it. Everything below is 
 
 ## Tooling
 
+- Local Node is too old for some CLIs: run them through bun (`bunx --bun <bin>`, `bun run --bun lint`).
+
 - Use **bun** only: `bun install`, `bun add <pkg>`, `bun run <script>`, `bunx <bin>`. Do not use npm/pnpm/yarn, and do not commit another lockfile.
 - Before handing work back, run and pass all of these: `bunx tsc --noEmit`, `bun run lint`, `bun run build`.
 - If `PageProps` / `LayoutProps` types are missing: `bunx next typegen`.
@@ -57,9 +59,11 @@ The block above is managed by `next dev`, so don't edit it. Everything below is 
 
 ## Data and backend status
 
-- `lib/mock-data.ts` is placeholder data for the UI. Replace it with Prisma queries, don't extend it.
-- The auth forms have `TODO`s where Better Auth calls go.
-- `components/pong/local-pong.tsx` is a client-only local game. Online play must be server-authoritative (see `CLAUDE.md`).
+- Database reads for pages are in `lib/users.ts` (profile, stats, history, leaderboard, friends); friend mutations are server actions in `lib/actions/friends.ts` (validated with `lib/validation/friends.ts`). Online status comes from the game server through `lib/presence.ts`.
+- Auth: Better Auth (`lib/auth.ts` server, `lib/auth-client.ts` browser, API at `app/api/auth/[...all]/route.ts`), email + password + unique `username`, TOTP 2FA (`twoFactor` plugin; the login form handles the code step), "Continue with 42" (`genericOAuth`, only enabled when `FT_CLIENT_ID` / `FT_CLIENT_SECRET` are set; see `lib/oauth42.ts`). Every Better Auth route that takes user input is re-validated with our zod schemas (`validatedRoutes` in `lib/auth.ts`). Database: Prisma 7 (`prisma/schema.prisma`, client generated in `lib/generated/prisma`, import `prisma` from `@/lib/prisma`). Do not upgrade to Prisma 8 (RC, incompatible with Better Auth). Details in French: `docs/auth.md`.
+- Pong physics live in `lib/pong/engine.ts`, shared by the local game (`components/pong/local-pong.tsx`) and the server.
+- Online play is server-authoritative: `server.ts` (custom server, Next + Socket.IO on one port) → `server/game-server.ts` (queue, matches, tournaments, in memory) → `server/match.ts` (60 ticks/s loop) / `server/tournament.ts` (bracket). Event types are in `lib/pong/protocol.ts`; the server re-validates every payload with `lib/validation/game.ts`. Client side: `lib/pong/connection.ts` + `components/online/`. Explanations in French: `docs/online.md`.
+- `bun run dev` / `bun run start` run `server.ts` (not `next dev` / `next start`). Online play requires a logged-in user: the socket server reads the Better Auth session from the cookie. Finished matches are saved by `server/results.ts` (history, stats, XP / level in `lib/xp.ts`). The header (`components/user-menu.tsx`) opens the game connection on every page while logged in, so friends see you online.
 
 ## Deployment
 

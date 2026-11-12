@@ -60,9 +60,9 @@ TODO: how tasks were split and tracked, communication tools, meeting rhythm.
 | Styling | **Tailwind CSS v4** + **shadcn/ui** (base-ui) | CSS framework required by the subject; accessible, editable components |
 | i18n | **next-intl** | Localized routes (`/en`, `/fr`), server and client translations |
 | Validation | **zod** | One schema shared by the front-end and the back-end |
-| Real time | Socket.IO on a custom server *(planned)* | Server-authoritative Pong at ~60 ticks/s |
-| Database | PostgreSQL + Prisma *(planned)* | Relational data (users, friends, matches) with a typed ORM |
-| Auth | Better Auth *(planned)* | Email/password, OAuth 42, TOTP 2FA |
+| Real time | Socket.IO on a custom server (`server.ts`) | Server-authoritative Pong at ~60 ticks/s |
+| Database | PostgreSQL + Prisma 7 | Relational data (users, friends, matches) with a typed ORM |
+| Auth | Better Auth | Email/password with unique usernames, OAuth 2.0 with 42, TOTP 2FA |
 | Infra | Docker Compose, nginx (HTTPS), Prometheus + Grafana *(planned)* | Single-command launch, monitoring |
 | Package manager | **Bun** | Fast installs and scripts |
 | Preview hosting | **Vercel** | Front-end preview only (no custom server / WebSockets there) |
@@ -76,11 +76,14 @@ TODO (DevOps): diagram and description of tables and relations (users, friendshi
 | Feature | Status | Who |
 | --- | --- | --- |
 | Localized pages (EN/FR) with language switcher | Done | mosmond |
-| Home, play menu, profile, leaderboard (sample data) | Done (UI) | mosmond |
-| Sign up / log in forms with client-side validation | Done (UI), backend TODO | mosmond |
+| Home, play menu | Done | mosmond |
+| Profiles (own + public), friends with online status, leaderboard (from the database) | Done | TODO |
+| 2FA (TOTP + backup codes) and login with 42 (OAuth 2.0) | Done | TODO |
+| Sign up / log in (Better Auth, validated client- and server-side) | Done | mosmond |
 | Privacy Policy and Terms of Service (footer links) | Done | mosmond |
 | Local 1v1 Pong (canvas) | Done | mosmond |
-| Online games, AI, tournaments | TODO | TODO |
+| Online games (server-side, reconnection, spectators), tournaments, saved results + XP | Done | TODO |
+| AI opponent | TODO | TODO |
 
 ## Modules
 
@@ -89,17 +92,17 @@ Target: **23 points** (19 needed for 125 %).
 | Module | Type | Points | Owner | Status |
 | --- | --- | --- | --- | --- |
 | Framework front + back (Next.js) | Major | 2 | All | In progress |
-| ORM (Prisma) | Minor | 1 | DevOps | TODO |
+| ORM (Prisma) | Minor | 1 | DevOps | Done |
 | Monitoring (Prometheus + Grafana) | Major | 2 | DevOps | TODO |
-| Standard user management | Major | 2 | Auth & users | UI preview |
-| Remote authentication (OAuth 2.0, 42) | Minor | 1 | Auth & users | TODO |
-| Two-factor authentication (TOTP) | Minor | 1 | Auth & users | TODO |
+| Standard user management | Major | 2 | Auth & users | Profiles, friends, online status done; avatar upload TODO |
+| Remote authentication (OAuth 2.0, 42) | Minor | 1 | Auth & users | Done (needs a 42 intra app) |
+| Two-factor authentication (TOTP) | Minor | 1 | Auth & users | Done |
 | Web-based game (Pong 2D) | Major | 2 | Game engine | Local preview |
-| Remote players (+ reconnection) | Major | 2 | Game engine | TODO |
-| Spectator mode | Minor | 1 | Game engine | TODO |
+| Remote players (+ reconnection) | Major | 2 | Game engine | Done |
+| Spectator mode | Minor | 1 | Game engine | Done |
 | AI opponent | Major | 2 | Around the game | TODO |
-| Game statistics and match history | Minor | 1 | Around the game | UI preview |
-| Tournament system | Minor | 1 | Around the game | TODO |
+| Game statistics and match history | Minor | 1 | Around the game | Done |
+| Tournament system | Minor | 1 | Around the game | Done |
 | Game customization | Minor | 1 | Around the game | TODO |
 | Gamification | Minor | 1 | Around the game | TODO |
 | Multiple languages (3) | Minor | 1 | Front | EN/FR done, 3rd TODO |

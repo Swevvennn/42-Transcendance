@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}q
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - db_data:/var/lib/postgresql/data
 
@@ -17,6 +17,12 @@ services:
     restart: always
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public"
+      # Better Auth : cle secrete des cookies de session + adresse publique du site (nginx)
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: https://localhost:${HTTPS_PORT:-8443}
+      # Connexion avec 42 (optionnel : sans ces 2 valeurs, le bouton affiche une erreur)
+      FT_CLIENT_ID: ${FT_CLIENT_ID:-}
+      FT_CLIENT_SECRET: ${FT_CLIENT_SECRET:-}
     depends_on:
       - db
 
@@ -25,7 +31,10 @@ services:
     build: ./nginx  # On dit à Docker d'aller lire le Dockerfile dans le dossier nginx
     restart: always
     ports:
-      - "443:443"   # La SEULE porte ouverte vers l'extérieur (ton vrai PC)
+      # La SEULE porte ouverte vers l'extérieur (ton vrai PC) : https://localhost:8443
+      # Le Docker "rootless" des postes 42 ne peut pas ouvrir 443 (port < 1024).
+      # Ailleurs on peut mettre HTTPS_PORT=443 dans le .env.
+      - "${HTTPS_PORT:-8443}:443"
     depends_on:
       - app         # On ne démarre Nginx que si l'app Next.js est allumée
 
