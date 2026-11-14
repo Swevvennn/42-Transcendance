@@ -100,7 +100,9 @@
     "usernameTaken": "This username is already taken.",
     "emailTaken": "An account already uses this email.",
     "codeFormat": "Enter the 6-digit code.",
-    "codeRequired": "Please enter a code."
+    "codeRequired": "Please enter a code.",
+    "avatarType": "Choose a PNG, JPEG, WebP or GIF picture.",
+    "avatarSize": "This picture is too big (10 MB max)."
   },
   "Play": {
     "title": "Play",
@@ -166,6 +168,22 @@
       "notHost": "Only the host can do that.",
       "notEnoughPlayers": "Not enough players to start.",
       "playersBusy": "A player is still in another match. Try again in a moment."
+    },
+    "live": {
+      "title": "Live matches",
+      "description": "Watch a match in progress as a spectator.",
+      "empty": "No match in progress right now.",
+      "versus": "{left} vs {right}",
+      "score": "Score {left} - {right}",
+      "tournament": "Tournament",
+      "watch": "Watch",
+      "resume": "Resume my match",
+      "status": {
+        "waiting": "Waiting for players",
+        "countdown": "Starting",
+        "playing": "Playing",
+        "paused": "Paused"
+      }
     }
   },
   "Match": {
@@ -309,7 +327,7 @@
   },
   "Settings": {
     "title": "Settings",
-    "description": "Security of your account.",
+    "description": "Your profile and account security.",
     "twoFactor": {
       "title": "Two-factor authentication (2FA)",
       "description": "At login, ask for a code from an authenticator app in addition to the password.",
@@ -328,6 +346,25 @@
       "disabledOk": "2FA is disabled.",
       "cancel": "Cancel",
       "oauthOnly": "This account uses the 42 login and has no password: its security (2FA included) is managed on the 42 intra."
+    },
+    "avatar": {
+      "title": "Avatar",
+      "hint": "PNG, JPEG, WebP or GIF. It is cropped to a square. Without a picture, your initials are shown.",
+      "upload": "Change picture",
+      "uploading": "Uploading…",
+      "remove": "Remove",
+      "saved": "Picture updated.",
+      "removed": "Picture removed."
+    },
+    "profile": {
+      "title": "Profile",
+      "description": "Your username is shown to other players and in your profile address.",
+      "save": "Save",
+      "saved": "Profile saved."
+    },
+    "errors": {
+      "unauthorized": "You must be logged in.",
+      "invalid": "Something went wrong. Please try again."
     }
   },
   "Privacy": {

@@ -39,6 +39,15 @@ export type MatchFrame = {
   score: { left: number; right: number }
 }
 
+/** A match in progress, for the "live matches" list (spectator mode). */
+export type LiveMatch = {
+  id: string
+  players: Record<Side, PlayerRef>
+  status: Exclude<MatchStatus, "over">
+  score: { left: number; right: number }
+  tournament: boolean
+}
+
 export type JoinMatchResult =
   | { ok: true; role: Side | "spectator"; info: MatchInfo; serverNow: number }
   | { ok: false; error: "notFound" }
@@ -97,6 +106,7 @@ export interface ServerToClientEvents {
   "queue:matched": (payload: { matchId: string }) => void
   "match:info": (info: MatchInfo) => void
   "match:frame": (frame: MatchFrame) => void
+  "matches:list": (list: LiveMatch[]) => void
   "tournament:list": (list: TournamentSummary[]) => void
   "tournament:update": (info: TournamentInfo) => void
   "tournament:matchReady": (payload: { tournamentId: string; matchId: string }) => void
@@ -110,6 +120,8 @@ export interface ClientToServerEvents {
   "match:leave": (matchId: unknown) => void
   "match:input": (direction: unknown) => void
   "match:forfeit": (matchId: unknown) => void
+  "matches:subscribe": (ack: (list: LiveMatch[]) => void) => void
+  "matches:unsubscribe": () => void
   "tournament:subscribeList": (ack: (list: TournamentSummary[]) => void) => void
   "tournament:unsubscribeList": () => void
   "tournament:create": (input: unknown, ack: (res: Ack<{ id: string }>) => void) => void

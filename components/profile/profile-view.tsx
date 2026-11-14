@@ -55,7 +55,7 @@ export async function ProfileView({
   return (
     <div className="flex flex-col gap-6">
       <section className="flex flex-wrap items-center gap-4">
-        <UserAvatar name={name} image={user.image} size="lg" />
+        <UserAvatar name={name} image={user.image} className="size-20 text-xl" />
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-bold">{name}</h1>
           <div className="flex flex-wrap gap-2">

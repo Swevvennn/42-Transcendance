@@ -100,7 +100,9 @@
     "usernameTaken": "Ce nom d'utilisateur est déjà pris.",
     "emailTaken": "Un compte utilise déjà cet email.",
     "codeFormat": "Entre le code à 6 chiffres.",
-    "codeRequired": "Entre un code."
+    "codeRequired": "Entre un code.",
+    "avatarType": "Choisis une image PNG, JPEG, WebP ou GIF.",
+    "avatarSize": "Cette image est trop lourde (10 Mo max)."
   },
   "Play": {
     "title": "Jouer",
@@ -166,6 +168,22 @@
       "notHost": "Seul l'organisateur peut faire ça.",
       "notEnoughPlayers": "Pas assez de joueurs pour commencer.",
       "playersBusy": "Un joueur est encore dans un autre match. Réessaie dans un instant."
+    },
+    "live": {
+      "title": "Matchs en cours",
+      "description": "Regarde un match en direct en tant que spectateur.",
+      "empty": "Aucun match en cours pour l'instant.",
+      "versus": "{left} contre {right}",
+      "score": "Score {left} - {right}",
+      "tournament": "Tournoi",
+      "watch": "Regarder",
+      "resume": "Reprendre mon match",
+      "status": {
+        "waiting": "En attente des joueurs",
+        "countdown": "Ça commence",
+        "playing": "En jeu",
+        "paused": "En pause"
+      }
     }
   },
   "Match": {
@@ -309,7 +327,7 @@
   },
   "Settings": {
     "title": "Paramètres",
-    "description": "Sécurité de ton compte.",
+    "description": "Ton profil et la sécurité de ton compte.",
     "twoFactor": {
       "title": "Double authentification (2FA)",
       "description": "À la connexion, demande un code d'une application d'authentification en plus du mot de passe.",
@@ -328,6 +346,25 @@
       "disabledOk": "La 2FA est désactivée.",
       "cancel": "Annuler",
       "oauthOnly": "Ce compte utilise la connexion 42 et n'a pas de mot de passe : sa sécurité (2FA comprise) se gère sur l'intra 42."
+    },
+    "avatar": {
+      "title": "Avatar",
+      "hint": "PNG, JPEG, WebP ou GIF. L'image est recadrée en carré. Sans image, tes initiales sont affichées.",
+      "upload": "Changer d'image",
+      "uploading": "Envoi…",
+      "remove": "Supprimer",
+      "saved": "Image mise à jour.",
+      "removed": "Image supprimée."
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Ton nom d'utilisateur est visible par les autres joueurs et dans l'adresse de ton profil.",
+      "save": "Enregistrer",
+      "saved": "Profil enregistré."
+    },
+    "errors": {
+      "unauthorized": "Tu dois être connecté.",
+      "invalid": "Une erreur est survenue. Réessaie."
     }
   },
   "Privacy": {

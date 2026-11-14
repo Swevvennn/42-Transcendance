@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 
 import { ButtonLink } from "@/components/button-link"
+import { LiveMatches } from "@/components/online/live-matches"
 import { OnlineGate } from "@/components/online/online-gate"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
@@ -12,7 +13,16 @@ import type { GameSocket } from "@/lib/pong/connection"
 import type { ErrorCode } from "@/lib/pong/protocol"
 
 export function OnlineLobby() {
-  return <OnlineGate>{({ socket }) => <Matchmaking socket={socket} />}</OnlineGate>
+  return (
+    <OnlineGate>
+      {({ socket, player }) => (
+        <div className="flex flex-col gap-8">
+          <Matchmaking socket={socket} />
+          <LiveMatches socket={socket} player={player} />
+        </div>
+      )}
+    </OnlineGate>
+  )
 }
 
 function Matchmaking({ socket }: { socket: GameSocket }) {

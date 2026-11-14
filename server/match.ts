@@ -10,6 +10,7 @@ import {
   type Side,
 } from "@/lib/pong/engine"
 import type {
+  LiveMatch,
   MatchEndReason,
   MatchFrame,
   MatchInfo,
@@ -87,6 +88,18 @@ export class Match {
       winner: this.winner,
       endReason: this.endReason,
       tournamentId: this.tournamentId,
+    }
+  }
+
+  /** Short form for the list of live matches (null once finished). */
+  summary(): LiveMatch | null {
+    if (this.status === "over") return null
+    return {
+      id: this.id,
+      players: this.players,
+      status: this.status,
+      score: { ...this.state.score },
+      tournament: this.tournamentId !== null,
     }
   }
 

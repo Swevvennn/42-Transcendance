@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import type { Locale } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
+import { AvatarSettings, ProfileForm } from "@/components/settings/profile-settings"
 import { TwoFactorSettings } from "@/components/settings/two-factor-settings"
 import {
   Card,
@@ -38,12 +39,38 @@ export default async function SettingsPage({ params }: PageProps<"/[locale]/sett
     select: { id: true },
   }))
 
+  const { user } = session
+  const profile = {
+    id: user.id,
+    name: user.displayUsername ?? user.username ?? user.name,
+    username: user.username ?? user.name,
+    email: user.email,
+    image: user.image ?? null,
+  }
+
   return (
     <div className="flex max-w-xl flex-col gap-6">
       <div>
         <h1 className="text-2xl font-bold">{t("title")}</h1>
         <p className="text-muted-foreground">{t("description")}</p>
       </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("avatar.title")}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <AvatarSettings user={profile} />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("profile.title")}</CardTitle>
+          <CardDescription>{t("profile.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ProfileForm user={profile} />
+        </CardContent>
+      </Card>
       <Card>
         <CardHeader>
           <CardTitle>{t("twoFactor.title")}</CardTitle>

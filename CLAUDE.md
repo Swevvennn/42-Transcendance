@@ -37,7 +37,8 @@
 - **Jeu en ligne + tournoi (12 novembre 2026)** : custom server `server.ts` + Socket.IO, partie serveur à 60 ticks/s, matchmaking, reconnexion (15 s puis forfait), spectateur, tournoi à élimination directe (3 à 8 joueurs). Parties en mémoire. Détails : `docs/online.md`.
 - **Better Auth + Prisma 7** : inscription / connexion email + mot de passe, nom d'utilisateur unique, sessions, déconnexion, jeu en ligne réservé aux connectés. BDD de dev : `bun run db:up`. Détails : `docs/auth.md`.
 - **Comptes complets (12 novembre 2026)** : 2FA TOTP + codes de secours, connexion 42 (OAuth, à activer avec une app intra), matchs sauvegardés en BDD + XP / niveau, profils réels (le sien et `/profile/<username>`), amis avec statut en ligne, classement depuis la BDD. Docker écoute en HTTPS sur **8443** (`HTTPS_PORT`).
-- Pas encore fait : upload d'avatar, modification du profil, mode IA, 3e langue, monitoring.
+- **14 novembre 2026** : upload d'avatar (stocké en BDD), modification du pseudo / email sur `/settings`, liste des matchs en cours à regarder (spectateur) sur `/play/online`.
+- Pas encore fait : mode IA, 3e langue, monitoring.
 - Vérifié : `tsc`, `lint` et `build` OK, aucune erreur console Chrome (prod et dev).
 - **Explications détaillées pour l'équipe : `docs/frontend.md`.** Règles de code pour les agents : `AGENTS.md`.
 

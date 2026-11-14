@@ -92,7 +92,12 @@ On ne peut pas entrer dans la file si on a déjà un match à jouer (partie en c
 
 ## Spectateurs
 
-N'importe qui peut ouvrir `/play/match/<id>`. Si son identifiant n'est pas un des deux joueurs, il devient **spectateur** : il reçoit les mêmes images mais ses touches sont ignorées. Le tableau du tournoi a un bouton « Regarder » sur les matchs en cours. C'est la base du module **Mode spectateur** (minor).
+N'importe qui peut ouvrir `/play/match/<id>`. Si son identifiant n'est pas un des deux joueurs, il devient **spectateur** : il reçoit les mêmes images mais ses touches sont ignorées. Pour trouver un match à regarder :
+
+- **`/play/online` → « Matchs en cours »** (`components/online/live-matches.tsx`) : la liste de toutes les parties non terminées (joueurs, score, statut, tournoi ou non), mise à jour en direct. La page s'abonne avec `matches:subscribe` et reçoit `matches:list` à chaque changement (nouvelle partie, point marqué, pause, fin). Sur son propre match, le bouton devient « Reprendre mon match ».
+- le tableau d'un tournoi a aussi un bouton « Regarder » sur les matchs en cours.
+
+C'est le module **Mode spectateur** (minor).
 
 ## Tournois (`server/tournament.ts`)
 

@@ -41,6 +41,7 @@ const rooms = {
   match: (id: string) => `match:${id}`, // players + spectators of a match
   tournament: (id: string) => `tournament:${id}`,
   tournamentList: "tournaments",
+  matchList: "matches", // pages showing the live matches (spectator mode)
 }
 
 function shuffle<T>(list: T[]): T[] {
@@ -140,6 +141,13 @@ export class GameServer {
       socket.emit("match:frame", match.frame())
     })
     socket.on("match:leave", () => this.stopWatching(socket))
+    // Live matches list: now, then on every change (spectator mode).
+    socket.on("matches:subscribe", (ack) => {
+      if (typeof ack !== "function") return
+      socket.join(rooms.matchList)
+      ack(this.liveMatches())
+    })
+    socket.on("matches:unsubscribe", () => socket.leave(rooms.matchList))
     socket.on("match:input", (raw) => {
       const direction = directionSchema.safeParse(raw)
       const watching = socket.data.watching
@@ -259,14 +267,33 @@ export class GameServer {
     const id = newId()
     const room = rooms.match(id)
     const match = new Match(id, left, right, tournamentId, {
-      onInfo: (info) => this.io.to(room).emit("match:info", info),
+      onInfo: (info) => {
+        this.io.to(room).emit("match:info", info)
+        // Status changes include the pause after each point: the score too.
+        this.broadcastLiveMatches()
+      },
       onFrame: (frame) => this.io.to(room).emit("match:frame", frame),
       onEnd: (m) => this.onMatchEnd(m),
     })
     this.matches.set(id, match)
     this.activeMatch.set(left.id, id)
     this.activeMatch.set(right.id, id)
+    this.broadcastLiveMatches()
     return match
+  }
+
+  private liveMatches() {
+    const list = []
+    for (const match of this.matches.values()) {
+      const summary = match.summary()
+      if (summary) list.push(summary)
+    }
+    return list
+  }
+
+  private broadcastLiveMatches() {
+    if (!this.io.sockets.adapter.rooms.get(rooms.matchList)?.size) return
+    this.io.to(rooms.matchList).emit("matches:list", this.liveMatches())
   }
 
   private onMatchEnd(match: Match) {

@@ -42,6 +42,7 @@ model User {
   matchesWon        Match[]      @relation("MatchWinner")
   friendRequestsOut Friendship[] @relation("FriendshipRequester")
   friendRequestsIn  Friendship[] @relation("FriendshipAddressee")
+  avatar            Avatar?
 
   @@map("user")
 }
@@ -112,6 +113,22 @@ model TwoFactor {
   @@index([secret])
   @@index([userId])
   @@map("twoFactor")
+}
+
+// --- Profile ------------------------------------------------------------
+
+/// Uploaded profile picture, served by app/api/avatar/[id]/route.ts.
+/// Stored in the database so Docker needs no upload volume. `user.image`
+/// points to it (with ?v=<time> so browsers drop the old picture).
+model Avatar {
+  userId    String   @id
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// The image, already resized to 256x256 by the browser (max 512 KB).
+  data      Bytes
+  mimeType  String
+  updatedAt DateTime @updatedAt
+
+  @@map("avatar")
 }
 
 // --- Game ---------------------------------------------------------------

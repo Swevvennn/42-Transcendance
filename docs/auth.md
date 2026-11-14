@@ -82,7 +82,12 @@ Plugin `genericOAuth`, fournisseur `42` (dans `lib/auth.ts`). Il n'est activé *
 - **Statut en ligne** (`lib/presence.ts`) : le serveur de jeu sait qui a une connexion Socket.IO ouverte, et qui a un match à jouer. Le header ouvre cette connexion sur **toutes** les pages quand on est connecté. Résultat : « En ligne », « En jeu » ou « Hors ligne ».
 - **XP / niveau** (`lib/xp.ts`) : +100 XP par victoire, +25 par défaite, un niveau tous les 250 XP.
 
+## Modifier son profil et son avatar (`/settings`)
+
+- **Nom d'utilisateur et email** : formulaire `ProfileForm` (`components/settings/profile-settings.tsx`) → Server Action `updateProfile` (`lib/actions/profile.ts`). Mêmes règles des deux côtés : `profileSchema` dans `lib/validation/profile.ts`. Le serveur relit la session, refuse un pseudo ou un email déjà pris (erreur affichée sous le champ), et stocke le pseudo comme Better Auth (minuscules dans `username`, casse tapée dans `displayUsername`). Après un changement de pseudo, la page rouvre la connexion Socket.IO pour que le jeu affiche le nouveau nom.
+- **Avatar** : table `avatar` (l'image est **dans la BDD**, donc rien à monter dans Docker). Le navigateur vérifie le fichier (`avatarSourceSchema` : PNG / JPEG / WebP / GIF, 10 Mo max), le recadre en carré 256×256 et l'envoie en WebP. La Server Action `uploadAvatar` revérifie (`avatarSchema` : type + 512 Ko max) **et** regarde les premiers octets du fichier (un faux `.png` est refusé ; pas de SVG, qui peut contenir du JavaScript). L'image est servie par `app/api/avatar/[id]/route.ts` ; `user.image` vaut `/api/avatar/<id>?v=<date>` pour que le navigateur ne garde pas l'ancienne.
+- **Avatar par défaut** : sans image, `UserAvatar` affiche les deux premières lettres du pseudo. « Supprimer » revient à cet avatar par défaut (`removeAvatar`).
+
 ## Pour la suite (module Auth & users)
 
-- **Avatar** : upload d'une image (avec un avatar par défaut, exigé par le module « gestion des users »). Aujourd'hui seuls les comptes 42 ont une photo ; les autres ont leurs initiales.
-- **Modifier son profil** : changer de nom d'utilisateur / d'email (Better Auth `updateUser`, avec les mêmes schémas zod).
+- Changer de mot de passe depuis `/settings` (pas exigé par le sujet).

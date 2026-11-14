@@ -68,3 +68,5 @@ export type ValidationKey =
   | "tournamentSize"
   | "codeFormat"
   | "codeRequired"
+  | "avatarType"
+  | "avatarSize"
