@@ -1,5 +1,5 @@
 services:
-  #lance la db
+#lance la db
   db:
     image: postgres:15
     restart: always
@@ -9,6 +9,11 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   #2e conteneur app next.js
   app:
@@ -19,13 +24,13 @@ services:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public"
       # Better Auth : cle secrete des cookies de session + adresse publique du site (nginx)
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
-      BETTER_AUTH_URL: https://localhost:${HTTPS_PORT:-8443}
+      BETTER_AUTH_URL: ${PUBLIC_URL:-https://localhost:${HTTPS_PORT:-8443}}
       # Connexion avec 42 (optionnel : sans ces 2 valeurs, le bouton affiche une erreur)
       FT_CLIENT_ID: ${FT_CLIENT_ID:-}
       FT_CLIENT_SECRET: ${FT_CLIENT_SECRET:-}
     depends_on:
-      - db
-
+      db:
+        condition: service_healthy
   #Le vigile Nginx
   nginx:
     build: ./nginx  # On dit à Docker d'aller lire le Dockerfile dans le dossier nginx

@@ -8,6 +8,6 @@ RUN apk update && apk add --no-cache openssl
 RUN mkdir -p /etc/nginx/ssl
 
 #exec openssl genere .key/.crt
-RUN openssl req -x509 -nodes -out /etc/nginx/ssl/pong.crt -keyout /etc/nginx/ssl/pong.key -subj "/C=FR/ST=Normandie/L=LeHavre/O=42/OU=42/CN=localhost/UID=anis"
+RUN openssl req -x509 -nodes -days 365 -out /etc/nginx/ssl/pong.crt -keyout /etc/nginx/ssl/pong.key -subj "/C=FR/ST=Normandie/L=LeHavre/O=42/OU=42/CN=localhost/UID=anis"
 
 COPY nginx.conf /etc/nginx/nginx.conf
