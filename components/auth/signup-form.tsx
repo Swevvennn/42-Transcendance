@@ -3,6 +3,8 @@
 import { useTranslations } from "next-intl"
 import { useState } from "react"
 
+import { authError, type AuthErrorResult } from "@/components/auth/auth-error"
+import { FormAlert } from "@/components/auth/form-alert"
 import { useFormErrors } from "@/components/auth/use-form-errors"
 import { Button } from "@/components/ui/button"
 import {
@@ -13,18 +15,43 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { useRouter } from "@/i18n/navigation"
+import { signUp } from "@/lib/auth-client"
 import { signupSchema, type SignupInput } from "@/lib/validation/auth"
 
 export function SignupForm() {
   const t = useTranslations("Auth")
-  const { errors, validate, errorFor } = useFormErrors<SignupInput>(signupSchema)
-  const [submitted, setSubmitted] = useState(false)
+  const router = useRouter()
+  const { errors, validate, errorFor, setFieldError } =
+    useFormErrors<SignupInput>(signupSchema)
+  const [pending, setPending] = useState(false)
+  const [formError, setFormError] = useState<AuthErrorResult | null>(null)
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const data = Object.fromEntries(new FormData(event.currentTarget))
-    // TODO: call the auth backend once it exists (it must re-validate with signupSchema).
-    setSubmitted(validate(data) !== null)
+    setFormError(null)
+    const data = validate(Object.fromEntries(new FormData(event.currentTarget)))
+    if (!data) return
+
+    // The server checks the same fields again (lib/auth.ts).
+    setPending(true)
+    const { error } = await signUp.email({
+      email: data.email,
+      password: data.password,
+      name: data.username,
+      username: data.username,
+    })
+    setPending(false)
+
+    if (!error) {
+      // Better Auth logs the new user in right away.
+      router.push("/play")
+      router.refresh()
+      return
+    }
+    const result = authError(error)
+    if (result.field) setFieldError(result.field, result.key)
+    else setFormError(result)
   }
 
   return (
@@ -80,15 +107,11 @@ export function SignupForm() {
           <FieldError>{errorFor("confirmPassword")}</FieldError>
         </Field>
 
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full" disabled={pending}>
           {t("signup.submit")}
         </Button>
 
-        {submitted && (
-          <p role="status" className="text-xs text-muted-foreground">
-            {t("notConnected")}
-          </p>
-        )}
+        <FormAlert error={formError} />
       </FieldGroup>
     </form>
   )

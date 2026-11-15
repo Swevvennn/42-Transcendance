@@ -1,0 +1,7 @@
+# Not sent to `docker build`: installed/generated inside the image, or secret.
+node_modules
+.next
+lib/generated
+.git
+.env*
+!.env.example

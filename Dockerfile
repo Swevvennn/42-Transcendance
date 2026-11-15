@@ -3,7 +3,10 @@ FROM oven/bun:1 AS builder
 
 WORKDIR /app
 
-COPY package.json bun.lock /app/
+#package.json + bun.lock pour installer, et le schema prisma car `bun install`
+#lance `prisma generate` (script postinstall) qui en a besoin
+COPY package.json bun.lock prisma.config.ts /app/
+COPY prisma /app/prisma
 
 #va lire bun.lock et installer les infos contenus dedans
 RUN bun install
@@ -14,5 +17,7 @@ COPY . .
 #compile le typescript, navigateur et serveur node.js comprennent pas le ts brut build va tt traduire en javascript
 RUN bun run build
 
-#cmd qd le conteneur se start a chaque lancement. bun = executable equivalant cc/gcc
-CMD ["bun", "run", "start"]
+#cmd qd le conteneur se start a chaque lancement :
+#1. applique les migrations prisma (cree / met a jour les tables de la bdd)
+#2. lance server.ts (Next.js + Socket.IO) en production
+CMD ["sh", "-c", "bun run db:deploy && bun run start"]

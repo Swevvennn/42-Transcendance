@@ -13,12 +13,12 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-// Only the local mode is playable for now; the others need the game server.
+// Online and tournament modes need the game server (server.ts).
 const modes = [
   { key: "local", href: "/play/local" },
+  { key: "online", href: "/play/online" },
+  { key: "tournament", href: "/play/tournament" },
   { key: "ai", href: null },
-  { key: "online", href: null },
-  { key: "tournament", href: null },
 ] as const
 
 export async function generateMetadata({
