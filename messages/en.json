@@ -362,6 +362,16 @@
       "save": "Save",
       "saved": "Profile saved."
     },
+    "password": {
+      "title": "Password",
+      "description": "Changing it logs you out of your other devices.",
+      "current": "Current password",
+      "new": "New password",
+      "confirm": "Confirm the new password",
+      "save": "Change password",
+      "saved": "Password changed.",
+      "oauthOnly": "This account uses the 42 login and has no password to change."
+    },
     "errors": {
       "unauthorized": "You must be logged in.",
       "invalid": "Something went wrong. Please try again."

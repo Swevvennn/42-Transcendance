@@ -88,6 +88,6 @@ Plugin `genericOAuth`, fournisseur `42` (dans `lib/auth.ts`). Il n'est activé *
 - **Avatar** : table `avatar` (l'image est **dans la BDD**, donc rien à monter dans Docker). Le navigateur vérifie le fichier (`avatarSourceSchema` : PNG / JPEG / WebP / GIF, 10 Mo max), le recadre en carré 256×256 et l'envoie en WebP. La Server Action `uploadAvatar` revérifie (`avatarSchema` : type + 512 Ko max) **et** regarde les premiers octets du fichier (un faux `.png` est refusé ; pas de SVG, qui peut contenir du JavaScript). L'image est servie par `app/api/avatar/[id]/route.ts` ; `user.image` vaut `/api/avatar/<id>?v=<date>` pour que le navigateur ne garde pas l'ancienne.
 - **Avatar par défaut** : sans image, `UserAvatar` affiche les deux premières lettres du pseudo. « Supprimer » revient à cet avatar par défaut (`removeAvatar`).
 
-## Pour la suite (module Auth & users)
+## Changer de mot de passe (`/settings`)
 
-- Changer de mot de passe depuis `/settings` (pas exigé par le sujet).
+Formulaire `PasswordSettings` (`components/settings/password-settings.tsx`) : mot de passe actuel, nouveau, confirmation. Il appelle `changePassword` de Better Auth (`/api/auth/change-password`) avec `revokeOtherSessions: true` : les autres navigateurs connectés sont déconnectés, celui-ci reste connecté. Mêmes règles des deux côtés : `changePasswordSchema` dans le formulaire, `changePasswordApiSchema` dans `validatedRoutes` (`lib/auth.ts`). Le nouveau mot de passe suit les règles de l'inscription (`newPasswordSchema`). Un mauvais mot de passe actuel affiche « Mot de passe incorrect ». Les comptes créés avec 42 n'ont pas de mot de passe : la carte l'explique à la place du formulaire.

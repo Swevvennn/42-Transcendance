@@ -9,6 +9,7 @@ import { fortyTwoCredentials } from "@/lib/oauth42"
 import { prisma } from "@/lib/prisma"
 import {
   backupCodeSchema,
+  changePasswordApiSchema,
   loginSchema,
   passwordConfirmSchema,
   signupApiSchema,
@@ -46,6 +47,7 @@ const validatedRoutes: Record<string, z.ZodType | undefined> = {
   "/two-factor/verify-backup-code": backupCodeSchema,
   "/two-factor/enable": passwordConfirmSchema,
   "/two-factor/disable": passwordConfirmSchema,
+  "/change-password": changePasswordApiSchema,
 }
 
 /** The part of https://api.intra.42.fr/v2/me we use. */
