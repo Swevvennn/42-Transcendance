@@ -13,6 +13,7 @@
     "db:down": "docker compose -f docker-compose.dev.yml down",
     "db:migrate": "bun --env-file=.env --bun x prisma migrate dev",
     "db:deploy": "bun x --bun prisma migrate deploy",
+	"db:seed": "bun --env-file=.env prisma/seed.ts",
     "db:studio": "bun --env-file=.env --bun x prisma studio"
   },
   "dependencies": {
