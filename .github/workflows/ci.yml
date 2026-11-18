@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Telecharge le code du repo sur le serveur GitHub
+      # 1. Télécharge le code du repo sur le serveur GitHub
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -30,11 +30,15 @@ jobs:
       - name: Lint
         run: bun run lint
 
-      # 5. Vérifie qu'il n'y a aucune erreur de typage TypeScript
+      # 5. Génère les types Next.js (.next/types) avant de lancer tsc
+      - name: Generate Next.js types
+        run: bunx next typegen
+
+      # 6. Vérifie qu'il n'y a aucune erreur de typage TypeScript
       - name: Typecheck
         run: bunx tsc --noEmit
 
-      # 6. Compile Next.js comme dans le Dockerfile (avec de fausses variables .env)
+      # 7. Compile Next.js comme dans le Dockerfile (avec de fausses variables .env)
       - name: Build
         run: bun run build
         env:
