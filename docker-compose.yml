@@ -1,12 +1,16 @@
+# ${VAR:?message} = variable obligatoire : si elle manque ou est vide dans le
+# .env, `docker compose` refuse de demarrer et affiche le message.
+# ${VAR:-defaut} = variable optionnelle avec une valeur par defaut.
+
 services:
 #lance la db
   db:
     image: postgres:15
     restart: always
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER:?a definir dans .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?a definir dans .env}
+      POSTGRES_DB: ${POSTGRES_DB:?a definir dans .env}
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
@@ -17,13 +21,13 @@ services:
 
   #2e conteneur app next.js
   app:
-    #build . = cherche le dockerfile ds le dossier actuel ou se trv le .yml 
+    #build . = cherche le dockerfile ds le dossier actuel ou se trv le .yml
     build: .
     restart: always
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public"
       # Better Auth : cle secrete des cookies de session + adresse publique du site (nginx)
-      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?a definir dans .env (openssl rand -base64 32)}
       BETTER_AUTH_URL: ${PUBLIC_URL:-https://localhost:${HTTPS_PORT:-8443}}
       # Connexion avec 42 (optionnel : sans ces 2 valeurs, le bouton affiche une erreur)
       FT_CLIENT_ID: ${FT_CLIENT_ID:-}
@@ -31,17 +35,37 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    # L'app est "healthy" quand elle repond vraiment. /api/auth/ok est une
+    # petite route de Better Auth qui renvoie {"ok":true}. L'image n'a ni curl
+    # ni wget : on utilise bun lui-meme pour faire la requete.
+    # exit 0 = sain, exit 1 = pas encore pret.
+    healthcheck:
+      test: ["CMD", "bun", "-e", "fetch('http://localhost:3000/api/auth/ok').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      # Les migrations Prisma tournent avant le serveur : 30 s de grace pendant
+      # lesquelles un echec ne compte pas.
+      start_period: 30s
+
   #Le vigile Nginx
   nginx:
     build: ./nginx  # On dit à Docker d'aller lire le Dockerfile dans le dossier nginx
     restart: always
+    environment:
+      # Lu par le template nginx.conf (redirection HTTP -> HTTPS vers le bon port)
+      HTTPS_PORT: ${HTTPS_PORT:-8443}
     ports:
-      # La SEULE porte ouverte vers l'extérieur (ton vrai PC) : https://localhost:8443
-      # Le Docker "rootless" des postes 42 ne peut pas ouvrir 443 (port < 1024).
-      # Ailleurs on peut mettre HTTPS_PORT=443 dans le .env.
+      # Les SEULES portes ouvertes vers l'extérieur (ton vrai PC) : https://localhost:8443
+      # Le Docker "rootless" des postes 42 ne peut pas ouvrir 443 / 80 (port < 1024).
+      # Ailleurs on peut mettre HTTPS_PORT=443 et HTTP_PORT=80 dans le .env.
       - "${HTTPS_PORT:-8443}:443"
+      # HTTP : ne sert qu'a rediriger vers HTTPS
+      - "${HTTP_PORT:-8080}:80"
     depends_on:
-      - app         # On ne démarre Nginx que si l'app Next.js est allumée
+      # On ne démarre Nginx que quand l'app Next.js repond (sinon erreurs 502)
+      app:
+        condition: service_healthy
 
 #save la db sur le vrai disque dur
 volumes:

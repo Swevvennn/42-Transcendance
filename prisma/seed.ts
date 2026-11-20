@@ -1,6 +1,19 @@
+import { hashPassword } from "better-auth/crypto";
+
 import { prisma } from "../lib/prisma";
 
+// Mot de passe commun aux comptes de test (respecte les regles du formulaire :
+// 8 caracteres minimum, au moins une lettre et un chiffre).
+const SEED_PASSWORD = "Password123";
+
 async function main() {
+  // 0. Garde-fou : le seed ne doit jamais tourner sur la vraie base.
+  //    Pour forcer quand meme (ex : base Docker de test) : ALLOW_SEED=1
+  if (process.env.NODE_ENV === "production" && process.env.ALLOW_SEED !== "1") {
+    console.error("Seed refusé : NODE_ENV=production. Relance avec ALLOW_SEED=1 si c'est une base de test.");
+    process.exit(1);
+  }
+
   // 1. Création de 3 joueurs de test (avec XP et niveaux différents)
   const alice = await prisma.user.upsert({
     where: { email: "alice@42.fr" },
@@ -46,6 +59,27 @@ async function main() {
       level: 1,
     },
   });
+
+  // 1b. Un compte "credential" (email + mot de passe) par joueur, sinon
+  //     impossible de se connecter avec. C'est la table account de Better Auth :
+  //     - providerId "credential" = connexion par mot de passe (vs "42")
+  //     - accountId = l'id du user pour ce type de compte
+  //     - password = le hash scrypt, fait avec la MEME fonction que Better Auth
+  //       (better-auth/crypto), donc le login sait le verifier.
+  const password = await hashPassword(SEED_PASSWORD);
+  for (const user of [alice, bob, charlie]) {
+    await prisma.account.upsert({
+      where: { id: `seed-account-${user.username}` },
+      update: { password },
+      create: {
+        id: `seed-account-${user.username}`,
+        accountId: user.id,
+        providerId: "credential",
+        userId: user.id,
+        password,
+      },
+    });
+  }
 
   // 2. Création de relations d'amitié (1 acceptée, 1 en attente)
   await prisma.friendship.upsert({
@@ -115,6 +149,7 @@ async function main() {
   }
 
   console.log("Seed terminé : 3 joueurs, 2 amitiés et 3 matchs insérés.");
+  console.log(`Connexion : alice@42.fr, bob@42.fr ou charlie@42.fr / ${SEED_PASSWORD}`);
 }
 
 main()
