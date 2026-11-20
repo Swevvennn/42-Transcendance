@@ -7,7 +7,10 @@ RUN apk update && apk add --no-cache openssl
 #dossier pr ranger les certificats
 RUN mkdir -p /etc/nginx/ssl
 
-#exec openssl genere .key/.crt
-RUN openssl req -x509 -nodes -out /etc/nginx/ssl/pong.crt -keyout /etc/nginx/ssl/pong.key -subj "/C=FR/ST=Normandie/L=LeHavre/O=42/OU=42/CN=localhost/UID=anis"
+#exec openssl genere .key/.crt, valables 365 jours (30 par defaut sans -days)
+RUN openssl req -x509 -nodes -days 365 -out /etc/nginx/ssl/pong.crt -keyout /etc/nginx/ssl/pong.key -subj "/C=FR/ST=Normandie/L=LeHavre/O=42/OU=42/CN=localhost/UID=anis"
 
-COPY nginx.conf /etc/nginx/nginx.conf
+#nginx.conf est un template : au demarrage, l'image remplace ${HTTPS_PORT}
+#puis ecrit le resultat dans /etc/nginx/nginx.conf (au lieu de conf.d/)
+ENV NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
+COPY nginx.conf /etc/nginx/templates/nginx.conf.template
