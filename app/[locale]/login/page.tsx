@@ -30,7 +30,14 @@ export default async function LoginPage({
       oauthEnabled={fortyTwoCredentials() !== null}
       title={t("login.title")}
       description={t("login.description")}
-      oauthError={typeof error === "string"}
+      oauthError={
+        typeof error !== "string"
+          ? null
+          : // An email account already uses the 42 email (no automatic linking).
+            error === "account_not_linked"
+            ? "oauthNotLinked"
+            : "oauthFailed"
+      }
       footer={
         <>
           <span className="text-muted-foreground">{t("login.noAccount")}</span>

@@ -72,6 +72,7 @@
       "invalidPassword": "Mot de passe incorrect.",
       "oauth42Unavailable": "La connexion avec 42 n'est pas configurée sur ce serveur.",
       "oauthFailed": "La connexion avec 42 a échoué. Réessaie.",
+      "oauthNotLinked": "Un compte utilise déjà cet email. Connecte-toi avec ton mot de passe.",
       "sessionExpired": "Trop tard : reconnecte-toi."
     },
     "twoFactor": {
@@ -100,6 +101,7 @@
     "usernameTaken": "Ce nom d'utilisateur est déjà pris.",
     "emailTaken": "Un compte utilise déjà cet email.",
     "passwordWrong": "Mot de passe incorrect.",
+    "passwordTooManyTries": "Trop de mauvais mots de passe. Réessaie dans 15 minutes.",
     "codeFormat": "Entre le code à 6 chiffres.",
     "codeRequired": "Entre un code.",
     "avatarType": "Choisis une image PNG, JPEG, WebP ou GIF.",

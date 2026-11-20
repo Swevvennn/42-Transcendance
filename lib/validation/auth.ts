@@ -86,6 +86,7 @@ export type ValidationKey =
   | "usernameTaken"
   | "emailTaken"
   | "passwordWrong"
+  | "passwordTooManyTries"
   | "tournamentNameLength"
   | "tournamentSize"
   | "codeFormat"

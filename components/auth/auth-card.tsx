@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl"
 
+import type { AuthErrorKey } from "@/components/auth/auth-error"
 import { OAuth42Button } from "@/components/auth/oauth42-button"
 import {
   Card,
@@ -17,7 +18,7 @@ export function AuthCard({
   description,
   footer,
   oauthEnabled,
-  oauthError = false,
+  oauthError = null,
   children,
 }: {
   title: string
@@ -26,7 +27,7 @@ export function AuthCard({
   /** "Continue with 42" is configured on the server. */
   oauthEnabled: boolean
   /** The 42 login came back with an error. */
-  oauthError?: boolean
+  oauthError?: AuthErrorKey | null
   children: React.ReactNode
 }) {
   const t = useTranslations("Auth")

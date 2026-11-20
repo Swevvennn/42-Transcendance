@@ -22,6 +22,29 @@ export type AvatarResult = { ok: true } | { ok: false; error: ProfileErrorKey | 
 
 const refresh = () => revalidatePath("/[locale]", "layout")
 
+// Server actions skip Better Auth's rate limit: limit the wrong passwords
+// here (a stolen session must not be able to guess the password).
+const MAX_WRONG_PASSWORDS = 5
+const WRONG_PASSWORD_WINDOW_MS = 15 * 60_000
+const store = globalThis as { __wrongPasswords?: Map<string, { count: number; since: number }> }
+const wrongPasswords = (store.__wrongPasswords ??= new Map())
+
+function tooManyWrongPasswords(userId: string) {
+  const entry = wrongPasswords.get(userId)
+  if (!entry) return false
+  if (Date.now() - entry.since >= WRONG_PASSWORD_WINDOW_MS) {
+    wrongPasswords.delete(userId)
+    return false
+  }
+  return entry.count >= MAX_WRONG_PASSWORDS
+}
+
+function recordWrongPassword(userId: string) {
+  const entry = wrongPasswords.get(userId)
+  if (entry && Date.now() - entry.since < WRONG_PASSWORD_WINDOW_MS) entry.count++
+  else wrongPasswords.set(userId, { count: 1, since: Date.now() })
+}
+
 /** Who already uses this username or email (another user than `userId`). */
 async function conflict(userId: string, username: string, email: string) {
   const other = await prisma.user.findFirst({
@@ -63,11 +86,16 @@ export async function updateProfile(input: unknown): Promise<ProfileResult> {
     })
     // 42 accounts have no password: their email comes from the intra.
     if (!hasPassword) return { ok: false, error: "invalid" }
+    if (tooManyWrongPasswords(userId)) {
+      return { ok: false, field: "password", key: "passwordTooManyTries" }
+    }
     try {
       await auth.api.verifyPassword({ body: { password }, headers: await headers() })
     } catch {
+      recordWrongPassword(userId)
       return { ok: false, field: "password", key: "passwordWrong" }
     }
+    wrongPasswords.delete(userId)
   }
 
   try {

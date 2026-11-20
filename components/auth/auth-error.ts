@@ -11,6 +11,7 @@ export type AuthErrorKey =
   | "invalidPassword"
   | "oauth42Unavailable"
   | "oauthFailed"
+  | "oauthNotLinked"
   | "sessionExpired"
 
 type BetterAuthError = { code?: string; message?: string; status?: number }

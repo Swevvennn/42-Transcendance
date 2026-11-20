@@ -72,6 +72,7 @@
       "invalidPassword": "Wrong password.",
       "oauth42Unavailable": "Login with 42 is not configured on this server.",
       "oauthFailed": "Login with 42 failed. Please try again.",
+      "oauthNotLinked": "An account already uses this email. Log in with your password instead.",
       "sessionExpired": "Too slow: please log in again."
     },
     "twoFactor": {
@@ -100,6 +101,7 @@
     "usernameTaken": "This username is already taken.",
     "emailTaken": "An account already uses this email.",
     "passwordWrong": "Wrong password.",
+    "passwordTooManyTries": "Too many wrong passwords. Try again in 15 minutes.",
     "codeFormat": "Enter the 6-digit code.",
     "codeRequired": "Please enter a code.",
     "avatarType": "Choose a PNG, JPEG, WebP or GIF picture.",
