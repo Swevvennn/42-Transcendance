@@ -8,6 +8,8 @@ import { usernameSchema } from "@/lib/validation/auth"
 export const profileSchema = z.object({
   username: usernameSchema,
   email: z.email({ error: "emailInvalid" }),
+  /** Current password: required to change the email (checked by the server). */
+  password: z.string().max(128, { error: "passwordRequired" }).optional(),
 })
 
 export type ProfileInput = z.infer<typeof profileSchema>

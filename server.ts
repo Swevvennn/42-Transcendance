@@ -20,9 +20,26 @@ const handle = app.getRequestHandler()
 
 await app.prepare()
 
+// Only our own pages may open a game connection (the session cookie would
+// otherwise be sent by any site the player visits: cross-site WebSocket).
+const allowedOrigin = process.env.BETTER_AUTH_URL ? new URL(process.env.BETTER_AUTH_URL).origin : null
+
 const io: GameIO = new Server(httpServer, {
   // Don't kill WebSocket upgrades meant for Next.js (dev hot reload).
   destroyUpgrade: false,
+  allowRequest: (req, callback) => {
+    const origin = req.headers.origin
+    // In dev without BETTER_AUTH_URL: same host as the request.
+    let ok = false
+    try {
+      ok = allowedOrigin
+        ? origin === allowedOrigin
+        : !!origin && new URL(origin).host === req.headers.host
+    } catch {
+      // Malformed Origin header: refused.
+    }
+    callback(null, ok)
+  },
 })
 new GameServer(io)
 

@@ -1,3 +1,5 @@
+import { randomInt } from "node:crypto"
+
 import { betterAuth, type BetterAuthPlugin } from "better-auth"
 import { prismaAdapter } from "better-auth/adapters/prisma"
 import { APIError, createAuthMiddleware } from "better-auth/api"
@@ -102,19 +104,32 @@ function fortyTwo(): BetterAuthPlugin[] {
 async function freeUsername(name: string) {
   let base = name.replace(/[^a-zA-Z0-9_]/g, "").slice(0, 16)
   if (base.length < 3) base = `player${base}`
-  for (let i = 0; ; i++) {
-    const candidate = i === 0 ? base : `${base.slice(0, 15)}_${Math.floor(Math.random() * 10_000)}`
+  for (let i = 0; i < 50; i++) {
+    const candidate = i === 0 ? base : `${base.slice(0, 15)}_${randomInt(10_000)}`
     const taken = await prisma.user.findUnique({
       where: { username: candidate.toLowerCase() },
       select: { id: true },
     })
     if (!taken) return candidate
   }
+  // 50 tries: give up instead of looping forever.
+  throw new APIError("INTERNAL_SERVER_ERROR", { message: "No free username" })
 }
 
 export const auth = betterAuth({
   appName: "Transcendence",
   database: prismaAdapter(prisma, { provider: "postgresql" }),
+  // Routes our UI never calls. Profile edits go through our own validated
+  // server actions (lib/actions/profile.ts); these would bypass zod
+  // (e.g. /update-user accepts any `image` URL or username).
+  disabledPaths: ["/update-user", "/sign-in/username", "/change-email", "/delete-user"],
+  account: {
+    accountLinking: {
+      // Emails are not verified at sign-up: a 42 login with the same email
+      // must not be merged into an existing account (account takeover).
+      disableImplicitLinking: true,
+    },
+  },
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 8,

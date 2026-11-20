@@ -8,7 +8,7 @@
     "start": "NODE_ENV=production bun server.ts",
     "lint": "eslint",
     "postinstall": "bun x --bun prisma generate",
-    "dev:next": "next dev",
+    "dev:next": "echo \"dev:next runs Next.js without Socket.IO: online play, presence and tournaments will not work. Use bun run dev.\" && next dev",
     "db:up": "docker compose -f docker-compose.dev.yml up -d",
     "db:down": "docker compose -f docker-compose.dev.yml down",
     "db:migrate": "bun --env-file=.env --bun x prisma migrate dev",

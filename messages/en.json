@@ -99,6 +99,7 @@
     "tournamentSize": "Choose 4 or 8 players.",
     "usernameTaken": "This username is already taken.",
     "emailTaken": "An account already uses this email.",
+    "passwordWrong": "Wrong password.",
     "codeFormat": "Enter the 6-digit code.",
     "codeRequired": "Please enter a code.",
     "avatarType": "Choose a PNG, JPEG, WebP or GIF picture.",
@@ -167,7 +168,8 @@
       "tournamentStarted": "This tournament has already started.",
       "notHost": "Only the host can do that.",
       "notEnoughPlayers": "Not enough players to start.",
-      "playersBusy": "A player is still in another match. Try again in a moment."
+      "playersBusy": "A player is still in another match. Try again in a moment.",
+      "tooManyTournaments": "Too many open tournaments. Try again later."
     },
     "live": {
       "title": "Live matches",
@@ -256,7 +258,8 @@
       "tournamentStarted": "This tournament has already started.",
       "notHost": "Only the host can do that.",
       "notEnoughPlayers": "Not enough players to start.",
-      "playersBusy": "A player is still in another match. Try again in a moment."
+      "playersBusy": "A player is still in another match. Try again in a moment.",
+      "tooManyTournaments": "Too many open tournaments. Try again later."
     }
   },
   "Profile": {
@@ -360,7 +363,10 @@
       "title": "Profile",
       "description": "Your username is shown to other players and in your profile address.",
       "save": "Save",
-      "saved": "Profile saved."
+      "saved": "Profile saved.",
+      "password": "Current password",
+      "passwordHint": "Only needed to change your email.",
+      "emailLocked": "This account uses the 42 login: its email comes from the intra."
     },
     "password": {
       "title": "Password",

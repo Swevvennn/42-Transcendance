@@ -10,16 +10,16 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "@/i18n/navigation"
 import type { GameSocket } from "@/lib/pong/connection"
-import type {
-  Ack,
-  BracketMatch,
-  ErrorCode,
-  PlayerRef,
-  TournamentInfo,
+import {
+  MIN_PLAYERS,
+  type Ack,
+  type BracketMatch,
+  type ErrorCode,
+  type PlayerRef,
+  type TournamentInfo,
 } from "@/lib/pong/protocol"
 import { cn } from "@/lib/utils"
 
-const MIN_PLAYERS = 3
 
 export function TournamentView({ id }: { id: string }) {
   return (

@@ -9,7 +9,7 @@ export const loginSchema = z.object({
   password: z.string().min(1, { error: "passwordRequired" }),
 })
 
-/** A username: also used for friend requests (lib/friends/actions.ts). */
+/** A username: also used for friend requests (lib/actions/friends.ts). */
 export const usernameSchema = z
   .string()
   .min(3, { error: "usernameLength" })
@@ -85,6 +85,7 @@ export type ValidationKey =
   | "passwordMismatch"
   | "usernameTaken"
   | "emailTaken"
+  | "passwordWrong"
   | "tournamentNameLength"
   | "tournamentSize"
   | "codeFormat"

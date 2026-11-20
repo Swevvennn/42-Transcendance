@@ -1,7 +1,9 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
+import { headers } from "next/headers"
 
+import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { currentSession } from "@/lib/users"
 import type { ValidationKey } from "@/lib/validation/auth"
@@ -49,6 +51,24 @@ export async function updateProfile(input: unknown): Promise<ProfileResult> {
 
   const taken = await conflict(userId, username, email)
   if (taken) return { ok: false, ...taken }
+
+  // A stolen session must not be enough to take the account over by
+  // changing its email: ask for the current password.
+  if (email !== session.user.email) {
+    const password = parsed.data.password ?? ""
+    if (!password) return { ok: false, field: "password", key: "passwordRequired" }
+    const hasPassword = await prisma.account.findFirst({
+      where: { userId, providerId: "credential" },
+      select: { id: true },
+    })
+    // 42 accounts have no password: their email comes from the intra.
+    if (!hasPassword) return { ok: false, error: "invalid" }
+    try {
+      await auth.api.verifyPassword({ body: { password }, headers: await headers() })
+    } catch {
+      return { ok: false, field: "password", key: "passwordWrong" }
+    }
+  }
 
   try {
     await prisma.user.update({

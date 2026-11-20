@@ -69,7 +69,7 @@ export default async function SettingsPage({ params }: PageProps<"/[locale]/sett
           <CardDescription>{t("profile.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <ProfileForm user={profile} />
+          <ProfileForm user={profile} hasPassword={hasPassword} />
         </CardContent>
       </Card>
       <Card>

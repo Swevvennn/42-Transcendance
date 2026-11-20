@@ -59,7 +59,10 @@ export async function ProfileView({
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-bold">{name}</h1>
           <div className="flex flex-wrap gap-2">
-            <StatusBadge status={userStatus(user.id)} />
+            {/* Online status: only for yourself and your friends. */}
+            {(isOwn || friendship?.state === "friends") && (
+              <StatusBadge status={userStatus(user.id)} />
+            )}
             <Badge variant="outline">{t("level", { level: user.level })}</Badge>
             <Badge variant="outline">{t("xp", { xp: user.xp })}</Badge>
           </div>
