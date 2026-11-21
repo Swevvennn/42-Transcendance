@@ -108,11 +108,19 @@ export function step(
   return scorer
 }
 
-/** Draws a frame. `fg` is the theme foreground color. */
+/** Theme colors for a canvas: foreground for the paddles, `--primary` for the ball. */
+export function pongColors(canvas: HTMLCanvasElement) {
+  const style = getComputedStyle(canvas)
+  const fg = style.color
+  return { fg, ball: style.getPropertyValue("--primary").trim() || fg }
+}
+
+/** Draws a frame. `fg` is the theme foreground color, `ball` the ball color. */
 export function drawPong(
   ctx: CanvasRenderingContext2D,
   s: Pick<PongState, "leftY" | "rightY" | "ballX" | "ballY">,
-  fg: string
+  fg: string,
+  ball: string = fg
 ) {
   ctx.clearRect(0, 0, WIDTH, HEIGHT)
   ctx.fillStyle = fg
@@ -125,5 +133,8 @@ export function drawPong(
 
   ctx.fillRect(PADDLE_MARGIN, s.leftY, PADDLE_W, PADDLE_H)
   ctx.fillRect(WIDTH - PADDLE_MARGIN - PADDLE_W, s.rightY, PADDLE_W, PADDLE_H)
-  ctx.fillRect(s.ballX, s.ballY, BALL_SIZE, BALL_SIZE)
+  ctx.fillStyle = ball
+  ctx.beginPath()
+  ctx.arc(s.ballX + BALL_SIZE / 2, s.ballY + BALL_SIZE / 2, BALL_SIZE / 2, 0, Math.PI * 2)
+  ctx.fill()
 }

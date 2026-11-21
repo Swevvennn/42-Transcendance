@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react"
 
 import {
   drawPong,
+  pongColors,
   HEIGHT,
   initialState,
   serve,
@@ -95,7 +96,8 @@ export function LocalPong() {
 
     const draw = () => {
       // Colors come from the theme through the canvas' CSS.
-      drawPong(ctx, stateRef.current, getComputedStyle(canvas).color)
+      const { fg, ball } = pongColors(canvas)
+      drawPong(ctx, stateRef.current, fg, ball)
     }
 
     let frame = 0

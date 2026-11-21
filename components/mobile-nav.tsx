@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 
 import { ButtonLink } from "@/components/button-link"
 import { Button } from "@/components/ui/button"
+import { UserMenu } from "@/components/user-menu"
 import { usePathname } from "@/i18n/navigation"
 
 const PANEL_ID = "mobile-nav-panel"
@@ -68,12 +69,7 @@ export function MobileNav() {
         <ButtonLink href="/profile" variant="ghost" className={LINK_CLASS} onClick={close}>
           {t("profile")}
         </ButtonLink>
-        <ButtonLink href="/login" variant="ghost" className={LINK_CLASS} onClick={close}>
-          {t("login")}
-        </ButtonLink>
-        <ButtonLink href="/signup" className={LINK_CLASS} onClick={close}>
-          {t("signup")}
-        </ButtonLink>
+        <UserMenu mobile onNavigate={close} />
       </nav>
     </>
   )
