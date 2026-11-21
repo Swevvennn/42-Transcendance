@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl"
 
 import { Badge } from "@/components/ui/badge"
-import type { UserStatus } from "@/lib/mock-data"
+import type { UserStatus } from "@/lib/presence"
 
 const variants = {
   online: "default",

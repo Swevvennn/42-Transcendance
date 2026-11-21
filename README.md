@@ -44,9 +44,8 @@ TODO (DevOps): one-command launch with `docker compose up --build`, HTTPS throug
 | Login | Role(s) | Responsibilities |
 | --- | --- | --- |
 | mosmond | TODO (PO / PM / Tech Lead / Dev) | Front-end: pages, i18n, SSR, browsers |
-| aandreo | TODO | TODO |
+| aandreo | Developer | Auth & users: accounts, OAuth 42, 2FA, friends |
 | TODO | TODO | DevOps: Prisma, Docker, monitoring |
-| TODO | TODO | Auth & users: accounts, OAuth 42, 2FA, friends |
 | TODO | TODO | Game engine: Pong, remote players, spectator mode |
 | TODO | TODO | Around the game: AI, stats, tournament, customization, gamification |
 
@@ -63,9 +62,9 @@ TODO: how tasks were split and tracked, communication tools, meeting rhythm.
 | i18n | **next-intl** | Localized routes (`/en`, `/fr`), server and client translations |
 | Validation | **zod** | One schema shared by the front-end and the back-end |
 | 3D | **three.js** | Cel-shaded animated intro of the home page only, loaded on demand |
-| Real time | Socket.IO on a custom server *(planned)* | Server-authoritative Pong at ~60 ticks/s |
-| Database | PostgreSQL + Prisma *(planned)* | Relational data (users, friends, matches) with a typed ORM |
-| Auth | Better Auth *(planned)* | Email/password, OAuth 42, TOTP 2FA |
+| Real time | Socket.IO on a custom server (`server.ts`) | Server-authoritative Pong at ~60 ticks/s |
+| Database | PostgreSQL + Prisma 7 | Relational data (users, friends, matches) with a typed ORM |
+| Auth | Better Auth | Email/password with unique usernames, OAuth 2.0 with 42, TOTP 2FA |
 | Infra | Docker Compose, nginx (HTTPS), Prometheus + Grafana *(planned)* | Single-command launch, monitoring |
 | Package manager | **Bun** | Fast installs and scripts |
 | Preview hosting | **Vercel** | Front-end preview only (no custom server / WebSockets there) |
@@ -79,13 +78,17 @@ TODO (DevOps): diagram and description of tables and relations (users, friendshi
 | Feature | Status | Who |
 | --- | --- | --- |
 | Localized pages (EN/FR) with language switcher | Done | mosmond |
-| Home, play menu, profile, leaderboard (sample data) | Done (UI) | mosmond |
-| Sign up / log in forms with client-side validation | Done (UI), backend TODO | mosmond |
+| Home, play menu | Done | mosmond |
+| Profiles (own + public), avatar upload, friends with online status, leaderboard (from the database) | Done | aandreo, TODO |
+| 2FA (TOTP + backup codes) and login with 42 (OAuth 2.0) | Done | aandreo, TODO |
+| Sign up / log in (Better Auth, validated client- and server-side) | Done | mosmond, aandreo |
+| Change password on the settings page (validated client- and server-side) | Done | aandreo |
 | Privacy Policy and Terms of Service (footer links) | Done | mosmond |
 | Local 1v1 Pong (canvas) | Done | mosmond |
 | Swiss visual identity, light/dark theme, "Stack" logo | Done | mosmond |
 | Animated manga-style 3D intro on the home page (full once per session, short version on reload) | Done | mosmond |
-| Online games, AI, tournaments | TODO | TODO |
+| Online games (server-side, reconnection, spectators), tournaments, saved results + XP | Done | TODO |
+| AI opponent | TODO | TODO |
 
 ## Modules
 
@@ -94,17 +97,17 @@ Target: **23 points** (19 needed for 125 %).
 | Module | Type | Points | Owner | Status |
 | --- | --- | --- | --- | --- |
 | Framework front + back (Next.js) | Major | 2 | All | In progress |
-| ORM (Prisma) | Minor | 1 | DevOps | TODO |
+| ORM (Prisma) | Minor | 1 | DevOps | Done |
 | Monitoring (Prometheus + Grafana) | Major | 2 | DevOps | TODO |
-| Standard user management | Major | 2 | Auth & users | UI preview |
-| Remote authentication (OAuth 2.0, 42) | Minor | 1 | Auth & users | TODO |
-| Two-factor authentication (TOTP) | Minor | 1 | Auth & users | TODO |
+| Standard user management | Major | 2 | Auth & users | Done (profile edit, avatar upload, friends, online status) |
+| Remote authentication (OAuth 2.0, 42) | Minor | 1 | Auth & users | Done (needs a 42 intra app) |
+| Two-factor authentication (TOTP) | Minor | 1 | Auth & users | Done |
 | Web-based game (Pong 2D) | Major | 2 | Game engine | Local preview |
-| Remote players (+ reconnection) | Major | 2 | Game engine | TODO |
-| Spectator mode | Minor | 1 | Game engine | TODO |
+| Remote players (+ reconnection) | Major | 2 | Game engine | Done |
+| Spectator mode | Minor | 1 | Game engine | Done |
 | AI opponent | Major | 2 | Around the game | TODO |
-| Game statistics and match history | Minor | 1 | Around the game | UI preview |
-| Tournament system | Minor | 1 | Around the game | TODO |
+| Game statistics and match history | Minor | 1 | Around the game | Done |
+| Tournament system | Minor | 1 | Around the game | Done |
 | Game customization | Minor | 1 | Around the game | TODO |
 | Gamification | Minor | 1 | Around the game | TODO |
 | Multiple languages (3) | Minor | 1 | Front | EN/FR done, 3rd TODO |
@@ -115,7 +118,7 @@ Target: **23 points** (19 needed for 125 %).
 ## Individual contributions
 
 - **mosmond** — Front-end rebuild: Next.js 16 App Router structure, next-intl (EN/FR, localized routing via `proxy.ts`), shadcn/ui components, all pages, shared zod validation schemas, local canvas Pong, Privacy/ToS pages; Swiss visual identity with light/dark theme and the "Stack" logo; the animated 3D intro of the home page (three.js) and the `/templates` style lab.
-- **aandreo** — TODO
+- **aandreo** — Auth & users. Added the change-password form on the settings page, with a zod schema shared by the form and the server (`lib/validation/auth.ts`, re-validated in `lib/auth.ts`). Registered the 42 intra application and set up OAuth login. Made the development database port configurable (`DB_PORT`). Tested the whole module: sign up, log in, sessions, 2FA, login with 42, profile edit, avatar upload, friends and online status, in development, in production and in the Docker + nginx HTTPS setup, including error cases (email already used, wrong 2FA code, invalid inputs, expired session). Difficulties: Better Auth accepts requests sent directly to its API, so the browser checks alone were not enough; every route that takes user input is now re-validated on the server with the same schema as the form. The default database port was already used on my machine, which is why the port became configurable.
 - TODO
 
 ## Resources
@@ -127,4 +130,4 @@ Target: **23 points** (19 needed for 125 %).
 
 ### Use of AI
 
-Claude (Claude Code) was used to scaffold the front-end preview: page structure, i18n setup, form validation and the local Pong. It also built the animated 3D intro of the home page from mosmond's art direction (iterated on feedback: shading, smash angle, camera, facial expressions, dark mode), and wrote the project documentation (`docs/frontend.md`, `AGENTS.md`, `CLAUDE.md`). All generated code was type-checked, linted and built; the preview pages were tested in Chrome, and the intro geometry was checked with scripts. Team members review it before building on it. TODO: each member adds how they used AI.
+Claude (Claude Code) was used to scaffold the front-end preview: page structure, i18n setup, form validation and the local Pong. It also built the animated 3D intro of the home page from mosmond's art direction (iterated on feedback: shading, smash angle, camera, facial expressions, dark mode), and wrote the project documentation (`docs/frontend.md`, `AGENTS.md`, `CLAUDE.md`). All generated code was type-checked, linted and built; the preview pages were tested in Chrome, and the intro geometry was checked with scripts. Team members review it before building on it. **aandreo**: Claude Code was used to explain the existing authentication code, to write the change-password feature and to run the tests of the Auth & users module (API calls and an automated Chromium session); I reviewed the changes and checked the login flows by hand, including login with 42. TODO: the other members add how they used AI.

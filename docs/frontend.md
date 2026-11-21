@@ -11,8 +11,8 @@ Ce qu'on a maintenant : une **preview fonctionnelle** de toutes les pages, volon
 - Stack : Next.js 16 (App Router) · React 19 · Tailwind v4 · shadcn/ui (variante base-ui) · next-intl · zod · three.js (intro de l'accueil)
 - Gestionnaire de paquets : **bun** (plus pnpm)
 - Langues : **EN / FR** (la 3e langue sera choisie plus tard)
-- Déploiement de la preview : **Vercel** (voir § 10)
-- Pas encore de backend : les formulaires valident côté client, les pages profil / classement utilisent des données d'exemple.
+- Déploiement de la preview : **Vercel** (voir § 9)
+- Le backend est branché (Better Auth, Prisma, Socket.IO) : voir `docs/auth.md` et `docs/online.md`. Ce document décrit surtout la structure du front.
 
 ## 2. Lancer le projet
 
@@ -32,12 +32,13 @@ Toutes les URLs sont préfixées par la langue : `/en/...` ou `/fr/...`. `/` red
 | Route | Fichier | Contenu | État |
 |---|---|---|---|
 | `/` | `app/[locale]/page.tsx` | Accueil suisse (bloc logo, Pong « attract » jouable, 3 cartes) + intro animée (§ 9) | ✅ |
-| `/login` | `app/[locale]/login/page.tsx` | Formulaire email + mot de passe, bouton « 42 » | Front OK, backend à brancher |
-| `/signup` | `app/[locale]/signup/page.tsx` | Username, email, mot de passe, confirmation | Front OK, backend à brancher |
-| `/play` | `app/[locale]/play/page.tsx` | Choix du mode (local, IA, en ligne, tournoi) | Seul « local » est jouable |
+| `/login` | `app/[locale]/login/page.tsx` | Formulaire email + mot de passe (+ code 2FA), bouton « 42 » | ✅ |
+| `/signup` | `app/[locale]/signup/page.tsx` | Username, email, mot de passe, confirmation | ✅ |
+| `/play` | `app/[locale]/play/page.tsx` | Choix du mode (local, IA, en ligne, tournoi) | IA pas encore faite |
 | `/play/local` | `app/[locale]/play/local/page.tsx` | Pong 1v1 sur le même clavier | ✅ (client uniquement) |
-| `/profile` | `app/[locale]/profile/page.tsx` | Avatar, statut, niveau, stats, historique, amis | Données d'exemple |
-| `/leaderboard` | `app/[locale]/leaderboard/page.tsx` | Classement | Données d'exemple |
+| `/profile` | `app/[locale]/profile/page.tsx` | Son profil : statut, niveau, XP, stats, historique, amis. `/profile/<username>` : profil public | ✅ (BDD) |
+| `/settings` | `app/[locale]/settings/page.tsx` | Activer / désactiver la 2FA | ✅ |
+| `/leaderboard` | `app/[locale]/leaderboard/page.tsx` | Classement | ✅ (BDD) |
 | `/privacy` | `app/[locale]/privacy/page.tsx` | Politique de confidentialité | ✅ (obligatoire) |
 | `/terms` | `app/[locale]/terms/page.tsx` | Conditions d'utilisation | ✅ (obligatoire) |
 | 404 | `app/[locale]/not-found.tsx` + `app/[locale]/[...rest]/page.tsx` | Page introuvable traduite | ✅ |
@@ -82,7 +83,7 @@ lib/
   utils.ts                  cn() (fusion de classes Tailwind)
   theme.ts                  script de thème clair / sombre (localStorage + OS)
   validation/auth.ts        schémas zod partagés front/back
-  mock-data.ts              données d'exemple (à remplacer par Prisma)
+  users.ts                  lectures BDD des pages (profil, stats, classement, amis)
 proxy.ts                    redirection vers /en ou /fr (ex-« middleware »)
 global.d.ts                 typage des clés de traduction
 docs/frontend.md            ce fichier
@@ -129,7 +130,7 @@ Le sujet exige une **validation côté front ET côté back**.
 - Les messages d'erreur zod sont des **clés de traduction** (`usernameLength`, `emailInvalid`…) traduites dans le namespace `Validation`. Pour ajouter une règle : ajouter le message dans le schéma, dans le type `ValidationKey`, et dans `Validation` de chaque fichier de messages.
 - `components/auth/use-form-errors.ts` exécute le schéma et garde la première erreur par champ.
 - Les formulaires ont `noValidate` : on désactive les bulles natives du navigateur (qui seraient dans la langue du navigateur et non celle du site) au profit de nos messages traduits.
-- **À faire (Auth)** : remplacer les `TODO` dans `login-form.tsx` / `signup-form.tsx` par l'appel à Better Auth, puis afficher les erreurs serveur. Le bouton « Continuer avec 42 » est désactivé en attendant l'OAuth.
+- Les formulaires appellent Better Auth, qui revalide avec les mêmes schémas (`lib/auth.ts`). Les erreurs serveur sont traduites par `components/auth/auth-error.ts`.
 
 ## 8. Le Pong local
 
@@ -189,8 +190,8 @@ La preview du site est déployée sur **Vercel**.
 
 | Qui | Quoi |
 |---|---|
-| Front | Choisir la 3e langue ; menu mobile ; test Firefox + Edge (module « navigateurs », intro WebGL comprise) ; console Chrome sur l'accueil (intro) |
-| Auth & users | Better Auth → brancher les formulaires, OAuth 42, 2FA ; vraie page profil (avatar, amis) |
-| DevOps | Prisma + PostgreSQL → remplacer `lib/mock-data.ts` ; Docker + nginx HTTPS ; `.env.example` |
+| Front | Choisir la 3e langue ; restyler les pages auth / profil / en ligne dans le thème suisse ; vue téléphone ; test Firefox + Edge (module « navigateurs », intro WebGL comprise) ; console Chrome sur l'accueil (intro) |
+| Auth & users | Upload d'avatar, modification du profil ; créer l'app 42 sur l'intra |
+| DevOps | Monitoring Prometheus + Grafana ; schéma de BDD dans le README |
 | Moteur | Boucle serveur + Socket.IO, réutiliser la logique de `local-pong.tsx` ; reconnexion ; spectateur |
 | Autour du jeu | Activer les modes IA / tournoi dans `app/[locale]/play/page.tsx` (`href: null` → vraie route) |

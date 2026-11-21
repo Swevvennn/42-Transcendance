@@ -37,5 +37,10 @@ export function useFormErrors<T extends Record<string, unknown>>(
     return key ? t(key) : null
   }
 
-  return { errors, validate, errorFor }
+  /** Shows an error coming from the server under a field. */
+  function setFieldError(field: keyof T, key: ValidationKey) {
+    setErrors((prev) => ({ ...prev, [field]: key }))
+  }
+
+  return { errors, validate, errorFor, setFieldError }
 }

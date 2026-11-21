@@ -5,6 +5,7 @@ import { ButtonLink } from "@/components/button-link"
 import { LocaleSwitcher } from "@/components/locale-switcher"
 import { MobileNav } from "@/components/mobile-nav"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { UserMenu } from "@/components/user-menu"
 import { Link } from "@/i18n/navigation"
 
 export function SiteHeader() {
@@ -37,12 +38,7 @@ export function SiteHeader() {
             {t("profile")}
           </ButtonLink>
           <span className="mx-1 h-5 w-px bg-border" aria-hidden />
-          <ButtonLink href="/login" variant="ghost" className="text-sm font-semibold">
-            {t("login")}
-          </ButtonLink>
-          <ButtonLink href="/signup" className="text-sm font-semibold">
-            {t("signup")}
-          </ButtonLink>
+          <UserMenu />
         </nav>
 
         {/* Stays visible at every width; the page links collapse into MobileNav. */}

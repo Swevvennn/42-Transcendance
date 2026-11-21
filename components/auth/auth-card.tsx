@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl"
 
-import { Button } from "@/components/ui/button"
+import type { AuthErrorKey } from "@/components/auth/auth-error"
+import { OAuth42Button } from "@/components/auth/oauth42-button"
 import { FieldSeparator } from "@/components/ui/field"
 
 // Shared frame for the login and signup pages: big title on the left,
@@ -9,11 +10,17 @@ export function AuthCard({
   title,
   description,
   footer,
+  oauthEnabled,
+  oauthError = null,
   children,
 }: {
   title: string
   description: string
   footer: React.ReactNode
+  /** "Continue with 42" is configured on the server. */
+  oauthEnabled: boolean
+  /** The 42 login came back with an error. */
+  oauthError?: AuthErrorKey | null
   children: React.ReactNode
 }) {
   const t = useTranslations("Auth")
@@ -31,10 +38,7 @@ export function AuthCard({
       <div className="flex flex-col gap-4 border-t-2 border-foreground pt-4 md:col-span-5 md:col-start-8">
         {children}
         <FieldSeparator>{t("or")}</FieldSeparator>
-        {/* OAuth 42 will be wired with Better Auth. */}
-        <Button variant="outline" size="lg" className="h-10 w-full" disabled>
-          {t("oauth42")}
-        </Button>
+        <OAuth42Button enabled={oauthEnabled} initialError={oauthError} />
         <p className="flex justify-center gap-1 text-xs">{footer}</p>
       </div>
     </div>

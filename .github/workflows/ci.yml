@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main, devops/infra-base]
+  pull_request:
+    branches: [main]
+
+# Droits du jeton GitHub donne a la CI : lecture du code seulement.
+# Si une action utilisee etait piratee, elle ne pourrait rien pousser.
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Lint, Typecheck & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Télécharge le code du repo sur le serveur GitHub
+      #    (v5 tourne sur Node 24 : plus d'alerte "Node.js 20 is deprecated")
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      # 2. Installe bun sur le serveur Linux, version figee (la meme qu'en local)
+      #    pour qu'une nouvelle version de bun ne casse pas la CI toute seule
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+
+      # 3. Cache : garde les paquets telecharges d'un run a l'autre.
+      #    La cle depend du contenu de bun.lock : si les dependances changent,
+      #    nouvelle cle, donc nouveau cache.
+      - name: Cache bun packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+
+      # 4. Installe les paquets (lance aussi `prisma generate` via postinstall)
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # 5. Vérifie les règles de code (ESLint)
+      - name: Lint
+        run: bun run lint
+
+      # 6. Génère les types Next.js (.next/types) avant de lancer tsc
+      - name: Generate Next.js types
+        run: bunx next typegen
+
+      # 7. Vérifie qu'il n'y a aucune erreur de typage TypeScript
+      - name: Typecheck
+        run: bunx tsc --noEmit
+
+      # 8. Compile Next.js comme dans le Dockerfile (avec de fausses variables .env)
+      - name: Build
+        run: bun run build
+        env:
+          DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci?schema=public"
+          BETTER_AUTH_SECRET: "ci-dummy-secret-key-for-build-only-32chars"
+          BETTER_AUTH_URL: "http://localhost:3000"
