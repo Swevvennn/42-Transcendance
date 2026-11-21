@@ -67,7 +67,7 @@ export async function ProfileView({
         title={
           <span className="flex flex-wrap items-center gap-x-5 gap-y-3">
             <UserAvatar name={name} image={user.image} className="size-14 text-lg sm:size-16" />
-            <span>
+            <span dir="ltr">
               {name}
               <span className="text-primary">.</span>
             </span>
@@ -129,7 +129,7 @@ export async function ProfileView({
       </section>
 
       <div className="grid gap-10 border-t-2 border-foreground pt-8 md:grid-cols-12">
-        <section className={isOwn ? "flex flex-col gap-4 md:col-span-8" : "flex flex-col gap-4 md:col-span-12"}>
+        <section className={isOwn ? "flex min-w-0 flex-col gap-4 md:col-span-8" : "flex min-w-0 flex-col gap-4 md:col-span-12"}>
           <h2 className="text-2xl font-bold tracking-tight">{t("history.title")}</h2>
           {history.length === 0 ? (
             <p className="text-sm text-muted-foreground">{t("history.empty")}</p>
@@ -184,7 +184,7 @@ export async function ProfileView({
         </section>
 
         {friends && (
-          <section className="flex flex-col gap-4 md:col-span-4">
+          <section className="flex min-w-0 flex-col gap-4 md:col-span-4">
             <h2 className="text-2xl font-bold tracking-tight">{t("friends.title")}</h2>
             <FriendsPanel {...friends} />
           </section>

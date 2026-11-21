@@ -153,6 +153,7 @@ export function FriendsPanel({
             <Input
               id="friend-username"
               name="username"
+              className="min-w-0 flex-1"
               autoComplete="off"
               aria-invalid={!!errors.username}
             />

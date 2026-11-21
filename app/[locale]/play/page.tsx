@@ -30,7 +30,7 @@ export default async function PlayPage({ params }: PageProps<"/[locale]/play">) 
 
   return (
     <div className="flex flex-col gap-10">
-      <PageHeader title={t("title")} description={t("description")} />
+      <PageHeader title={t("title")} description={t("description")} className="border-b-0 pb-0" />
 
       <ol className="grid gap-x-8 gap-y-10 sm:grid-cols-2">
         {modes.map(({ key, href }, index) => (

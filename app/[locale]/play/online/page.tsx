@@ -3,6 +3,7 @@ import type { Locale } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { ButtonLink } from "@/components/button-link"
+import { PageHeader } from "@/components/page-header"
 import { OnlineLobby } from "@/components/online/online-lobby"
 
 export async function generateMetadata({
@@ -19,16 +20,17 @@ export default async function OnlinePage({ params }: PageProps<"/[locale]/play/o
   const t = await getTranslations("Online")
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <h1 className="text-2xl font-bold">{t("title")}</h1>
-          <p className="text-muted-foreground">{t("description")}</p>
-        </div>
-        <ButtonLink href="/play" variant="outline">
-          {t("back")}
-        </ButtonLink>
-      </div>
+    <div className="flex flex-col gap-10">
+      <PageHeader
+        className="border-b-0 pb-0"
+        title={t("title")}
+        description={t("description")}
+        actions={
+          <ButtonLink href="/play" variant="outline" size="lg" className="h-10 px-4">
+            {t("back")}
+          </ButtonLink>
+        }
+      />
       <OnlineLobby />
     </div>
   )
