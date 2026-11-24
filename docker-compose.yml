@@ -66,7 +66,38 @@ services:
       # On ne démarre Nginx que quand l'app Next.js repond (sinon erreurs 502)
       app:
         condition: service_healthy
+    # Collecteur de métriques : lit /metrics toutes les 15s et garde l'historique
+  prometheus:
+    image: prom/prometheus:latest
+    restart: always
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    depends_on:
+      app:
+        condition: service_healthy
+
+  # Exporter Postgres : se connecte a la base comme un client normal, lit ses
+  # statistiques internes (connexions, taille, transactions...) et les
+  # traduit au format texte de Prometheus sur le port 9187.
+  # Aucun "ports:" : seul Prometheus le lit, sur le reseau Docker interne.
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    restart: always
+    environment:
+      # sslmode=disable : la base est sur le reseau interne, sans TLS
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Exporter "machine" : CPU, RAM, disque, reseau, lus dans /proc et /sys,
+  # exposes sur le port 9100. Pas de "ports:" non plus.
+  node-exporter:
+    image: prom/node-exporter:latest
+    restart: always
 
 #save la db sur le vrai disque dur
 volumes:
     db_data:
+    prometheus_data:
