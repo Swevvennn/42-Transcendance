@@ -32,6 +32,8 @@ services:
       # Connexion avec 42 (optionnel : sans ces 2 valeurs, le bouton affiche une erreur)
       FT_CLIENT_ID: ${FT_CLIENT_ID:-}
       FT_CLIENT_SECRET: ${FT_CLIENT_SECRET:-}
+      # Comptes de test (prisma/seed.ts) : optionnel, le seed refuse de tourner sans
+      SEED_PASSWORD: ${SEED_PASSWORD:-}
     depends_on:
       db:
         condition: service_healthy
@@ -110,28 +112,30 @@ services:
     image: prom/node-exporter:v1.13.1
     restart: always
 
-  # cAdvisor : CPU / RAM / reseau PAR CONTENEUR (app, db, nginx...), la ou
+  # cAdvisor : CPU / RAM PAR CONTENEUR (app, db, nginx...), la ou
   # node-exporter ne voit que la machine entiere. Port interne 8080.
-  # Il lit les infos que le noyau Linux tient sur chaque conteneur (cgroups,
-  # dans /sys) et demande leurs noms a Docker (/var/run/docker.sock).
-  # Tout est monte en :ro (lecture seule) : il observe, il ne modifie rien.
+  # Il lit les compteurs du noyau (cgroups, dans /sys) et trouve les noms des
+  # conteneurs par les sockets de Docker et containerd.
+  # On ne monte QUE / et /sys, qui existent partout. Surtout pas /var/run:ro :
+  # Podman doit creer /run/.containerenv dans le conteneur, et un /run en
+  # lecture seule fait echouer le demarrage. Les sockets sont lus a travers
+  # /rootfs : s'ils n'existent pas, cAdvisor demarre quand meme (mais sans
+  # donnees par conteneur). Plus besoin de "privileged".
+  # Attention : ":ro" protege les fichiers, pas l'API derriere un socket.
+  # cAdvisor reste donc un service de confiance, jamais expose.
   cadvisor:
     image: ghcr.io/google/cadvisor:v0.61.1
     restart: always
-    # Acces aux compteurs du noyau (sinon une partie des metriques manque)
-    privileged: true
-    devices:
-      - /dev/kmsg
     volumes:
       - /:/rootfs:ro
-      - /var/run:/var/run:ro
       - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
     command:
       # Moins de travail : on ne garde que les metriques utiles au dashboard
       - --docker_only=true
+      - --enable_metrics=cpu,memory,network
       - --housekeeping_interval=15s
+      - --docker=unix:///rootfs/run/docker.sock
+      - --containerd=/rootfs/run/containerd/containerd.sock
 
   # Grafana : le site qui dessine les courbes a partir de Prometheus.
   # Pas de "ports:" : on y accede seulement par nginx, sur /grafana/.
