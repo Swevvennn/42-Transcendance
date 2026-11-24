@@ -36,6 +36,7 @@ Toutes les URLs sont préfixées par la langue : `/en/...` ou `/fr/...`. `/` red
 | `/signup` | `app/[locale]/signup/page.tsx` | Username, email, mot de passe, confirmation | ✅ |
 | `/play` | `app/[locale]/play/page.tsx` | Choix du mode (local, IA, en ligne, tournoi) | IA pas encore faite |
 | `/play/local` | `app/[locale]/play/local/page.tsx` | Pong 1v1 sur le même clavier | ✅ (client uniquement) |
+| `/play/ai` | `app/[locale]/play/ai/page.tsx` | Pong contre l'IA (`lib/pong/ai.ts`), 3 niveaux | ✅ (client uniquement) |
 | `/profile` | `app/[locale]/profile/page.tsx` | Son profil : statut, niveau, XP, stats, historique, amis. `/profile/<username>` : profil public | ✅ (BDD) |
 | `/settings` | `app/[locale]/settings/page.tsx` | Activer / désactiver la 2FA | ✅ |
 | `/leaderboard` | `app/[locale]/leaderboard/page.tsx` | Classement | ✅ (BDD) |

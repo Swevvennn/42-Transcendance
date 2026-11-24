@@ -3,6 +3,15 @@
 import { useTranslations } from "next-intl"
 import { useEffect, useRef, useState } from "react"
 
+import { Button } from "@/components/ui/button"
+import {
+  AI_LEVELS,
+  aiInput,
+  aiOnServe,
+  createAi,
+  type AiBrain,
+  type AiLevel,
+} from "@/lib/pong/ai"
 import {
   drawPong,
   pongColors,
@@ -18,20 +27,31 @@ import {
   type Side,
 } from "@/lib/pong/engine"
 
-// Local 2-player Pong, fully client-side. The physics live in
-// lib/pong/engine.ts and are the same ones the online game server uses.
+// Local Pong, fully client-side. The physics live in lib/pong/engine.ts and
+// are the same ones the online game server uses.
+// Two players on one keyboard, or (vsAi) one player against the AI of
+// lib/pong/ai.ts, which plays the right paddle.
 
 type Phase = "ready" | "playing" | "paused" | "over"
 
-export function LocalPong() {
+export function LocalPong({ vsAi = false }: { vsAi?: boolean }) {
   const t = useTranslations("Game")
+  const tAi = useTranslations("AiGame")
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const stateRef = useRef<PongState>(initialState())
   const keysRef = useRef(new Set<string>())
   const phaseRef = useRef<Phase>("ready")
+  const aiRef = useRef<AiBrain | null>(null)
+  const levelRef = useRef<AiLevel>("normal")
   const [phase, setPhase] = useState<Phase>("ready")
   const [score, setScore] = useState({ left: 0, right: 0 })
   const [winner, setWinner] = useState<Side | null>(null)
+  const [level, setLevel] = useState<AiLevel>("normal")
+
+  const chooseLevel = (next: AiLevel) => {
+    levelRef.current = next
+    setLevel(next)
+  }
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -51,7 +71,9 @@ export function LocalPong() {
       const current = phaseRef.current
       if (current === "ready" || current === "over") {
         stateRef.current = initialState()
+        aiRef.current = vsAi ? createAi(levelRef.current, "right") : null
         serve(stateRef.current, Math.random() < 0.5 ? "left" : "right")
+        if (aiRef.current) aiOnServe(aiRef.current)
         setScore({ left: 0, right: 0 })
         setWinner(null)
         changePhase("playing")
@@ -77,10 +99,14 @@ export function LocalPong() {
       const dir = (up: string, down: string): Direction =>
         keys.has(up) === keys.has(down) ? 0 : keys.has(up) ? -1 : 1
 
-      const scorer = step(s, dt, {
-        left: dir("w", "s"),
-        right: dir("arrowup", "arrowdown"),
-      })
+      const ai = aiRef.current
+      // Against the AI, the player may use W / S or the arrows.
+      const left = ai
+        ? dir("w", "s") || dir("arrowup", "arrowdown")
+        : dir("w", "s")
+      const right = ai ? aiInput(ai, s, dt) : dir("arrowup", "arrowdown")
+
+      const scorer = step(s, dt, { left, right })
       if (!scorer) return
 
       setScore(s.score)
@@ -91,6 +117,7 @@ export function LocalPong() {
         changePhase("over")
       } else {
         serve(s, scorer === "left" ? "right" : "left")
+        if (ai) aiOnServe(ai)
       }
     }
 
@@ -101,9 +128,9 @@ export function LocalPong() {
     }
 
     let frame = 0
-    let last = performance.now()
+    let last: number | null = null
     const loop = (now: number) => {
-      const dt = Math.min((now - last) / 1000, 0.05)
+      const dt = last === null ? 0 : Math.min((now - last) / 1000, 0.05)
       last = now
       // Small fixed sub-steps so a fast ball cannot pass through a paddle.
       let remaining = dt
@@ -123,7 +150,10 @@ export function LocalPong() {
       window.removeEventListener("keyup", onKeyUp)
       window.removeEventListener("blur", onBlur)
     }
-  }, [])
+  }, [vsAi])
+
+  const label = (side: Side) =>
+    vsAi ? tAi(side === "left" ? "you" : "ai") : t(side)
 
   const message =
     phase === "ready"
@@ -131,15 +161,50 @@ export function LocalPong() {
       : phase === "paused"
         ? t("paused")
         : phase === "over" && winner
-          ? t("winner", { player: t(winner) })
+          ? vsAi
+            ? tAi(winner === "left" ? "youWin" : "aiWins")
+            : t("winner", { player: t(winner) })
           : null
 
   return (
     <div className="flex flex-col gap-2">
+      {vsAi && (
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <span
+            id="ai-level-label"
+            className="text-xs font-semibold tracking-widest text-muted-foreground uppercase"
+          >
+            {tAi("difficulty")}
+          </span>
+          <div role="group" aria-labelledby="ai-level-label" className="flex">
+            {AI_LEVELS.map((key) => (
+              <Button
+                key={key}
+                type="button"
+                variant={level === key ? "default" : "outline"}
+                size="lg"
+                aria-pressed={level === key}
+                disabled={phase === "playing"}
+                onClick={(e) => {
+                  chooseLevel(key)
+                  // Keep Space for the game, not for re-clicking this button.
+                  e.currentTarget.blur()
+                }}
+                className="px-4 text-sm"
+              >
+                {tAi(`levels.${key}`)}
+              </Button>
+            ))}
+          </div>
+          {phase !== "ready" && phase !== "over" && (
+            <span className="text-xs text-muted-foreground">{tAi("levelNextGame")}</span>
+          )}
+        </div>
+      )}
       <div dir="ltr" className="flex items-end justify-between">
         <span className="flex flex-col">
           <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
-            {t("left")}
+            {label("left")}
           </span>
           <strong className="text-5xl font-black tracking-tighter tabular-nums">
             {score.left}
@@ -147,7 +212,7 @@ export function LocalPong() {
         </span>
         <span className="flex flex-col items-end">
           <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
-            {t("right")}
+            {label("right")}
           </span>
           <strong className="text-5xl font-black tracking-tighter tabular-nums">
             {score.right}

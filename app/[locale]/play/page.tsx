@@ -12,8 +12,8 @@ const modes = [
   { key: "local", href: "/play/local" },
   { key: "online", href: "/play/online" },
   { key: "tournament", href: "/play/tournament" },
-  { key: "ai", href: null },
-] as const
+  { key: "ai", href: "/play/ai" },
+] as const satisfies readonly { key: string; href: string | null }[]
 
 export async function generateMetadata({
   params,
