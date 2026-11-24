@@ -1,6 +1,12 @@
 global:
   # Fréquence à laquelle Prometheus va lire les pages /metrics
   scrape_interval: 15s
+  # Frequence a laquelle Prometheus verifie les regles d'alerte
+  evaluation_interval: 15s
+
+# Fichier des regles d'alerte (chemin relatif a ce fichier : /etc/prometheus/)
+rule_files:
+  - "alerts.yml"
 
 scrape_configs:
   # 1. Prometheus se surveille lui-même (sa propre RAM / santé)
@@ -22,3 +28,8 @@ scrape_configs:
   - job_name: "node"
     static_configs:
       - targets: ["node-exporter:9100"]
+
+  # 5. Les conteneurs un par un (CPU / RAM de app, db, nginx...), via cAdvisor
+  - job_name: "cadvisor"
+    static_configs:
+      - targets: ["cadvisor:8080"]

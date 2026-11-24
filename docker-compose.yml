@@ -66,12 +66,26 @@ services:
       # On ne démarre Nginx que quand l'app Next.js repond (sinon erreurs 502)
       app:
         condition: service_healthy
-    # Collecteur de métriques : lit /metrics toutes les 15s et garde l'historique
+      # nginx cherche l'adresse de "grafana" au demarrage : il doit exister
+      grafana:
+        condition: service_started
+
+  # ---------------------------------------------------------------------
+  # MONITORING. Aucun de ces services n'a de "ports:" : ils ne sont
+  # joignables que sur le reseau Docker interne. Seul Grafana est visible,
+  # et uniquement a travers nginx (https://localhost:8443/grafana/).
+  # Versions figees (pas de :latest) : une nouvelle version ne peut pas
+  # casser la stack toute seule la veille de l'evaluation.
+  # ---------------------------------------------------------------------
+
+  # Collecteur de métriques : lit /metrics toutes les 15s et garde l'historique.
+  # Il evalue aussi les regles d'alerte (prometheus/alerts.yml).
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:v3.16.0
     restart: always
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      # Tout le dossier (prometheus.yml + alerts.yml), en lecture seule
+      - ./prometheus:/etc/prometheus:ro
       - prometheus_data:/prometheus
     depends_on:
       app:
@@ -80,9 +94,8 @@ services:
   # Exporter Postgres : se connecte a la base comme un client normal, lit ses
   # statistiques internes (connexions, taille, transactions...) et les
   # traduit au format texte de Prometheus sur le port 9187.
-  # Aucun "ports:" : seul Prometheus le lit, sur le reseau Docker interne.
   postgres-exporter:
-    image: prometheuscommunity/postgres-exporter:latest
+    image: prometheuscommunity/postgres-exporter:v0.21.1
     restart: always
     environment:
       # sslmode=disable : la base est sur le reseau interne, sans TLS
@@ -92,12 +105,64 @@ services:
         condition: service_healthy
 
   # Exporter "machine" : CPU, RAM, disque, reseau, lus dans /proc et /sys,
-  # exposes sur le port 9100. Pas de "ports:" non plus.
+  # exposes sur le port 9100.
   node-exporter:
-    image: prom/node-exporter:latest
+    image: prom/node-exporter:v1.13.1
     restart: always
+
+  # cAdvisor : CPU / RAM / reseau PAR CONTENEUR (app, db, nginx...), la ou
+  # node-exporter ne voit que la machine entiere. Port interne 8080.
+  # Il lit les infos que le noyau Linux tient sur chaque conteneur (cgroups,
+  # dans /sys) et demande leurs noms a Docker (/var/run/docker.sock).
+  # Tout est monte en :ro (lecture seule) : il observe, il ne modifie rien.
+  cadvisor:
+    image: ghcr.io/google/cadvisor:v0.61.1
+    restart: always
+    # Acces aux compteurs du noyau (sinon une partie des metriques manque)
+    privileged: true
+    devices:
+      - /dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    command:
+      # Moins de travail : on ne garde que les metriques utiles au dashboard
+      - --docker_only=true
+      - --housekeeping_interval=15s
+
+  # Grafana : le site qui dessine les courbes a partir de Prometheus.
+  # Pas de "ports:" : on y accede seulement par nginx, sur /grafana/.
+  grafana:
+    image: grafana/grafana:13.3.2
+    restart: always
+    environment:
+      # Compte admin, lu dans le .env. Attention : n'est applique qu'a la
+      # TOUTE PREMIERE creation du volume grafana_data (voir README).
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:?a definir dans .env}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?a definir dans .env}
+      # Personne ne peut se creer un compte, pas d'acces anonyme
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      # Grafana est servi sous /grafana/ (et non a la racine du site) :
+      # il doit le savoir pour generer ses liens et ses redirections.
+      GF_SERVER_ROOT_URL: "https://localhost:${HTTPS_PORT:-8443}/grafana/"
+      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+      # Pas d'appel a internet (stats d'usage, verification de mises a jour)
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      # Provisioning : source de donnees + dashboard crees au demarrage
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana-dashboards:ro
+    depends_on:
+      - prometheus
 
 #save la db sur le vrai disque dur
 volumes:
     db_data:
     prometheus_data:
+    grafana_data:
