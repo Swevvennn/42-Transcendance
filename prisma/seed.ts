@@ -4,13 +4,19 @@ import { prisma } from "../lib/prisma";
 
 // Mot de passe commun aux comptes de test (respecte les regles du formulaire :
 // 8 caracteres minimum, au moins une lettre et un chiffre).
-const SEED_PASSWORD = "Password123";
+// Lu dans le .env : aucun mot de passe ne doit etre ecrit dans le code.
+const SEED_PASSWORD = process.env.SEED_PASSWORD ?? "";
 
 async function main() {
   // 0. Garde-fou : le seed ne doit jamais tourner sur la vraie base.
   //    Pour forcer quand meme (ex : base Docker de test) : ALLOW_SEED=1
   if (process.env.NODE_ENV === "production" && process.env.ALLOW_SEED !== "1") {
     console.error("Seed refusé : NODE_ENV=production. Relance avec ALLOW_SEED=1 si c'est une base de test.");
+    process.exit(1);
+  }
+
+  if (SEED_PASSWORD.length < 8 || !/[a-zA-Z]/.test(SEED_PASSWORD) || !/[0-9]/.test(SEED_PASSWORD)) {
+    console.error("Seed refusé : SEED_PASSWORD absent ou trop faible dans .env (8 caractères, une lettre, un chiffre).");
     process.exit(1);
   }
 
@@ -149,7 +155,7 @@ async function main() {
   }
 
   console.log("Seed terminé : 3 joueurs, 2 amitiés et 3 matchs insérés.");
-  console.log(`Connexion : alice@42.fr, bob@42.fr ou charlie@42.fr / ${SEED_PASSWORD}`);
+  console.log("Connexion : alice@42.fr, bob@42.fr ou charlie@42.fr (mot de passe : SEED_PASSWORD du .env)");
 }
 
 main()

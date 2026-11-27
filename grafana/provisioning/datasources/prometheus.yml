@@ -1,0 +1,17 @@
+# Provisioning : Grafana lit ce fichier au demarrage et cree tout seul la
+# "source de donnees" Prometheus. Rien a cliquer le jour de l'evaluation.
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    # uid fixe : le dashboard (pongo-overview.json) y fait reference par ce nom
+    uid: prometheus
+    type: prometheus
+    # "proxy" : c'est le serveur Grafana qui interroge Prometheus, pas le
+    # navigateur. Prometheus reste donc invisible de l'exterieur.
+    access: proxy
+    # Nom du service Docker + port interne de Prometheus
+    url: http://prometheus:9090
+    isDefault: true
+    # Modifiable seulement par ce fichier, pas depuis l'interface
+    editable: false

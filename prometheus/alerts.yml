@@ -1,0 +1,41 @@
+# Regles d'alerte. Prometheus evalue chaque "expr" toutes les 15 s
+# (evaluation_interval). Cycle de vie d'une alerte :
+#   inactive -> pending (la condition est vraie) -> firing (elle est restee
+#   vraie pendant toute la duree "for")
+# "for" evite de crier au loup pour un trou de quelques secondes.
+# On les voit dans Prometheus (/api/v1/alerts) et sur le dashboard Grafana.
+
+groups:
+  - name: pongo
+    rules:
+      # up = metrique creee par Prometheus lui-meme pour chaque cible :
+      # 1 s'il a pu lire /metrics, 0 sinon. Donc app eteinte ou plantee = 0.
+      - alert: AppDown
+        expr: up{job="pongo-app"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "L'app Pongo (Next.js + Socket.IO) ne repond plus"
+
+      # pg_up = metrique de postgres-exporter : 1 s'il arrive a se connecter
+      # a la base. Attention, up{job="postgres"} ne suffit pas : l'exporter
+      # peut repondre (up = 1) alors que la base est tombee (pg_up = 0).
+      - alert: PostgresDown
+        expr: pg_up == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL est injoignable"
+
+      # RAM utilisee en % = 100 x (1 - disponible / totale), via node-exporter.
+      # "Disponible" (MemAvailable) compte aussi le cache que Linux peut liberer :
+      # c'est la vraie marge, pas "libre" (MemFree).
+      - alert: HighMemoryUsage
+        expr: (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 > 85
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "RAM de la machine au-dessus de 85 % ({{ $value | printf \"%.0f\" }} %)"

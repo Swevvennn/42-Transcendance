@@ -1,0 +1,13 @@
+# Provisioning : Grafana charge au demarrage tous les dashboards JSON du
+# dossier "path" (monte depuis ./grafana/dashboards dans docker-compose.yml).
+apiVersion: 1
+
+providers:
+  - name: pongo
+    folder: Pongo
+    type: file
+    # Interdit de supprimer le dashboard depuis l'interface
+    allowUiUpdates: false
+    disableDeletion: true
+    options:
+      path: /var/lib/grafana-dashboards
