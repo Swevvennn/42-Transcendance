@@ -1,17 +1,17 @@
-import type {
-  BracketMatch,
-  ErrorCode,
-  PlayerRef,
-  TournamentInfo,
-  TournamentStatus,
-  TournamentSummary,
+import {
+  MIN_PLAYERS,
+  type BracketMatch,
+  type ErrorCode,
+  type PlayerRef,
+  type TournamentInfo,
+  type TournamentStatus,
+  type TournamentSummary,
 } from "@/lib/pong/protocol"
 
 // A single-elimination tournament. This class only manages the bracket: it
 // does not create the games itself. The game server asks `pendingMatches()`
 // which games can start, creates them, and reports results with `reportResult`.
 
-export const MIN_PLAYERS = 3
 
 type Result = { ok: true } | { ok: false; error: ErrorCode }
 
@@ -21,6 +21,8 @@ export class Tournament {
   rounds: BracketMatch[][] = []
   winner: PlayerRef | null = null
   hostId: string
+  /** Date.now() at creation (lobbies expire, see game-server.ts). */
+  readonly createdAt = Date.now()
 
   constructor(
     readonly id: string,

@@ -6,7 +6,13 @@ import { useRef, useState } from "react"
 import { useFormErrors } from "@/components/auth/use-form-errors"
 import { UserAvatar } from "@/components/profile/user-avatar"
 import { Button } from "@/components/ui/button"
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useRouter } from "@/i18n/navigation"
 import { removeAvatar, updateProfile, uploadAvatar, type AvatarResult } from "@/lib/actions/profile"
@@ -172,7 +178,7 @@ export function AvatarSettings({ user }: { user: User }) {
 
 // --- Username and email ----------------------------------------------------
 
-export function ProfileForm({ user }: { user: User }) {
+export function ProfileForm({ user, hasPassword }: { user: User; hasPassword: boolean }) {
   const t = useTranslations("Settings.profile")
   const te = useTranslations("Settings.errors")
   const tAuth = useTranslations("Auth")
@@ -188,6 +194,10 @@ export function ProfileForm({ user }: { user: User }) {
     setError(null)
     const data = validate(Object.fromEntries(new FormData(event.currentTarget)))
     if (!data) return
+    // Same rule as the server: a new email needs the current password.
+    if (data.email.toLowerCase() !== user.email.toLowerCase() && !data.password) {
+      return setFieldError("password", "passwordRequired")
+    }
 
     setPending(true)
     try {
@@ -229,10 +239,26 @@ export function ProfileForm({ user }: { user: User }) {
             type="email"
             defaultValue={user.email}
             autoComplete="email"
+            readOnly={!hasPassword}
             aria-invalid={!!errors.email}
           />
+          {!hasPassword && <FieldDescription>{t("emailLocked")}</FieldDescription>}
           <FieldError>{errorFor("email")}</FieldError>
         </Field>
+        {hasPassword && (
+          <Field data-invalid={!!errors.password}>
+            <FieldLabel htmlFor="profile-password">{t("password")}</FieldLabel>
+            <Input
+              id="profile-password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              aria-invalid={!!errors.password}
+            />
+            <FieldDescription>{t("passwordHint")}</FieldDescription>
+            <FieldError>{errorFor("password")}</FieldError>
+          </Field>
+        )}
         <Button type="submit" className="w-fit" disabled={pending}>
           {t("save")}
         </Button>

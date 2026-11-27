@@ -144,6 +144,7 @@ model Friendship {
   createdAt   DateTime @default(now())
 
   @@unique([requesterId, addresseeId])
+  @@index([addresseeId])
   @@map("friendship")
 }
 

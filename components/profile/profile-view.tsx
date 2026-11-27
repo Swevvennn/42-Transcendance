@@ -1,12 +1,12 @@
 import { getFormatter, getTranslations } from "next-intl/server"
 
 import { ButtonLink } from "@/components/button-link"
+import { PageHeader } from "@/components/page-header"
 import { FriendButton } from "@/components/profile/friend-button"
 import { FriendsPanel } from "@/components/profile/friends-panel"
 import { UserAvatar } from "@/components/profile/user-avatar"
 import { StatusBadge } from "@/components/status-badge"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -52,124 +52,142 @@ export async function ProfileView({
   ])
   const winRate = stats.played === 0 ? 0 : stats.wins / stats.played
 
-  return (
-    <div className="flex flex-col gap-6">
-      <section className="flex flex-wrap items-center gap-4">
-        <UserAvatar name={name} image={user.image} className="size-20 text-xl" />
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold">{name}</h1>
-          <div className="flex flex-wrap gap-2">
-            <StatusBadge status={userStatus(user.id)} />
-            <Badge variant="outline">{t("level", { level: user.level })}</Badge>
-            <Badge variant="outline">{t("xp", { xp: user.xp })}</Badge>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {t("memberSince", { date: format.dateTime(user.createdAt, { dateStyle: "medium" }) })}
-          </p>
-        </div>
-        <div className="ml-auto">
-          {isOwn && (
-            <ButtonLink href="/settings" variant="outline">
-              {t("settings")}
-            </ButtonLink>
-          )}
-          {friendship && user.username && (
-            <FriendButton
-              username={user.username}
-              state={friendship.state}
-              friendshipId={friendship.id}
-            />
-          )}
-        </div>
-      </section>
+  const statItems = [
+    { key: "played", value: format.number(stats.played) },
+    { key: "wins", value: format.number(stats.wins) },
+    { key: "losses", value: format.number(stats.losses) },
+    { key: "winRate", value: format.number(winRate, { style: "percent" }) },
+  ] as const
 
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("stats.title")}</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-4 text-center sm:grid-cols-4">
-          {[
-            [stats.played, t("stats.played")],
-            [stats.wins, t("stats.wins")],
-            [stats.losses, t("stats.losses")],
-            [format.number(winRate, { style: "percent" }), t("stats.winRate")],
-          ].map(([value, label]) => (
-            <div key={label}>
-              <p className="text-2xl font-bold">{value}</p>
-              <p className="text-xs text-muted-foreground">{label}</p>
+  return (
+    <div className="flex flex-col gap-10">
+      <PageHeader
+        eyebrow={t("title")}
+        dot={false}
+        title={
+          <span className="flex flex-wrap items-center gap-x-5 gap-y-3">
+            <UserAvatar name={name} image={user.image} className="size-14 text-lg sm:size-16" />
+            <span dir="ltr">
+              {name}
+              <span className="text-primary">.</span>
+            </span>
+          </span>
+        }
+        description={
+          <span className="flex flex-col gap-2">
+            <span className="flex flex-wrap items-center gap-2">
+              {/* Online status: only for yourself and your friends. */}
+              {(isOwn || friendship?.state === "friends") && (
+                <StatusBadge status={userStatus(user.id)} />
+              )}
+              <Badge variant="outline">{t("level", { level: user.level })}</Badge>
+              <Badge variant="outline">{t("xp", { xp: user.xp })}</Badge>
+            </span>
+            <span className="text-xs">
+              {t("memberSince", { date: format.dateTime(user.createdAt, { dateStyle: "medium" }) })}
+            </span>
+          </span>
+        }
+        actions={
+          <>
+            {isOwn && (
+              <ButtonLink href="/settings" variant="outline" size="lg" className="h-10 px-4">
+                {t("settings")}
+              </ButtonLink>
+            )}
+            {friendship && user.username && (
+              <FriendButton
+                username={user.username}
+                state={friendship.state}
+                friendshipId={friendship.id}
+              />
+            )}
+          </>
+        }
+      />
+
+      <section className="grid gap-8 sm:grid-cols-12">
+        <h2 className="text-sm font-semibold sm:col-span-3">{t("stats.title")}</h2>
+        <dl className="grid grid-cols-2 gap-6 sm:col-span-9 sm:grid-cols-4">
+          {statItems.map(({ key, value }) => (
+            <div key={key} className="flex flex-col-reverse gap-1 border-t border-foreground pt-3">
+              <dt className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+                {t(`stats.${key}`)}
+              </dt>
+              <dd
+                className={
+                  key === "winRate"
+                    ? "text-4xl font-black tracking-tighter text-primary tabular-nums sm:text-5xl"
+                    : "text-4xl font-black tracking-tighter tabular-nums sm:text-5xl"
+                }
+              >
+                {value}
+              </dd>
             </div>
           ))}
-        </CardContent>
-      </Card>
+        </dl>
+      </section>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <Card className={isOwn ? "md:col-span-2" : "md:col-span-3"}>
-          <CardHeader>
-            <CardTitle>{t("history.title")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {history.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{t("history.empty")}</p>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t("history.opponent")}</TableHead>
-                    <TableHead>{t("history.score")}</TableHead>
-                    <TableHead>{t("history.result")}</TableHead>
-                    <TableHead>{t("history.date")}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {history.map((match) => (
-                    <TableRow key={match.id}>
-                      <TableCell>
-                        {match.opponentUsername ? (
-                          <Link href={`/profile/${match.opponentUsername}`} className="hover:underline">
-                            {match.opponent}
-                          </Link>
-                        ) : (
-                          t("history.deleted")
-                        )}
-                        {match.tournament && (
-                          <Badge variant="outline" className="ml-2">
-                            {t("history.tournament")}
-                          </Badge>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {match.myScore} - {match.theirScore}
-                        {match.forfeit && (
-                          <span className="ml-1 text-xs text-muted-foreground">
-                            ({t("history.forfeit")})
-                          </span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={match.won ? "default" : "destructive"}>
-                          {match.won ? t("history.win") : t("history.loss")}
+      <div className="grid gap-10 border-t-2 border-foreground pt-8 md:grid-cols-12">
+        <section className={isOwn ? "flex min-w-0 flex-col gap-4 md:col-span-8" : "flex min-w-0 flex-col gap-4 md:col-span-12"}>
+          <h2 className="text-2xl font-bold tracking-tight">{t("history.title")}</h2>
+          {history.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{t("history.empty")}</p>
+          ) : (
+            <Table className="text-sm">
+              <TableHeader>
+                <TableRow className="border-b-2 border-foreground hover:bg-transparent">
+                  <TableHead className="text-xs tracking-widest uppercase">{t("history.opponent")}</TableHead>
+                  <TableHead className="text-xs tracking-widest uppercase">{t("history.score")}</TableHead>
+                  <TableHead className="text-xs tracking-widest uppercase">{t("history.result")}</TableHead>
+                  <TableHead className="text-end text-xs tracking-widest uppercase">{t("history.date")}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {history.map((match) => (
+                  <TableRow key={match.id}>
+                    <TableCell className="font-semibold">
+                      {match.opponentUsername ? (
+                        <Link href={`/profile/${match.opponentUsername}`} className="hover:underline">
+                          {match.opponent}
+                        </Link>
+                      ) : (
+                        t("history.deleted")
+                      )}
+                      {match.tournament && (
+                        <Badge variant="outline" className="ms-2">
+                          {t("history.tournament")}
                         </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {format.dateTime(match.date, { dateStyle: "medium", timeStyle: "short" })}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </CardContent>
-        </Card>
+                      )}
+                    </TableCell>
+                    <TableCell className="tabular-nums">
+                      {match.myScore} – {match.theirScore}
+                      {match.forfeit && (
+                        <span className="ms-1 text-xs text-muted-foreground">
+                          ({t("history.forfeit")})
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={match.won ? "default" : "outline"}>
+                        {match.won ? t("history.win") : t("history.loss")}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-end text-muted-foreground">
+                      {format.dateTime(match.date, { dateStyle: "medium", timeStyle: "short" })}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </section>
 
         {friends && (
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("friends.title")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <FriendsPanel {...friends} />
-            </CardContent>
-          </Card>
+          <section className="flex min-w-0 flex-col gap-4 md:col-span-4">
+            <h2 className="text-2xl font-bold tracking-tight">{t("friends.title")}</h2>
+            <FriendsPanel {...friends} />
+          </section>
         )}
       </div>
     </div>

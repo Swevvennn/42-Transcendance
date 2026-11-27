@@ -33,23 +33,31 @@ export async function sendFriendRequest(input: unknown): Promise<FriendResult> {
   if (!other) return { ok: false, error: "notFound" }
   if (other.id === userId) return { ok: false, error: "self" }
 
-  const existing = await prisma.friendship.findFirst({
-    where: {
-      OR: [
-        { requesterId: userId, addresseeId: other.id },
-        { requesterId: other.id, addresseeId: userId },
-      ],
-    },
-  })
-  if (existing) {
-    if (existing.status === "pending" && existing.addresseeId === userId) {
-      await prisma.friendship.update({ where: { id: existing.id }, data: { status: "accepted" } })
-      return done()
+  // A and B sending each other a request at the same moment would create two
+  // rows (A→B and B→A). A lock on the pair makes the second one wait and
+  // find the first.
+  const pair = [userId, other.id].sort().join(":")
+  const result = await prisma.$transaction(async (tx) => {
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${pair}))`
+    const existing = await tx.friendship.findFirst({
+      where: {
+        OR: [
+          { requesterId: userId, addresseeId: other.id },
+          { requesterId: other.id, addresseeId: userId },
+        ],
+      },
+    })
+    if (existing) {
+      if (existing.status === "pending" && existing.addresseeId === userId) {
+        await tx.friendship.update({ where: { id: existing.id }, data: { status: "accepted" } })
+        return "ok"
+      }
+      return "already"
     }
-    return { ok: false, error: "already" }
-  }
-  await prisma.friendship.create({ data: { requesterId: userId, addresseeId: other.id } })
-  return done()
+    await tx.friendship.create({ data: { requesterId: userId, addresseeId: other.id } })
+    return "ok"
+  })
+  return result === "ok" ? done() : { ok: false, error: "already" }
 }
 
 /** Accepts a request sent to this user. */

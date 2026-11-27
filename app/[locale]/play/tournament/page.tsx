@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import type { Locale } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
+import { PageHeader } from "@/components/page-header"
 import { TournamentList } from "@/components/online/tournament-list"
 
 export async function generateMetadata({
@@ -20,11 +21,8 @@ export default async function TournamentsPage({
   const t = await getTranslations("Tournament")
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("description")}</p>
-      </div>
+    <div className="flex flex-col gap-10">
+      <PageHeader title={t("title")} description={t("description")} className="border-b-0 pb-0" />
       <TournamentList />
     </div>
   )

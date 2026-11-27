@@ -32,6 +32,14 @@ const TICK_MS = 1000 / 60
 /** Finished games stay readable a while (to show the result after a reload). */
 const KEEP_FINISHED_MATCH_MS = 5 * 60_000
 const KEEP_FINISHED_TOURNAMENT_MS = 30 * 60_000
+/** A lobby nobody starts is closed after this delay. */
+const LOBBY_TTL_MS = 30 * 60_000
+/** At most this many tournaments waiting for players at once (memory). */
+const MAX_LOBBIES = 50
+/** Sessions are checked again this often (logout, expiry, revoked session). */
+const SESSION_CHECK_MS = 60_000
+/** Flood protection: more events than this per second = disconnected. */
+const MAX_EVENTS_PER_SECOND = 40
 
 const newId = () => randomBytes(9).toString("base64url")
 
@@ -70,6 +78,30 @@ export class GameServer {
       const now = Date.now()
       for (const match of this.matches.values()) match.tick(now)
     }, TICK_MS)
+    setInterval(() => this.expireLobbies(), 60_000)
+    setInterval(() => void this.recheckSessions(), SESSION_CHECK_MS)
+  }
+
+  /** The user behind a cookie header, or null (logged out, expired...). */
+  private async userFromCookie(cookie: string) {
+    const session = await auth.api.getSession({ headers: new Headers({ cookie }) })
+    return session?.user ?? null
+  }
+
+  /**
+   * The handshake only proves the session was valid at connection time.
+   * Check it again from time to time: a logged out / revoked session loses
+   * its sockets.
+   */
+  private async recheckSessions() {
+    for (const socket of this.io.sockets.sockets.values()) {
+      try {
+        const user = await this.userFromCookie(socket.request.headers.cookie ?? "")
+        if (user?.id !== socket.data.player.id) socket.disconnect(true)
+      } catch {
+        // Database down: keep the socket, try again next time.
+      }
+    }
   }
 
   // --- Connection ---------------------------------------------------------
@@ -86,11 +118,8 @@ export class GameServer {
   // the client could forge: no cookie / bad cookie = connection refused.
   private async authenticate(socket: GameSocket, next: (err?: Error) => void) {
     try {
-      const session = await auth.api.getSession({
-        headers: new Headers({ cookie: socket.request.headers.cookie ?? "" }),
-      })
-      if (!session) return next(new Error("unauthorized"))
-      const { user } = session
+      const user = await this.userFromCookie(socket.request.headers.cookie ?? "")
+      if (!user) return next(new Error("unauthorized"))
       socket.data.player = {
         id: user.id,
         name: user.displayUsername ?? user.username ?? user.name,
@@ -105,6 +134,19 @@ export class GameServer {
   private onConnection(socket: GameSocket) {
     const player = socket.data.player
     socket.join(rooms.player(player.id))
+
+    // Flood protection: count the events of this socket per second.
+    let windowStart = Date.now()
+    let events = 0
+    socket.use((_packet, next) => {
+      const now = Date.now()
+      if (now - windowStart >= 1000) {
+        windowStart = now
+        events = 0
+      }
+      if (++events > MAX_EVENTS_PER_SECOND) return socket.disconnect(true)
+      next()
+    })
 
     socket.on("session:get", (ack) => {
       if (typeof ack !== "function") return
@@ -172,6 +214,11 @@ export class GameServer {
       if (typeof ack !== "function") return
       const input = tournamentFormSchema.safeParse(raw)
       if (!input.success) return ack({ ok: false, error: "invalid" })
+      // One tournament at a time per player, and a global limit (memory).
+      if (this.isBusy(player.id) || this.lobbyOf(player.id)) {
+        return ack({ ok: false, error: "alreadyInMatch" })
+      }
+      if (this.lobbyCount() >= MAX_LOBBIES) return ack({ ok: false, error: "tooManyTournaments" })
       const tournament = new Tournament(newId(), input.data.name, input.data.maxPlayers, player)
       this.tournaments.set(tournament.id, tournament)
       this.broadcastTournament(tournament)
@@ -192,6 +239,11 @@ export class GameServer {
       if (typeof ack !== "function") return
       const tournament = this.findTournament(raw)
       if (!tournament) return ack({ ok: false, error: "notFound" })
+      // Not in two tournaments (or a match) at once.
+      const lobby = this.lobbyOf(player.id)
+      if (!tournament.has(player.id) && (this.isBusy(player.id) || lobby)) {
+        return ack({ ok: false, error: "alreadyInMatch" })
+      }
       const result = tournament.join(player)
       if (result.ok) this.broadcastTournament(tournament)
       ack(result)
@@ -200,12 +252,7 @@ export class GameServer {
       if (typeof ack !== "function") return
       const tournament = this.findTournament(raw)
       if (!tournament) return ack({ ok: false, error: "notFound" })
-      const result = tournament.leave(player.id)
-      if (result.ok) {
-        if (tournament.players.length === 0) this.tournaments.delete(tournament.id)
-        this.broadcastTournament(tournament)
-      }
-      ack(result)
+      ack(this.leaveLobby(tournament, player.id))
     })
     socket.on("tournament:start", (raw, ack) => {
       if (typeof ack !== "function") return
@@ -219,6 +266,9 @@ export class GameServer {
       // Last tab of this player closed: they are no longer looking for a game.
       if (!this.io.sockets.adapter.rooms.get(rooms.player(player.id))?.size) {
         this.leaveQueue(player.id)
+        // ...and they leave the lobby they were in (no ghost host).
+        const lobby = this.lobbyOf(player.id)
+        if (lobby) this.leaveLobby(lobby, player.id)
       }
     })
   }
@@ -328,6 +378,42 @@ export class GameServer {
     return id.success ? this.tournaments.get(id.data) : undefined
   }
 
+  /** The tournament lobby (not started yet) this player is in, if any. */
+  private lobbyOf(playerId: string) {
+    for (const t of this.tournaments.values()) {
+      if (t.status === "lobby" && t.has(playerId)) return t
+    }
+    return undefined
+  }
+
+  private lobbyCount() {
+    let count = 0
+    for (const t of this.tournaments.values()) if (t.status === "lobby") count++
+    return count
+  }
+
+  private leaveLobby(tournament: Tournament, playerId: string) {
+    const result = tournament.leave(playerId)
+    if (result.ok) {
+      if (tournament.players.length === 0) this.tournaments.delete(tournament.id)
+      this.broadcastTournament(tournament)
+    }
+    return result
+  }
+
+  /** Closes the lobbies that waited too long. */
+  private expireLobbies() {
+    const now = Date.now()
+    let changed = false
+    for (const t of this.tournaments.values()) {
+      if (t.status === "lobby" && now - t.createdAt >= LOBBY_TTL_MS) {
+        this.tournaments.delete(t.id)
+        changed = true
+      }
+    }
+    if (changed) this.io.to(rooms.tournamentList).emit("tournament:list", this.tournamentList())
+  }
+
   private tournamentList() {
     return [...this.tournaments.values()].map((t) => t.summary())
   }
@@ -338,7 +424,7 @@ export class GameServer {
   ): { ok: true } | { ok: false; error: ErrorCode } {
     // Everyone must be free, otherwise their first game would start while
     // they are busy elsewhere and they would lose it by forfeit.
-    if (tournament.players.some((p) => this.activeMatch.has(p.id))) {
+    if (tournament.players.some((p) => this.isBusy(p.id))) {
       return { ok: false, error: "playersBusy" }
     }
     const result = tournament.start(playerId, shuffle)

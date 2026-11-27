@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { PageHeader } from "@/components/page-header"
 import { notFound } from "next/navigation"
 import type { Locale } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
@@ -21,8 +22,8 @@ export default async function MatchPage({ params }: PageProps<"/[locale]/play/ma
   const t = await getTranslations("Match")
 
   return (
-    <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
+    <div className="flex flex-col gap-8">
+      <PageHeader title={t("title")} />
       <OnlineMatch matchId={id} />
     </div>
   )

@@ -79,20 +79,29 @@ export async function getHistory(userId: string, take = 20) {
 
 /** Players ranked by wins (then fewer losses, then level). */
 export async function getLeaderboard(take = 50) {
+  // Counting and sorting are done by PostgreSQL: only the top `take` players
+  // are read, however many users there are.
+  const ranking = await prisma.$queryRaw<{ id: string; wins: number; played: number }[]>`
+    SELECT p.id,
+           COUNT(*) FILTER (WHERE m."winnerId" = p.id)::int AS wins,
+           COUNT(*)::int AS played
+    FROM match m
+    CROSS JOIN LATERAL (VALUES (m."player1Id"), (m."player2Id")) AS p(id)
+    JOIN "user" u ON u.id = p.id
+    WHERE p.id IS NOT NULL
+    GROUP BY p.id, u.level
+    ORDER BY wins DESC, (COUNT(*) - COUNT(*) FILTER (WHERE m."winnerId" = p.id)) ASC, u.level DESC
+    LIMIT ${take}
+  `
   const users = await prisma.user.findMany({
-    select: {
-      ...publicUser,
-      _count: { select: { matchesWon: true, matchesAsPlayer1: true, matchesAsPlayer2: true } },
-    },
+    where: { id: { in: ranking.map((r) => r.id) } },
+    select: publicUser,
   })
-  return users
-    .map(({ _count, ...user }) => {
-      const played = _count.matchesAsPlayer1 + _count.matchesAsPlayer2
-      return { ...user, wins: _count.matchesWon, losses: played - _count.matchesWon, played }
-    })
-    .filter((user) => user.played > 0)
-    .sort((a, b) => b.wins - a.wins || a.losses - b.losses || b.level - a.level)
-    .slice(0, take)
+  const byId = new Map(users.map((u) => [u.id, u]))
+  return ranking.flatMap(({ id, wins, played }) => {
+    const user = byId.get(id)
+    return user ? [{ ...user, wins, losses: played - wins, played }] : []
+  })
 }
 
 export type FriendshipState = "none" | "friends" | "sent" | "received"

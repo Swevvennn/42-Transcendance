@@ -77,7 +77,7 @@ export function LoginForm() {
           <FieldError>{errorFor("password")}</FieldError>
         </Field>
 
-        <Button type="submit" className="w-full" disabled={pending}>
+        <Button type="submit" size="lg" className="h-10 w-full text-sm font-semibold" disabled={pending}>
           {t("login.submit")}
         </Button>
 

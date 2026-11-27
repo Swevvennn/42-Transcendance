@@ -38,7 +38,9 @@
 - **Better Auth + Prisma 7** : inscription / connexion email + mot de passe, nom d'utilisateur unique, sessions, déconnexion, jeu en ligne réservé aux connectés. BDD de dev : `bun run db:up`. Détails : `docs/auth.md`.
 - **Comptes complets (12 novembre 2026)** : 2FA TOTP + codes de secours, connexion 42 (OAuth, à activer avec une app intra), matchs sauvegardés en BDD + XP / niveau, profils réels (le sien et `/profile/<username>`), amis avec statut en ligne, classement depuis la BDD. Docker écoute en HTTPS sur **8443** (`HTTPS_PORT`).
 - **14 novembre 2026** : upload d'avatar (stocké en BDD), modification du pseudo / email sur `/settings`, liste des matchs en cours à regarder (spectateur) sur `/play/online`.
-- Pas encore fait : mode IA, 3e langue, monitoring.
+- Ajouté le 6 novembre : thème suisse clair / sombre, logo « Stack » (`components/brand/logos.tsx`), intro 3D manga de l'accueil (three.js, `components/landing/anime3d/`, une fois par session), labo `/templates`, menu mobile. Branche d'intégration `integration/all` (21 novembre) : tout le projet fusionné ; les pages auth / profil / en ligne venant de la branche Auth ne sont pas encore restylées en thème suisse.
+- **24 novembre 2026** : mode contre l'IA (`/play/ai`, `lib/pong/ai.ts`) : vue du jeu 1 fois/s, prédiction des rebonds, temps de réaction, erreurs, 3 niveaux.
+- Pas encore fait : 3e langue, monitoring.
 - Vérifié : `tsc`, `lint` et `build` OK, aucune erreur console Chrome (prod et dev).
 - **Explications détaillées pour l'équipe : `docs/frontend.md`.** Règles de code pour les agents : `AGENTS.md`.
 

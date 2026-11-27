@@ -107,7 +107,7 @@ export function SignupForm() {
           <FieldError>{errorFor("confirmPassword")}</FieldError>
         </Field>
 
-        <Button type="submit" className="w-full" disabled={pending}>
+        <Button type="submit" size="lg" className="h-10 w-full text-sm font-semibold" disabled={pending}>
           {t("signup.submit")}
         </Button>
 

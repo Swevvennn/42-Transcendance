@@ -6,17 +6,9 @@ import { useEffect, useState } from "react"
 import { useFormErrors } from "@/components/auth/use-form-errors"
 import { ButtonLink } from "@/components/button-link"
 import { OnlineGate } from "@/components/online/online-gate"
+import { SwissSection } from "@/components/swiss-section"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
@@ -29,7 +21,7 @@ export function TournamentList() {
   return (
     <OnlineGate>
       {({ socket }) => (
-        <div className="grid gap-6 md:grid-cols-[1fr_2fr]">
+        <div className="flex flex-col gap-10">
           <CreateTournament socket={socket} />
           <OpenTournaments socket={socket} />
         </div>
@@ -57,11 +49,7 @@ function CreateTournament({ socket }: { socket: GameSocket }) {
   }
 
   return (
-    <Card className="self-start">
-      <CardHeader>
-        <CardTitle>{t("create.title")}</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <SwissSection title={t("create.title")}>
         <form onSubmit={onSubmit} noValidate>
           <FieldGroup>
             <Field data-invalid={!!errors.name}>
@@ -91,8 +79,7 @@ function CreateTournament({ socket }: { socket: GameSocket }) {
             )}
           </FieldGroup>
         </form>
-      </CardContent>
-    </Card>
+    </SwissSection>
   )
 }
 
@@ -111,33 +98,35 @@ function OpenTournaments({ socket }: { socket: GameSocket }) {
   }, [socket])
 
   return (
-    <section className="flex flex-col gap-3">
-      <h2 className="font-semibold">{t("list.title")}</h2>
+    <SwissSection title={t("list.title")}>
       {list?.length === 0 && (
         <p className="text-sm text-muted-foreground">{t("list.empty")}</p>
       )}
-      {list?.map((item) => (
-        <Card key={item.id} size="sm">
-          <CardHeader>
-            <CardTitle>{item.name}</CardTitle>
-            <CardDescription>
-              {t("list.players", { count: item.playerCount, max: item.maxPlayers })}
-              {" · "}
-              {t("list.host", { name: item.hostName })}
-            </CardDescription>
-            <CardAction>
-              <Badge variant={item.status === "lobby" ? "default" : "secondary"}>
+      <ul className="flex flex-col">
+        {list?.map((item) => (
+          <li
+            key={item.id}
+            className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-border py-3"
+          >
+            <div className="flex min-w-0 flex-col">
+              <span className="font-semibold">{item.name}</span>
+              <span className="text-sm text-muted-foreground">
+                {t("list.players", { count: item.playerCount, max: item.maxPlayers })}
+                {" · "}
+                {t("list.host", { name: item.hostName })}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant={item.status === "lobby" ? "default" : "outline"}>
                 {t(`status.${item.status}`)}
               </Badge>
-            </CardAction>
-          </CardHeader>
-          <CardFooter>
-            <ButtonLink href={`/play/tournament/${item.id}`} variant="outline" size="sm">
-              {t("list.open")}
-            </ButtonLink>
-          </CardFooter>
-        </Card>
-      ))}
-    </section>
+              <ButtonLink href={`/play/tournament/${item.id}`} variant="outline" size="sm">
+                {t("list.open")}
+              </ButtonLink>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </SwissSection>
   )
 }

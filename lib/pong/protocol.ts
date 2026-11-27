@@ -86,6 +86,9 @@ export type TournamentSummary = Pick<
 > & { playerCount: number; hostName: string }
 
 /** Error codes, translated on the client under `Online.errors.*`. */
+/** Fewest players needed to start a tournament (server and lobby page). */
+export const MIN_PLAYERS = 3
+
 export type ErrorCode =
   | "invalid"
   | "notFound"
@@ -95,6 +98,7 @@ export type ErrorCode =
   | "notHost"
   | "notEnoughPlayers"
   | "playersBusy"
+  | "tooManyTournaments"
 
 export type Ack<T = object> = ({ ok: true } & T) | { ok: false; error: ErrorCode }
 

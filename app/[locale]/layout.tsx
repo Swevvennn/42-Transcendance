@@ -1,18 +1,23 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Cairo, Geist_Mono, Inter_Tight } from "next/font/google"
 import { notFound } from "next/navigation"
 import { hasLocale, NextIntlClientProvider } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
+import { InlineScript } from "@/components/inline-script"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
-import { routing } from "@/i18n/routing"
+import { localeDirection, routing } from "@/i18n/routing"
+import { themeScript } from "@/lib/theme"
 import { cn } from "@/lib/utils"
 
 import "../globals.css"
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] })
+const interTight = Inter_Tight({ variable: "--font-inter-tight", subsets: ["latin"] })
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] })
+// Arabic glyphs, used as a fallback after Inter Tight. Only downloaded when
+// Arabic text is on the page, so no preload.
+const cairo = Cairo({ variable: "--font-arabic", subsets: ["arabic"], preload: false })
 
 // Pre-render every page for each locale at build time.
 export function generateStaticParams() {
@@ -45,12 +50,18 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={cn("h-full antialiased", geistSans.variable, geistMono.variable)}
+      dir={localeDirection(locale)}
+      className={cn("h-full antialiased", interTight.variable, geistMono.variable, cairo.variable)}
+      // The theme script adds `dark` before hydration.
+      suppressHydrationWarning
     >
+      <head>
+        <InlineScript html={themeScript} />
+      </head>
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider>
           <SiteHeader />
-          <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
+          <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
             {children}
           </main>
           <SiteFooter />

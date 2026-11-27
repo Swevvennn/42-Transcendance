@@ -5,25 +5,38 @@ import { useEffect } from "react"
 
 import { ButtonLink } from "@/components/button-link"
 import { Button } from "@/components/ui/button"
-import { Link, useRouter } from "@/i18n/navigation"
+import { useRouter } from "@/i18n/navigation"
 import { signOut, useSession } from "@/lib/auth-client"
 import { connectAs, disconnect } from "@/lib/pong/connection"
 
-/** Header buttons: log in / sign up, or the player's name + log out. */
-export function UserMenu() {
+/**
+ * Header buttons: log in / sign up, or the player's name + log out.
+ * `mobile` renders the full-width rows of the mobile panel; only the desktop
+ * instance keeps the game connection (it is always mounted).
+ */
+export function UserMenu({
+  mobile = false,
+  onNavigate,
+}: {
+  mobile?: boolean
+  onNavigate?: () => void
+}) {
   const t = useTranslations("Nav")
   const router = useRouter()
   const { data: session, isPending } = useSession()
   const userId = session?.user.id
+  const linkClass = mobile
+    ? "h-11 w-full justify-start text-base font-semibold"
+    : "text-sm font-semibold"
 
   // Keep the game connection open on every page while logged in: that is
   // how the others see you "online" (lib/presence.ts), and how a tournament
   // can call you to your match.
   useEffect(() => {
-    if (isPending) return
+    if (mobile || isPending) return
     if (userId) connectAs(userId)
     else disconnect()
-  }, [userId, isPending])
+  }, [mobile, userId, isPending])
 
   // Same output on the server and on the first client render (no flash of
   // the wrong buttons, no hydration mismatch).
@@ -32,15 +45,18 @@ export function UserMenu() {
   if (!session) {
     return (
       <>
-        <ButtonLink href="/login" variant="outline">
+        <ButtonLink href="/login" variant="ghost" className={linkClass} onClick={onNavigate}>
           {t("login")}
         </ButtonLink>
-        <ButtonLink href="/signup">{t("signup")}</ButtonLink>
+        <ButtonLink href="/signup" className={linkClass} onClick={onNavigate}>
+          {t("signup")}
+        </ButtonLink>
       </>
     )
   }
 
   async function logout() {
+    onNavigate?.()
     await signOut()
     disconnect() // close the game connection of the old session
     router.push("/")
@@ -49,10 +65,10 @@ export function UserMenu() {
 
   return (
     <>
-      <Link href="/profile" className="px-2 text-xs text-muted-foreground hover:underline">
+      <ButtonLink href="/profile" variant="ghost" className={linkClass} onClick={onNavigate}>
         {session.user.displayUsername ?? session.user.name}
-      </Link>
-      <Button variant="outline" onClick={logout}>
+      </ButtonLink>
+      <Button variant="outline" className={linkClass} onClick={logout}>
         {t("logout")}
       </Button>
     </>

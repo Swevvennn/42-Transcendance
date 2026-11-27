@@ -7,7 +7,7 @@ import { ButtonLink } from "@/components/button-link"
 import { OnlineGate } from "@/components/online/online-gate"
 import { Button } from "@/components/ui/button"
 import type { GameSocket } from "@/lib/pong/connection"
-import { drawPong, HEIGHT, WIDTH, type Direction, type Side } from "@/lib/pong/engine"
+import { drawPong, HEIGHT, pongColors, WIDTH, type Direction, type Side } from "@/lib/pong/engine"
 import type { MatchFrame, MatchInfo } from "@/lib/pong/protocol"
 
 // The client never simulates the online game: it sends its direction and
@@ -133,7 +133,8 @@ function MatchView({ socket, matchId }: { socket: GameSocket; matchId: string })
       const frames = framesRef.current
       if (frames.length > 0) {
         const renderTime = Date.now() + (offsetRef.current ?? 0) - INTERP_DELAY_MS
-        drawPong(ctx, interpolate(frames, renderTime), getComputedStyle(canvas).color)
+        const { fg, ball } = pongColors(canvas)
+        drawPong(ctx, interpolate(frames, renderTime), fg, ball)
       }
       raf = requestAnimationFrame(draw)
     }

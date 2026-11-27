@@ -1,7 +1,9 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
+import { headers } from "next/headers"
 
+import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { currentSession } from "@/lib/users"
 import type { ValidationKey } from "@/lib/validation/auth"
@@ -19,6 +21,29 @@ export type ProfileResult =
 export type AvatarResult = { ok: true } | { ok: false; error: ProfileErrorKey | ValidationKey }
 
 const refresh = () => revalidatePath("/[locale]", "layout")
+
+// Server actions skip Better Auth's rate limit: limit the wrong passwords
+// here (a stolen session must not be able to guess the password).
+const MAX_WRONG_PASSWORDS = 5
+const WRONG_PASSWORD_WINDOW_MS = 15 * 60_000
+const store = globalThis as { __wrongPasswords?: Map<string, { count: number; since: number }> }
+const wrongPasswords = (store.__wrongPasswords ??= new Map())
+
+function tooManyWrongPasswords(userId: string) {
+  const entry = wrongPasswords.get(userId)
+  if (!entry) return false
+  if (Date.now() - entry.since >= WRONG_PASSWORD_WINDOW_MS) {
+    wrongPasswords.delete(userId)
+    return false
+  }
+  return entry.count >= MAX_WRONG_PASSWORDS
+}
+
+function recordWrongPassword(userId: string) {
+  const entry = wrongPasswords.get(userId)
+  if (entry && Date.now() - entry.since < WRONG_PASSWORD_WINDOW_MS) entry.count++
+  else wrongPasswords.set(userId, { count: 1, since: Date.now() })
+}
 
 /** Who already uses this username or email (another user than `userId`). */
 async function conflict(userId: string, username: string, email: string) {
@@ -49,6 +74,29 @@ export async function updateProfile(input: unknown): Promise<ProfileResult> {
 
   const taken = await conflict(userId, username, email)
   if (taken) return { ok: false, ...taken }
+
+  // A stolen session must not be enough to take the account over by
+  // changing its email: ask for the current password.
+  if (email !== session.user.email) {
+    const password = parsed.data.password ?? ""
+    if (!password) return { ok: false, field: "password", key: "passwordRequired" }
+    const hasPassword = await prisma.account.findFirst({
+      where: { userId, providerId: "credential" },
+      select: { id: true },
+    })
+    // 42 accounts have no password: their email comes from the intra.
+    if (!hasPassword) return { ok: false, error: "invalid" }
+    if (tooManyWrongPasswords(userId)) {
+      return { ok: false, field: "password", key: "passwordTooManyTries" }
+    }
+    try {
+      await auth.api.verifyPassword({ body: { password }, headers: await headers() })
+    } catch {
+      recordWrongPassword(userId)
+      return { ok: false, field: "password", key: "passwordWrong" }
+    }
+    wrongPasswords.delete(userId)
+  }
 
   try {
     await prisma.user.update({

@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from "next-intl"
 import { useState } from "react"
 
-import { authError, type AuthErrorResult } from "@/components/auth/auth-error"
+import { authError, type AuthErrorKey, type AuthErrorResult } from "@/components/auth/auth-error"
 import { FormAlert } from "@/components/auth/form-alert"
 import { Button } from "@/components/ui/button"
 import { signIn } from "@/lib/auth-client"
@@ -15,17 +15,17 @@ import { signIn } from "@/lib/auth-client"
  */
 export function OAuth42Button({
   enabled,
-  initialError = false,
+  initialError = null,
 }: {
   /** False when the server has no 42 app credentials (FT_CLIENT_ID / SECRET). */
   enabled: boolean
-  initialError?: boolean
+  initialError?: AuthErrorKey | null
 }) {
   const t = useTranslations("Auth")
   const locale = useLocale()
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<AuthErrorResult | null>(
-    initialError ? { field: null, kind: "auth", key: "oauthFailed" } : null
+    initialError ? { field: null, kind: "auth", key: initialError } : null
   )
 
   async function onClick() {

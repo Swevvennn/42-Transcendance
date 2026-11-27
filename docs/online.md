@@ -75,7 +75,7 @@ La partie compte les sockets de chaque joueur. Recharger la page ferme une socke
 
 ### Qui est le joueur ?
 
-Le navigateur n'envoie **aucune identité à la main**. Avec la connexion WebSocket, il envoie automatiquement le cookie de session de Better Auth. Le serveur (`authenticate` dans `server/game-server.ts`) demande à Better Auth à quel utilisateur ce cookie appartient (`auth.api.getSession`). Sans cookie valide, la connexion est refusée. Le nom affiché en jeu est le nom d'utilisateur du compte, qui est **unique**.
+Le navigateur n'envoie **aucune identité à la main**. Avec la connexion WebSocket, il envoie automatiquement le cookie de session de Better Auth. Le serveur (`authenticate` dans `server/game-server.ts`) demande à Better Auth à quel utilisateur ce cookie appartient (`auth.api.getSession`). Sans cookie valide, la connexion est refusée. La session est **revérifiée toutes les minutes** : un compte déconnecté ou une session expirée perd ses sockets. Seules nos pages peuvent ouvrir la connexion : `allowRequest` dans `server.ts` refuse toute origine autre que celle de `BETTER_AUTH_URL` (sinon un autre site visité par le joueur pourrait ouvrir une connexion avec son cookie). Le nom affiché en jeu est le nom d'utilisateur du compte, qui est **unique**.
 
 Comme le joueur est identifié par son compte, il retrouve sa partie après un rechargement, et même depuis un autre onglet :
 
@@ -110,9 +110,18 @@ C'est le module **Mode spectateur** (minor).
 
 Un joueur absent perd son match par forfait au bout de 30 s, donc un tournoi ne peut pas rester bloqué.
 
+Garde-fous (tout est en mémoire) :
+
+- un joueur ne peut être que dans **un seul** lobby à la fois, et ne peut ni créer ni rejoindre un tournoi s'il a un match à jouer ou s'il est encore qualifié dans un autre tournoi (revérifié au lancement : `playersBusy`) ;
+- **50 lobbies** au maximum (`tooManyTournaments`) ;
+- un lobby non lancé est fermé au bout de **30 min** ;
+- un joueur qui ferme son dernier onglet quitte son lobby (s'il était organisateur, le suivant le devient).
+
 ## Validation (exigée par le sujet)
 
 Tout ce qui arrive au serveur est revérifié avec zod : la session (à la connexion), le formulaire de tournoi (mêmes schémas que côté client), les identifiants et les directions. Un message invalide est ignoré ou renvoie une erreur (`invalid`, `notFound`…), traduite côté client sous `Online.errors.*` / `Tournament.errors.*`.
+
+Anti-flood : un socket qui envoie plus de **40 événements par seconde** est déconnecté (`socket.use` dans `onConnection`).
 
 ## Limites actuelles et suite
 

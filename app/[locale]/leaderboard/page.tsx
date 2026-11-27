@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import type { Locale } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
+import { PageHeader } from "@/components/page-header"
 import { UserAvatar } from "@/components/profile/user-avatar"
 import {
   Table,
@@ -13,6 +14,7 @@ import {
 } from "@/components/ui/table"
 import { Link } from "@/i18n/navigation"
 import { displayName, getLeaderboard } from "@/lib/users"
+import { cn } from "@/lib/utils"
 
 export async function generateMetadata({
   params,
@@ -37,38 +39,45 @@ export default async function LeaderboardPage({
   const rows = await getLeaderboard()
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("description")}</p>
-      </div>
+    <div className="flex flex-col gap-8">
+      <PageHeader title={t("title")} description={t("description")} />
 
       {rows.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t("empty")}</p>
       ) : (
-        <Table>
+        <Table className="text-sm">
           <TableHeader>
-            <TableRow>
-              <TableHead>{t("rank")}</TableHead>
-              <TableHead>{t("player")}</TableHead>
-              <TableHead>{t("level")}</TableHead>
-              <TableHead>{t("wins")}</TableHead>
-              <TableHead>{t("losses")}</TableHead>
+            <TableRow className="border-b-2 border-foreground hover:bg-transparent">
+              <TableHead className="w-20 text-xs tracking-widest uppercase">{t("rank")}</TableHead>
+              <TableHead className="text-xs tracking-widest uppercase">{t("player")}</TableHead>
+              <TableHead className="text-end text-xs tracking-widest uppercase">{t("level")}</TableHead>
+              <TableHead className="text-end text-xs tracking-widest uppercase">{t("wins")}</TableHead>
+              <TableHead className="text-end text-xs tracking-widest uppercase">{t("losses")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {rows.map((row, index) => (
               <TableRow key={row.id}>
-                <TableCell>#{index + 1}</TableCell>
+                <TableCell
+                  className={cn(
+                    "text-2xl font-black tracking-tighter tabular-nums",
+                    index === 0 && "text-primary",
+                  )}
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </TableCell>
                 <TableCell>
-                  <Link href={`/profile/${row.username}`} className="flex items-center gap-2 hover:underline">
+                  <Link
+                    href={`/profile/${row.username}`}
+                    className="flex items-center gap-2 text-base font-semibold hover:underline"
+                  >
                     <UserAvatar name={displayName(row)} image={row.image} size="sm" />
                     {displayName(row)}
                   </Link>
                 </TableCell>
-                <TableCell>{row.level}</TableCell>
-                <TableCell>{row.wins}</TableCell>
-                <TableCell>{row.losses}</TableCell>
+                <TableCell className="text-end tabular-nums">{row.level}</TableCell>
+                <TableCell className="text-end tabular-nums">{row.wins}</TableCell>
+                <TableCell className="text-end tabular-nums">{row.losses}</TableCell>
               </TableRow>
             ))}
           </TableBody>

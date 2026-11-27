@@ -9,23 +9,26 @@ export const loginSchema = z.object({
   password: z.string().min(1, { error: "passwordRequired" }),
 })
 
-/** A username: also used for friend requests (lib/friends/actions.ts). */
+/** A username: also used for friend requests (lib/actions/friends.ts). */
 export const usernameSchema = z
   .string()
   .min(3, { error: "usernameLength" })
   .max(20, { error: "usernameLength" })
   .regex(/^[a-zA-Z0-9_]+$/, { error: "usernameChars" })
 
+/** A new password: same rules at sign-up and when changing it. */
+export const newPasswordSchema = z
+  .string()
+  .min(8, { error: "passwordLength" })
+  .max(128, { error: "passwordLength" })
+  .regex(/[a-zA-Z]/, { error: "passwordLetterDigit" })
+  .regex(/[0-9]/, { error: "passwordLetterDigit" })
+
 /** What the browser sends to the server at sign-up (checked by lib/auth.ts). */
 export const signupApiSchema = z.object({
   username: usernameSchema,
   email: z.email({ error: "emailInvalid" }),
-  password: z
-    .string()
-    .min(8, { error: "passwordLength" })
-    .max(128, { error: "passwordLength" })
-    .regex(/[a-zA-Z]/, { error: "passwordLetterDigit" })
-    .regex(/[0-9]/, { error: "passwordLetterDigit" }),
+  password: newPasswordSchema,
 })
 
 /** The sign-up form: the same fields + the password confirmation. */
@@ -51,8 +54,26 @@ export const passwordConfirmSchema = z.object({
   password: z.string().min(1, { error: "passwordRequired" }).max(128, { error: "passwordRequired" }),
 })
 
+/** What the browser sends to change the password (checked by lib/auth.ts). */
+export const changePasswordApiSchema = z.object({
+  currentPassword: z
+    .string()
+    .min(1, { error: "passwordRequired" })
+    .max(128, { error: "passwordRequired" }),
+  newPassword: newPasswordSchema,
+})
+
+/** The change-password form: the same fields + the confirmation. */
+export const changePasswordSchema = changePasswordApiSchema
+  .extend({ confirmPassword: z.string() })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    error: "passwordMismatch",
+    path: ["confirmPassword"],
+  })
+
 export type LoginInput = z.infer<typeof loginSchema>
 export type SignupInput = z.infer<typeof signupSchema>
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>
 
 export type ValidationKey =
   | "emailInvalid"
@@ -64,6 +85,8 @@ export type ValidationKey =
   | "passwordMismatch"
   | "usernameTaken"
   | "emailTaken"
+  | "passwordWrong"
+  | "passwordTooManyTries"
   | "tournamentNameLength"
   | "tournamentSize"
   | "codeFormat"

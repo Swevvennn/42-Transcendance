@@ -1,6 +1,6 @@
 {
   "Metadata": {
-    "title": "Transcendence",
+    "title": "Pongo",
     "description": "Jouez à Pong en ligne avec vos amis."
   },
   "Nav": {
@@ -10,20 +10,25 @@
     "profile": "Profil",
     "login": "Connexion",
     "signup": "Inscription",
+    "theme": "Basculer entre thème clair et sombre",
+    "menu": "Menu principal",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
     "logout": "Se déconnecter"
   },
   "LocaleSwitcher": {
     "label": "Langue",
     "en": "English",
-    "fr": "Français"
+    "fr": "Français",
+    "ar": "العربية"
   },
   "Footer": {
-    "rights": "© 2026 Transcendence — projet 42 Le Havre",
+    "rights": "© 2026 Pongo — projet 42 Le Havre",
     "privacy": "Politique de confidentialité",
     "terms": "Conditions d'utilisation"
   },
   "Home": {
-    "title": "Transcendence",
+    "title": "Pongo",
     "subtitle": "Le Pong classique, en ligne. Défiez vos amis, l'IA, ou participez à un tournoi.",
     "play": "Jouer",
     "signup": "Créer un compte",
@@ -40,7 +45,16 @@
         "title": "Tournois",
         "description": "Affrontez plusieurs joueurs et grimpez dans le classement."
       }
-    }
+    },
+    "kicker": "Pong en temps réel",
+    "headline": "Pongo",
+    "tagline": "Une balle. Deux joueurs. Zéro décoration.",
+    "vertical": "Pongo — 42 Le Havre",
+    "featuresTitle": "Programme",
+    "attractHint": "Passez le curseur sur le terrain pour prendre la raquette de droite.",
+    "introSfx": "SMASH !",
+    "introSkip": "Passer l'intro",
+    "introLoading": "Chargement"
   },
   "Auth": {
     "email": "E-mail",
@@ -72,6 +86,7 @@
       "invalidPassword": "Mot de passe incorrect.",
       "oauth42Unavailable": "La connexion avec 42 n'est pas configurée sur ce serveur.",
       "oauthFailed": "La connexion avec 42 a échoué. Réessaie.",
+      "oauthNotLinked": "Un compte utilise déjà cet email. Connecte-toi avec ton mot de passe.",
       "sessionExpired": "Trop tard : reconnecte-toi."
     },
     "twoFactor": {
@@ -99,6 +114,8 @@
     "tournamentSize": "Choisis 4 ou 8 joueurs.",
     "usernameTaken": "Ce nom d'utilisateur est déjà pris.",
     "emailTaken": "Un compte utilise déjà cet email.",
+    "passwordWrong": "Mot de passe incorrect.",
+    "passwordTooManyTries": "Trop de mauvais mots de passe. Réessaie dans 15 minutes.",
     "codeFormat": "Entre le code à 6 chiffres.",
     "codeRequired": "Entre un code.",
     "avatarType": "Choisis une image PNG, JPEG, WebP ou GIF.",
@@ -138,6 +155,22 @@
     "right": "Joueur droit",
     "back": "Retour aux modes"
   },
+  "AiGame": {
+    "title": "Contre l'IA",
+    "controls": "Vous jouez à gauche : W / S ou ↑ / ↓",
+    "back": "Retour aux modes",
+    "you": "Vous",
+    "ai": "IA",
+    "youWin": "Vous gagnez ! Appuyez sur Espace pour rejouer",
+    "aiWins": "L'IA gagne ! Appuyez sur Espace pour rejouer",
+    "difficulty": "Difficulté",
+    "levelNextGame": "S'applique à la prochaine partie",
+    "levels": {
+      "easy": "Facile",
+      "normal": "Normal",
+      "hard": "Difficile"
+    }
+  },
   "Online": {
     "title": "Match en ligne",
     "description": "Joue contre un adversaire au hasard, en temps réel.",
@@ -167,7 +200,8 @@
       "tournamentStarted": "Ce tournoi a déjà commencé.",
       "notHost": "Seul l'organisateur peut faire ça.",
       "notEnoughPlayers": "Pas assez de joueurs pour commencer.",
-      "playersBusy": "Un joueur est encore dans un autre match. Réessaie dans un instant."
+      "playersBusy": "Un joueur est encore dans un autre match. Réessaie dans un instant.",
+      "tooManyTournaments": "Trop de tournois ouverts. Réessaie plus tard."
     },
     "live": {
       "title": "Matchs en cours",
@@ -256,7 +290,8 @@
       "tournamentStarted": "Ce tournoi a déjà commencé.",
       "notHost": "Seul l'organisateur peut faire ça.",
       "notEnoughPlayers": "Pas assez de joueurs pour commencer.",
-      "playersBusy": "Un joueur est encore dans un autre match. Réessaie dans un instant."
+      "playersBusy": "Un joueur est encore dans un autre match. Réessaie dans un instant.",
+      "tooManyTournaments": "Trop de tournois ouverts. Réessaie plus tard."
     }
   },
   "Profile": {
@@ -317,7 +352,7 @@
   },
   "Leaderboard": {
     "title": "Classement",
-    "description": "Les meilleurs joueurs de Transcendence.",
+    "description": "Les meilleurs joueurs de Pongo.",
     "rank": "Rang",
     "player": "Joueur",
     "wins": "Victoires",
@@ -360,7 +395,20 @@
       "title": "Profil",
       "description": "Ton nom d'utilisateur est visible par les autres joueurs et dans l'adresse de ton profil.",
       "save": "Enregistrer",
-      "saved": "Profil enregistré."
+      "saved": "Profil enregistré.",
+      "password": "Mot de passe actuel",
+      "passwordHint": "Nécessaire seulement pour changer ton email.",
+      "emailLocked": "Ce compte utilise la connexion 42 : son email vient de l'intra."
+    },
+    "password": {
+      "title": "Mot de passe",
+      "description": "Le changer te déconnecte de tes autres appareils.",
+      "current": "Mot de passe actuel",
+      "new": "Nouveau mot de passe",
+      "confirm": "Confirmer le nouveau mot de passe",
+      "save": "Changer le mot de passe",
+      "saved": "Mot de passe modifié.",
+      "oauthOnly": "Ce compte utilise la connexion 42 et n'a pas de mot de passe à changer."
     },
     "errors": {
       "unauthorized": "Tu dois être connecté.",
@@ -399,7 +447,7 @@
     "sections": {
       "acceptance": {
         "title": "Acceptation",
-        "body": "En créant un compte ou en utilisant Transcendence, vous acceptez ces conditions. Si vous ne les acceptez pas, merci de ne pas utiliser le service."
+        "body": "En créant un compte ou en utilisant Pongo, vous acceptez ces conditions. Si vous ne les acceptez pas, merci de ne pas utiliser le service."
       },
       "account": {
         "title": "Votre compte",
@@ -411,7 +459,7 @@
       },
       "service": {
         "title": "Disponibilité du service",
-        "body": "Transcendence est un projet étudiant fourni en l'état, sans garantie de disponibilité. Les fonctionnalités peuvent évoluer ou être retirées à tout moment."
+        "body": "Pongo est un projet étudiant fourni en l'état, sans garantie de disponibilité. Les fonctionnalités peuvent évoluer ou être retirées à tout moment."
       },
       "changes": {
         "title": "Modifications",
@@ -423,5 +471,191 @@
     "title": "Page introuvable",
     "description": "La page que vous cherchez n'existe pas.",
     "back": "Retour à l'accueil"
+  },
+  "Templates": {
+    "title": "Labo de styles",
+    "description": "Des idées d'animation pour la page d'accueil de Pongo, et les anciens essais de style.",
+    "notice": "Pages expérimentales : elles ne sont pas dans la navigation principale.",
+    "open": "Ouvrir",
+    "back": "Tous les modèles",
+    "fontLine": "Police : {font}",
+    "styles": {
+      "brutalist": {
+        "name": "Brutaliste",
+        "description": "Bordures brutes, typo énorme, ombres dures. Pas de dégradé, pas d'excuse.",
+        "font": "Archivo Black + Space Grotesk",
+        "kicker": "Pong. Sans chichis.",
+        "headline": "Frappez la balle. Battez vos amis.",
+        "tagline": "Un jeu web fait à 42 Le Havre. Temps réel, classé, gratuit.",
+        "marquee": "Parties en ligne · Adversaire IA · Tournois · Classement ·",
+        "featuresTitle": "Au programme"
+      },
+      "editorial": {
+        "name": "Éditorial",
+        "description": "Un magazine de sport sur papier : titres à empattements, colonnes et lettrine.",
+        "font": "Instrument Serif",
+        "masthead": "La Gazette de Pongo",
+        "issue": "Numéro 42 · Le Havre",
+        "section": "Sport",
+        "headline": "Le plus vieux jeu vidéo est de retour, et il veut sa revanche",
+        "lede": "Cinquante ans après son premier échange, Pong revient dans le navigateur. Nos reporters ont joué des centaines de parties contre des amis, des inconnus et une IA étrangement humaine. Leur constat : les règles n'ont pas changé, mais l'enjeu, si. Chaque point compte au classement, chaque tournoi a son vainqueur et chaque défaite vient avec un bouton revanche.",
+        "featuresTitle": "Dans ce numéro"
+      },
+      "terminal": {
+        "name": "Terminal",
+        "description": "Shell au phosphore vert, terrain en ASCII et curseur clignotant.",
+        "font": "JetBrains Mono",
+        "command": "./pongo --mode online",
+        "boot": "Démarrage du serveur de jeu…",
+        "ready": "Prêt. 3 joueurs dans la file d'attente.",
+        "ok": "OK",
+        "featuresTitle": "Modes disponibles",
+        "hint": "Choisissez une commande ci-dessous pour continuer."
+      },
+      "swiss": {
+        "name": "Suisse",
+        "description": "Style typographique international : grille stricte, un cercle rouge, rien de plus.",
+        "font": "Inter Tight",
+        "kicker": "Pong en temps réel",
+        "headline": "Pongo",
+        "tagline": "Une balle. Deux joueurs. Zéro décoration.",
+        "vertical": "Pongo — 42 Le Havre",
+        "featuresTitle": "Programme"
+      },
+      "riso": {
+        "name": "Fanzine riso",
+        "description": "Impression risographie deux encres : rose et bleu superposés, trames, grain du papier.",
+        "font": "Bricolage Grotesque",
+        "kicker": "Fanzine nº 1 · Imprimé maison",
+        "headline": "Le Pong est un sport",
+        "tagline": "Prenez une raquette, appelez un ami et mettez de l'ambiance dans le cluster.",
+        "sticker": "Gratuit !",
+        "featuresTitle": "Dans ce fanzine"
+      },
+      "blueprint": {
+        "name": "Plan technique",
+        "description": "Dessin technique : papier quadrillé, lignes de cote et cartouche.",
+        "font": "IBM Plex Sans Condensed + Plex Mono",
+        "figure": "Fig. 1 — Terrain, vue de dessus",
+        "paddle": "Raquette",
+        "ball": "Balle",
+        "net": "Filet",
+        "featuresTitle": "Caractéristiques",
+        "project": "Projet",
+        "drawnBy": "Dessiné par",
+        "drawnByValue": "Équipe 42 Le Havre",
+        "sheet": "Feuille",
+        "scale": "Échelle",
+        "revision": "Rév."
+      }
+    },
+    "motionTitle": "Animations de la page d'accueil",
+    "motionDescription": "La même page d'accueil suisse avec différents types de mouvement. Les trois premiers sont des intros anime en 3D. Ouvrez-en une, cliquez sur Rejouer, choisissez.",
+    "stylesTitle": "Anciens essais de style",
+    "replay": "Rejouer",
+    "motion": {
+      "gym": {
+        "name": "3D · Gymnase",
+        "description": "Deux lycéens dans un gymnase en cel-shading. La caméra part d'au-dessus de la table comme une partie de Pong, plonge dans l'action, alterne entre les joueurs, fait un travelling compensé sur le saut et tourne autour du smash en bullet time."
+      },
+      "rooftop": {
+        "name": "3D · Toit au coucher du soleil",
+        "description": "Le toit du lycée au coucher du soleil, avec des pétales de cerisier. Une grue qui descend lentement, un travelling au ras du sol, le héros qui saute en contre-jour et un tour complet à 360° quand le temps s'arrête."
+      },
+      "manga": {
+        "name": "3D · Manga",
+        "description": "Trames noir et blanc dans une salle de club. On vit l'échange par les yeux de chaque joueur, depuis le filet et d'en haut, puis la caméra s'envole avec la balle."
+      },
+      "anime": {
+        "name": "Intro anime 2D",
+        "description": "Un écran de chargement, puis un échange façon anime en 2D avec gros plan sur l'œil et image d'impact. Le smash final envoie la balle rouge dans le logo bloc suisse."
+      },
+      "kinetic": {
+        "name": "Cinétique",
+        "description": "Les lettres montent une à une, le point rouge tombe et rebondit comme une balle."
+      },
+      "rally": {
+        "name": "Échange",
+        "description": "Le terrain abstrait joue tout seul : une balle rouge avec traînée et des raquettes qui la suivent."
+      },
+      "assemble": {
+        "name": "Assemblage",
+        "description": "Une affiche suisse se monte toute seule : la grille se dessine, puis les blocs se placent."
+      },
+      "attract": {
+        "name": "Mode démo",
+        "description": "Un vrai match IA contre IA dans l'en-tête, comme une borne d'arcade. Survolez le terrain pour jouer."
+      }
+    },
+    "logosTitle": "Logos",
+    "logosDescription": "Cinq pistes pour le logo de Pongo, de la taille affiche jusqu'au favicon de 16 px. Les petites tailles passent à la version icône.",
+    "logoFull": "Logo",
+    "logoIcon": "Icône",
+    "logoInverted": "Inversé",
+    "sizePx": "{size} px",
+    "logos": {
+      "ballO": {
+        "name": "Balle dans le o",
+        "description": "La balle rouge se pose dans le premier « o »."
+      },
+      "point": {
+        "name": "Point final",
+        "description": "Le logo actuel : le nom en noir, fermé par un point rouge."
+      },
+      "paddle": {
+        "name": "P raquette",
+        "description": "Le « P » est une raquette et une balle : une barre pour le fût, le cercle rouge pour la panse."
+      },
+      "court": {
+        "name": "Terrain",
+        "description": "Un mini terrain avec deux raquettes et la balle, à côté du nom en minuscules."
+      },
+      "stack": {
+        "name": "Bloc suisse",
+        "description": "Le nom sur deux lignes dans un carré plein, avec la balle sur la grille."
+      }
+    },
+    "characters": {
+      "title": "Labo personnages",
+      "description": "Prototypes 3D des deux lycéens en cinq styles de modèles. Faites-les tourner, changez la pose et la trame, puis choisissez celui à animer dans l'intro manga.",
+      "open": "Ouvrir le labo personnages",
+      "pose": "Pose",
+      "poses": {
+        "ready": "En garde",
+        "swing": "Coup droit",
+        "smash": "Smash sauté"
+      },
+      "screentone": "Trame manga",
+      "hint": "Faites glisser un modèle pour le tourner.",
+      "hero": "Héros",
+      "rival": "Rival",
+      "styles": {
+        "classic": {
+          "name": "Classique",
+          "description": "Les modèles des intros gymnase et toit, pour comparer : visages ronds, cheveux simples."
+        },
+        "sharp": {
+          "name": "Manga affûté",
+          "description": "Proportions manga plus élancées, torse en V, menton pointu, sourcils obliques, nombreuses mèches pointues. Membres hexagonaux, articulations en losange et ombres anguleuses en trame. Utilisé dans l'intro manga."
+        },
+        "lowpoly": {
+          "name": "Low-poly",
+          "description": "Les modèles affûtés en facettes plates, sans contours, comme un vieux jeu anime en 3D."
+        },
+        "chibi": {
+          "name": "Chibi",
+          "description": "Grosses têtes, petits corps, grands yeux ronds et lunettes rondes. Mignon plutôt que féroce."
+        },
+        "ink": {
+          "name": "Silhouette encre",
+          "description": "Silhouettes noires aux longues jambes, contours blancs et yeux en fente ; seuls les détails rouges ressortent. Pensé pour la trame."
+        }
+      },
+      "view": "Vue",
+      "views": {
+        "body": "En pied",
+        "face": "Visages"
+      }
+    }
   }
 }
